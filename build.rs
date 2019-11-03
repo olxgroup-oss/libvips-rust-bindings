@@ -584,7 +584,12 @@ impl Parameter {
     }
 
     fn default(&self) -> String {
-        format!("{}: {}", self.name, self.param_type.default())
+        match self.param_type {
+            ParamType::Str if self.description.contains("ICC") => {
+                format!("{}: String::from(\"sRGB\")", self.name)
+            }
+            _ => format!("{}: {}", self.name, self.param_type.default()),
+        }
     }
 
     fn struct_declaration(&self) -> String {
