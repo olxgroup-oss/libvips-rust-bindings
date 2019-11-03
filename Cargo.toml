@@ -1,0 +1,15 @@
+[package]
+name = "vips-rs"
+version = "8.3.0"
+authors = ["Augusto César Dias <augusto.dias@olx.com>"]
+edition = "2018"
+
+[build-dependencies]
+bindgen = "0.51"
+cc = "1.0"
+Inflector = "0.11"
+which = "3.0"
+
+[dependencies]
+num-traits = "0.2"
+num-derive = "0.3"

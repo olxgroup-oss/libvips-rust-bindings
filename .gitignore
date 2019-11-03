@@ -1,0 +1,8 @@
+/target
+**/*.rs.bk
+introspect
+introspect.*
+!introspect.c
+.DS_Store
+src/bindings.rs
+src/ops.rs
