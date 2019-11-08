@@ -1215,7 +1215,7 @@ fn main() {
         .arg("introspect.c")
         .status();
     if result.is_ok() && !result.unwrap().success() {
-        let cmd = Command::new("cc");
+        let mut cmd = Command::new("cc");
         cmd.arg("-g -Wall introspect.c -o introspect `pkg-config --cflags --libs vips`");
         let res = cmd.status().expect("Couldn't compile introspect.c");
         if !res.success() {
