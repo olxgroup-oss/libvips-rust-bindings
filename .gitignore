@@ -6,3 +6,5 @@ introspect.*
 .DS_Store
 src/bindings.rs
 src/ops.rs
+src/error.rs
+
