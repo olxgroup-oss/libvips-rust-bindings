@@ -1204,8 +1204,11 @@ fn main() {
     for flag in instrospect_flags.into_iter() {
         cc_builder.flag(&flag);
     }
-    let mut cc_cmd = cc_builder
-        .no_default_flags(true)
+     let mut cc_cmd = if cfg!(target_os = "linux") {
+         cc_builder.target("x86_64-unknown-linux-gnu")
+     } else {
+         &mut cc_builder
+     }.no_default_flags(true)
         .out_dir("./")
         .flag("-ointrospect")
         .flag("-g")
