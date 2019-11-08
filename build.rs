@@ -1204,11 +1204,8 @@ fn main() {
     for flag in instrospect_flags.into_iter() {
         cc_builder.flag(&flag);
     }
-     let mut cc_cmd = if cfg!(target_os = "linux") {
-         cc_builder.target("x86_64-unknown-linux-gnu")
-     } else {
-         &mut cc_builder
-     }.no_default_flags(true)
+     let mut cc_cmd = cc_builder
+        .no_default_flags(true)
         .out_dir("./")
         .flag("-ointrospect")
         .flag("-g")
@@ -1216,10 +1213,14 @@ fn main() {
         .to_command();
     let result = cc_cmd
         .arg("introspect.c")
-        .status()
-        .expect("Failed to compile introspect.c");
-    if !result.success() {
-        panic!("Failed to compile introspect.c");
+        .status();
+    if result.is_ok() && !result.unwrap().success() {
+        let cmd = Command::new("cc");
+        cmd.arg("-g -Wall introspect.c -o introspect `pkg-config --cflags --libs vips`");
+        let res = cmd.status().expect("Couldn't compile introspect.c");
+        if !res.success() {
+            panic!("Failed to compile introspect.c");
+        }
     }
 
     let vips_introspection = Command::new("./introspect")
