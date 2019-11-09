@@ -25,6 +25,8 @@ pub(crate) struct VipsBlob {
     pub(crate) ctx: *mut bindings::VipsBlob,
 }
 
+/// This is the main type of vips. It represents an image and most operations will take one as input and output a new one.
+/// In the moment this type is not thread safe. Be careful working within thread environments.
 impl VipsImage {
     pub fn new() -> VipsImage {
         VipsImage {

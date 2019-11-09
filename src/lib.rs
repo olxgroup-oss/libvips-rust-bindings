@@ -22,15 +22,68 @@ pub type Result<T> = std::result::Result<T, error::Error>;
 
 pub struct VipsApp;
 
+/// That's the main type of this crate. Use it to initialize the system 
 impl VipsApp {
+    /// default constructor of a VIpsApp instance which will disable memory leak debugging
     pub fn default(name: &str) -> Result<VipsApp> {
         init(name, false)?;
         Ok(VipsApp)
     }
 
+    /// new instance of VipsApp takes the application name and a flag indicating if the library should debug memory leak (good for testing purposes)
     pub fn new(name: &str, detect_leak: bool) -> Result<VipsApp> {
         init(name, detect_leak)?;
         Ok(VipsApp)
+    }
+
+    pub fn progress_set(&self, flag: bool) {
+        unsafe {
+            bindings::vips_progress_set(if flag { 1 } else { 0 });
+        }
+    }
+    
+    pub fn get_disc_threshold(&self) -> u64 {
+        unsafe { bindings::vips_get_disc_threshold() }
+    }
+    
+    pub fn version_string(&self) -> Result<&str> {
+        unsafe {
+            let version = CStr::from_ptr(bindings::vips_version_string());
+            version
+            .to_str()
+            .map_err(|_| Error::InitializationError("Error initializing string"))
+        }
+    }
+    
+    pub fn thread_shutdown(&self) {
+        unsafe {
+            bindings::vips_thread_shutdown();
+        }
+    }
+
+    pub fn error_buffer(&self) -> Result<&str> {
+        unsafe {
+            let buffer = CStr::from_ptr(bindings::vips_error_buffer());
+            buffer
+                .to_str()
+                .map_err(|_| Error::InitializationError("Error initializing string"))
+        }
+    }
+
+    pub fn error(&self, domain: &str, error: &str) {
+        unsafe {
+            let c_str_error = CString::from(error);
+            let c_str_domain = CString::from(domain);
+            bindings::vips_error(c_str_domain.as_ptr(), c_str_error.as_ptr());
+        }
+    }
+
+    pub fn error_system(&self, code: i32, domain: &str, error: &str) {
+        unsafe {
+            let c_str_error = CString::from(error);
+            let c_str_domain = CString::from(domain);
+            bindings::vips_error_system(code, c_str_domain.as_ptr(), c_str_error.as_ptr());
+        }
     }
 
     pub fn freeze_error_buffer(&self) {
@@ -39,28 +92,22 @@ impl VipsApp {
         }
     }
 
-    pub fn progress_set(&self, flag: bool) {
+    pub fn error_clear(&self) {
         unsafe {
-            bindings::vips_progress_set(if flag { 1 } else { 0 });
+            bindings::vips_error_clear();
         }
     }
 
-    pub fn get_disc_threshold(&self) -> u64 {
-        unsafe { bindings::vips_get_disc_threshold() }
-    }
-
-    pub fn version_string(&self) -> Result<&str> {
+    pub fn error_thaw(&self) {
         unsafe {
-            let version = CStr::from_ptr(bindings::vips_version_string());
-            version
-                .to_str()
-                .map_err(|_| Error::InitializationError("Error initializing string"))
+            bindings::vips_error_thaw();
         }
     }
 
-    pub fn thread_shutdown(&self) {
+    pub fn error_exit(&self, error: &str) {
         unsafe {
-            bindings::vips_thread_shutdown();
+            let c_str_error = CString::from(error);
+            bindings::vips_error_exit(c_str_error.as_ptr());
         }
     }
 }
