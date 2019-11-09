@@ -1175,6 +1175,7 @@ fn main() {
     let mut cmd = Command::new("pkg-config");
     cmd.args(&["--cflags", "vips"]);
     let flags = run(cmd);
+    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     let mut generator = bindgen::Builder::default()
         .header("vips.h")
@@ -1267,7 +1268,6 @@ fn main() {
     enums.sort();
     enums.dedup(); // not working
 
-    let out_path = PathBuf::from("src/");
     bindings
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
@@ -1287,8 +1287,6 @@ fn main() {
     const NULL: *const c_void = null_mut();
     {}
     {}
-
-    include!("manual.rs");
     "#,
         enums.join("\n"),
         methods
@@ -1334,11 +1332,11 @@ fn main() {
         ops_content
     };
 
-    let mut file_ops = File::create("src/ops.rs").expect("Can't create file");
+    let mut file_ops = File::create(out_path.join("ops.rs")).expect("Can't create file");
     file_ops
         .write_all(ops_formated.as_bytes())
         .expect("Can't write to file");
-    let mut file_errs = File::create("src/error.rs").expect("Can't create file");
+    let mut file_errs = File::create(out_path.join("error.rs")).expect("Can't create file");
     file_errs
         .write_all(errors_formated.as_bytes())
         .expect("Can't write to file");
