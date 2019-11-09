@@ -6,7 +6,6 @@ authors = ["Augusto César Dias <augusto.dias@olx.com>"]
 repository = "https://github.com/augustocdias/libvips-rust-bindings.git"
 documentation = "https://github.com/augustocdias/libvips-rust-bindings/blob/master/README.md"
 license = "MIT"
-license-file = "LICENSE"
 edition = "2018"
 keywords = ["libvips", "bindgen", "image", "bindings"]
 categories = ["multimedia::images", "multimedia::encoding", "multimedia::decoding", "bindings"]
