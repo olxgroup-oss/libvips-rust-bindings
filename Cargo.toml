@@ -1,14 +1,21 @@
 [package]
 name = "vips-rs"
+description = "Safe bindings for libvips"
 version = "8.3.0"
 authors = ["Augusto César Dias <augusto.dias@olx.com>"]
+repository = "https://github.com/augustocdias/libvips-rust-bindings.git"
+documentation = "https://github.com/augustocdias/libvips-rust-bindings/blob/master/README.md"
+license = "MIT"
+license-file = "LICENSE"
 edition = "2018"
+keywords = ["libvips", "bindgen", "image", "bindings"]
+categories = ["multimedia::images", "multimedia::encoding", "multimedia::decoding", "bindings"]
 
 [build-dependencies]
 bindgen = "0.51"
 cc = "1.0"
 Inflector = "0.11"
-which = "3.0"
+which = "3.1"
 
 [dependencies]
 num-traits = "0.2"
