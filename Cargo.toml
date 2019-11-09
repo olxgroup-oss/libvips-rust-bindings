@@ -1,5 +1,5 @@
 [package]
-name = "vips-rs"
+name = "libvips"
 description = "Safe bindings for libvips"
 version = "8.3.0"
 authors = ["Augusto César Dias <augusto.dias@olx.com>"]
