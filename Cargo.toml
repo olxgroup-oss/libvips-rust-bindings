@@ -9,7 +9,6 @@ license = "MIT"
 edition = "2018"
 keywords = ["libvips", "bindgen", "image", "bindings"]
 categories = ["multimedia::images", "multimedia::encoding", "multimedia::decoding", "bindings"]
-exclude = ["./introspect.*SYM", "./introspect"]
 
 [build-dependencies]
 bindgen = "0.51"

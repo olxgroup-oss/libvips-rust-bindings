@@ -1208,7 +1208,7 @@ fn main() {
     let mut cc_cmd = cc_builder
         .no_default_flags(true)
         .out_dir("./")
-        .flag("-ointrospect")
+        .flag(format!("-o{}", out_path.join("introspect").to_str().unwrap()).as_str())
         .flag("-g")
         .get_compiler()
         .to_command();
@@ -1223,7 +1223,7 @@ fn main() {
         }
     }
 
-    let vips_introspection = Command::new("./introspect")
+    let vips_introspection = Command::new(out_path.join("introspect"))
         .output()
         .expect("Failed to run vips introspection");
 
