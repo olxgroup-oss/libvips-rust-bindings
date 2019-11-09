@@ -8,7 +8,7 @@ readme = "README.md"
 license = "MIT"
 edition = "2018"
 keywords = ["libvips", "bindgen", "image", "bindings"]
-categories = ["multimedia::images", "multimedia::encoding", "multimedia::decoding", "bindings"]
+categories = ["multimedia::images", "multimedia::encoding", "graphics"]
 
 [build-dependencies]
 bindgen = "0.51"
