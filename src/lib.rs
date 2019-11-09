@@ -70,19 +70,21 @@ impl VipsApp {
         }
     }
 
-    pub fn error(&self, domain: &str, error: &str) {
+    pub fn error(&self, domain: &str, error: &str) -> Result<()> {
         unsafe {
-            let c_str_error = CString::new(error);
-            let c_str_domain = CString::new(domain);
+            let c_str_error = utils::new_c_string(error)?;
+            let c_str_domain = utils::new_c_string(domain)?;
             bindings::vips_error(c_str_domain.as_ptr(), c_str_error.as_ptr());
+            Ok(())
         }
     }
 
-    pub fn error_system(&self, code: i32, domain: &str, error: &str) {
+    pub fn error_system(&self, code: i32, domain: &str, error: &str) -> Result<()> {
         unsafe {
-            let c_str_error = CString::new(error);
-            let c_str_domain = CString::new(domain);
+            let c_str_error = utils::new_c_string(error)?;
+            let c_str_domain = utils::new_c_string(domain)?;
             bindings::vips_error_system(code, c_str_domain.as_ptr(), c_str_error.as_ptr());
+            Ok(())
         }
     }
 
@@ -104,10 +106,11 @@ impl VipsApp {
         }
     }
 
-    pub fn error_exit(&self, error: &str) {
+    pub fn error_exit(&self, error: &str) -> Result<()> {
         unsafe {
-            let c_str_error = CString::from(error);
+            let c_str_error = utils::new_c_string(error)?;
             bindings::vips_error_exit(c_str_error.as_ptr());
+            Ok(())
         }
     }
 }
@@ -121,7 +124,7 @@ impl Drop for VipsApp {
 }
 
 fn init(name: &str, detect_leak: bool) -> Result<i32> {
-    let cstring = CString::new(name);
+    let cstring = utils::new_c_string(name);
     if let Ok(c_name) = cstring {
         let res = unsafe { bindings::vips_init(c_name.as_ptr()) };
         let result = if res == 0 {
