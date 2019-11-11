@@ -113,6 +113,98 @@ impl VipsApp {
             Ok(())
         }
     }
+
+    pub fn cache_print(&self) {
+        unsafe {
+            bindings::vips_cache_print();
+        }
+    }
+
+    pub fn cache_set_max(&self, max: i32) {
+        unsafe {
+            bindings::vips_cache_set_max(max);
+        }
+    }
+
+    pub fn cache_set_max_mem(&self, max: usize) {
+        unsafe {
+            bindings::vips_cache_set_max_mem(max);
+        }
+    }
+
+    pub fn cache_get_max(&self) -> i32 {
+        unsafe {
+            bindings::vips_cache_get_max()
+        }
+    }
+
+    pub fn cache_get_max_mem(&self) -> usize {
+        unsafe {
+            bindings::vips_cache_get_max_mem()
+        }
+    }
+
+    pub fn cache_get_size(&self) -> i32 {
+        unsafe {
+            bindings::vips_cache_get_size()
+        }
+    }
+
+    pub fn cache_set_max_files(&self, max: i32) {
+        unsafe {
+            bindings::vips_cache_set_max_files(max);
+        }
+    }
+
+    pub fn cache_get_max_files(&self) -> i32 {
+        unsafe {
+            bindings::vips_cache_get_max_files()
+        }
+    }
+
+    pub fn vips_cache_set_dump(&self, flag: bool) {
+        unsafe {
+            bindings::vips_cache_set_dump(if flag { 1 } else { 0 });
+        }
+    }
+
+    pub fn vips_cache_set_trace(&self, flag: bool) {
+        unsafe {
+            bindings::vips_cache_set_trace(if flag { 1 } else { 0 });
+        }
+    }
+
+    /// set the number of worker threads for vips to operate
+    pub fn concurrency_set(&self, max: i32) {
+        unsafe {
+            bindings::vips_concurrency_set(max);
+        }
+    }
+
+    /// get the number of worker threads that vips is operating
+    pub fn concurency_get(&self) -> i32 {
+        unsafe {
+            bindings::vips_concurrency_get()
+        }
+    }
+
+    pub fn tracked_get_mem(&self) -> usize {
+        unsafe {
+            bindings::vips_tracked_get_mem()
+        }
+    }
+
+    pub fn tracked_get_mem_highwater(&self) -> usize {
+        unsafe {
+            bindings::vips_tracked_get_mem_highwater()
+        }
+    }
+
+    pub fn tracked_get_allocs(&self) -> i32 {
+        unsafe {
+            bindings::vips_tracked_get_allocs()
+        }
+    }
 }
 
 impl Drop for VipsApp {
