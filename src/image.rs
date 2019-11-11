@@ -178,6 +178,23 @@ impl VipsImage {
         }
     }
 
+    pub fn image_copy_memory(image: VipsImage) -> Result<VipsImage> {
+        unsafe {
+            let result = bindings::vips_image_copy_memory(image.ctx);
+            vips_image_result(
+                result,
+                Error::InitializationError("Could not copy memory"),
+            )
+        }
+    }
+
+    pub fn image_wio_input(&mut self) -> Result<()> {
+        unsafe {
+            let result = bindings::vips_image_wio_input(self.ctx);
+            utils::result(result, (), Error::InitializationError("Error on vips)image_wio_input"))
+        }
+    }
+
     pub fn get_filename(&self) -> std::result::Result<&str, std::str::Utf8Error> {
         unsafe {
             let filename = bindings::vips_image_get_filename(self.ctx);
@@ -332,14 +349,14 @@ impl VipsImage {
         }
     }
 
-    pub fn image_pio_input(&self) -> Result<()> {
+    pub fn image_pio_input(&mut self) -> Result<()> {
         unsafe {
             let res = bindings::vips_image_pio_input(self.ctx);
             utils::result(res, (), Error::IOError("Cannot read image"))
         }
     }
 
-    pub fn image_pio_output(&self) -> Result<()> {
+    pub fn image_pio_output(&mut self) -> Result<()> {
         unsafe {
             let res = bindings::vips_image_pio_output(self.ctx);
             utils::result(res, (), Error::IOError("Cannot write image"))
