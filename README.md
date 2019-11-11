@@ -1,9 +1,7 @@
 # libvips-rust-bindings
-Rust bindings for libvips
+Rust bindings for libvips. Generated from `version 8.8.3`.
 
 This is a safe wrapper for [libvips](https://libvips.github.io/libvips/) C library. It is made on top of the C API and based on the introspection API results.
-
-THIS IS EXPERIMENTAL AND NOT YET TESTED.
 
 This crate itself is not documented, but it has no logic or special behavior in comparison to libvips itself. All calls and types described in the official libvips [docs](https://libvips.github.io/libvips/API/current/) are just translated to rust types. All defaults also respected.
 
@@ -12,8 +10,6 @@ This crate itself is not documented, but it has no logic or special behavior in 
 As a first step, it runs the bindgen to generate unsafe calls to the C libvips library. After this is generated, a C code is compiled and executed. This code introspects the operations and outputs them as text. This text is parsed and then generates the `error.rs` and the `ops.rs` modules.
 
 Those are basically safe wrappers on top of the also genereated bindings. Though not widely tested, all the memory cleaning should be working as expected. Important to note that all "vips" prefixes in the naming were removed from the operations's names.
-
-The version numbers from this crate will follow the main libvips versions for major and minor numbers. Meaning that the version from this crate correspond to the respective from libvips. The patch numbers will be independent from libvips versions. 
 
 ## How to use it
 
