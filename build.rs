@@ -438,7 +438,7 @@ impl Parameter {
                 self.name
             ),
             ParamType::ArrayByte => format!(
-                "let {}_in: {} = {}.as_mut_ptr() as {};",
+                "let {}_in: {} = {}.as_ptr() as {};",
                 self.name,
                 self.param_type.vips_in_type(false),
                 self.name,
@@ -695,7 +695,7 @@ impl ParamType {
             ParamType::Bool { .. } => String::from("bool"),
             ParamType::ArrayInt => String::from("&mut [i32]"),
             ParamType::ArrayDouble => String::from("&mut [f64]"),
-            ParamType::ArrayByte => String::from("&mut [u8]"),
+            ParamType::ArrayByte => String::from("&[u8]"),
             ParamType::ArrayImage => String::from("&mut [VipsImage]"),
             ParamType::VipsInterpolate => String::from("&VipsInterpolate"),
             ParamType::VipsImage { .. } => String::from("&VipsImage"),
