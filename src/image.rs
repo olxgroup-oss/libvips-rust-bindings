@@ -7,20 +7,21 @@ use crate::Result;
 use num_traits::FromPrimitive;
 use std::ffi::*;
 use std::ptr::null_mut;
+use std::mem;
 
 const NULL: *const c_void = null_mut();
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct VipsImage {
     pub(crate) ctx: *mut bindings::VipsImage,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct VipsInterpolate {
     pub(crate) ctx: *mut bindings::VipsInterpolate,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub(crate) struct VipsBlob {
     pub(crate) ctx: *mut bindings::VipsBlob,
 }
@@ -503,6 +504,45 @@ impl VipsInterpolate {
 
     pub fn get_windows_offset(&self) -> i32 {
         unsafe { bindings::vips_interpolate_get_window_offset(self.ctx) }
+    }
+}
+
+impl Clone for VipsImage {
+    fn clone(&self) -> Self {
+        unsafe {
+            let size = mem::size_of_val(&*self.ctx);
+            let dest = null_mut::<bindings::VipsImage>();
+            std::ptr::copy(self.ctx, dest, size);
+            VipsImage {
+                ctx: dest
+            }
+        }
+    }
+}
+
+impl Clone for VipsBlob {
+    fn clone(&self) -> Self {
+        unsafe {
+            let size = mem::size_of_val(&*self.ctx);
+            let dest = null_mut::<bindings::VipsBlob>();
+            std::ptr::copy(self.ctx, dest, size);
+            VipsBlob {
+                ctx: dest
+            }
+        }
+    }
+}
+
+impl Clone for VipsInterpolate {
+    fn clone(&self) -> Self {
+        unsafe {
+            let size = mem::size_of_val(&*self.ctx);
+            let dest = null_mut::<bindings::VipsInterpolate>();
+            std::ptr::copy(self.ctx, dest, size);
+            VipsInterpolate {
+                ctx: dest
+            }
+        }
     }
 }
 
