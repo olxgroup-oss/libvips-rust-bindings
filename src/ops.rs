@@ -893,7 +893,7 @@ pub fn boolean(
 ///  `Wop` -> VIPS_OPERATION_MATH2_WOP = 1
 ///  `Last` -> VIPS_OPERATION_MATH2_LAST = 2
 /// returns `VipsImage` - Output image
-pub fn math2(left: &VipsImage, right: &VipsImage, math_2: OperationMath2) -> Result<VipsImage> {
+pub fn math_2(left: &VipsImage, right: &VipsImage, math_2: OperationMath2) -> Result<VipsImage> {
     unsafe {
         let left_in: *mut bindings::VipsImage = left.ctx;
         let right_in: *mut bindings::VipsImage = right.ctx;
@@ -922,7 +922,7 @@ pub fn math2(left: &VipsImage, right: &VipsImage, math_2: OperationMath2) -> Res
 ///  `CrossPhase` -> VIPS_OPERATION_COMPLEX2_CROSS_PHASE = 0 [DEFAULT]
 ///  `Last` -> VIPS_OPERATION_COMPLEX2_LAST = 1
 /// returns `VipsImage` - Output image
-pub fn complex2(
+pub fn complex_2(
     left: &VipsImage,
     right: &VipsImage,
     cmplx: OperationComplex2,
@@ -1192,7 +1192,7 @@ pub fn boolean_const(
 ///  `Last` -> VIPS_OPERATION_MATH2_LAST = 2
 /// c: `&mut [f64]` -> Array of constants
 /// returns `VipsImage` - Output image
-pub fn math2_const(inp: &VipsImage, math_2: OperationMath2, c: &mut [f64]) -> Result<VipsImage> {
+pub fn math_2_const(inp: &VipsImage, math_2: OperationMath2, c: &mut [f64]) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let math_2_in: i32 = math_2 as i32;
@@ -3715,7 +3715,7 @@ pub fn rot(inp: &VipsImage, angle: Angle) -> Result<VipsImage> {
 /// VipsRot45 (rot45), rotate an image
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn rot45(inp: &VipsImage) -> Result<VipsImage> {
+pub fn rot_45(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -3729,7 +3729,7 @@ pub fn rot45(inp: &VipsImage) -> Result<VipsImage> {
     }
 }
 
-/// Options for rot45 operation
+/// Options for rot_45 operation
 #[derive(Clone, Debug)]
 pub struct Rot45Options {
     /// angle: `Angle45` -> Angle to rotate image
@@ -3755,9 +3755,9 @@ impl std::default::Default for Rot45Options {
 
 /// VipsRot45 (rot45), rotate an image
 /// inp: `&VipsImage` -> Input image
-/// rot45_options: `&Rot45Options` -> optional arguments
+/// rot_45_options: `&Rot45Options` -> optional arguments
 /// returns `VipsImage` - Output image
-pub fn rot45_with_opts(inp: &VipsImage, rot_45_options: &Rot45Options) -> Result<VipsImage> {
+pub fn rot_45_with_opts(inp: &VipsImage, rot_45_options: &Rot45Options) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -4283,7 +4283,7 @@ pub fn grid(inp: &VipsImage, tile_height: i32, across: i32, down: i32) -> Result
 /// VipsTranspose3d (transpose3d), transpose3d an image
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn transpose3d(inp: &VipsImage) -> Result<VipsImage> {
+pub fn transpose_3d(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -4297,7 +4297,7 @@ pub fn transpose3d(inp: &VipsImage) -> Result<VipsImage> {
     }
 }
 
-/// Options for transpose3d operation
+/// Options for transpose_3d operation
 #[derive(Clone, Debug)]
 pub struct Transpose3DOptions {
     /// page_height: `i32` -> Height of each input page
@@ -4315,9 +4315,9 @@ impl std::default::Default for Transpose3DOptions {
 
 /// VipsTranspose3d (transpose3d), transpose3d an image
 /// inp: `&VipsImage` -> Input image
-/// transpose3d_options: `&Transpose3DOptions` -> optional arguments
+/// transpose_3d_options: `&Transpose3DOptions` -> optional arguments
 /// returns `VipsImage` - Output image
-pub fn transpose3d_with_opts(
+pub fn transpose_3d_with_opts(
     inp: &VipsImage,
     transpose_3d_options: &Transpose3DOptions,
 ) -> Result<VipsImage> {
@@ -4891,7 +4891,7 @@ pub fn composite_with_opts(
 ///  `Exclusion` -> VIPS_BLEND_MODE_EXCLUSION = 24
 ///  `Last` -> VIPS_BLEND_MODE_LAST = 25
 /// returns `VipsImage` - Output image
-pub fn composite2(base: &VipsImage, overlay: &VipsImage, mode: BlendMode) -> Result<VipsImage> {
+pub fn composite_2(base: &VipsImage, overlay: &VipsImage, mode: BlendMode) -> Result<VipsImage> {
     unsafe {
         let base_in: *mut bindings::VipsImage = base.ctx;
         let overlay_in: *mut bindings::VipsImage = overlay.ctx;
@@ -4913,7 +4913,7 @@ pub fn composite2(base: &VipsImage, overlay: &VipsImage, mode: BlendMode) -> Res
     }
 }
 
-/// Options for composite2 operation
+/// Options for composite_2 operation
 #[derive(Clone, Debug)]
 pub struct Composite2Options {
     /// x: `i32` -> x position of overlay
@@ -4991,9 +4991,9 @@ impl std::default::Default for Composite2Options {
 ///  `Difference` -> VIPS_BLEND_MODE_DIFFERENCE = 23
 ///  `Exclusion` -> VIPS_BLEND_MODE_EXCLUSION = 24
 ///  `Last` -> VIPS_BLEND_MODE_LAST = 25
-/// composite2_options: `&Composite2Options` -> optional arguments
+/// composite_2_options: `&Composite2Options` -> optional arguments
 /// returns `VipsImage` - Output image
-pub fn composite2_with_opts(
+pub fn composite_2_with_opts(
     base: &VipsImage,
     overlay: &VipsImage,
     mode: BlendMode,
@@ -14602,7 +14602,7 @@ pub fn colourspace_with_opts(
 /// VipsLab2XYZ (Lab2XYZ), transform CIELAB to XYZ
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn Lab2XYZ(inp: &VipsImage) -> Result<VipsImage> {
+pub fn lab_2xyz(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14611,29 +14611,29 @@ pub fn Lab2XYZ(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::Lab2XYZError,
+            Error::Lab2XyzError,
         )
     }
 }
 
-/// Options for Lab2XYZ operation
+/// Options for lab_2xyz operation
 #[derive(Clone, Debug)]
-pub struct Lab2XYZOptions {
+pub struct Lab2XyzOptions {
     /// temp: `Vec<f64>` -> Color temperature
     pub temp: Vec<f64>,
 }
 
-impl std::default::Default for Lab2XYZOptions {
+impl std::default::Default for Lab2XyzOptions {
     fn default() -> Self {
-        Lab2XYZOptions { temp: Vec::new() }
+        Lab2XyzOptions { temp: Vec::new() }
     }
 }
 
 /// VipsLab2XYZ (Lab2XYZ), transform CIELAB to XYZ
 /// inp: `&VipsImage` -> Input image
-/// Lab2XYZ_options: `&Lab2XYZOptions` -> optional arguments
+/// lab_2xyz_options: `&Lab2XyzOptions` -> optional arguments
 /// returns `VipsImage` - Output image
-pub fn Lab2XYZ_with_opts(inp: &VipsImage, lab_2xyz_options: &Lab2XYZOptions) -> Result<VipsImage> {
+pub fn lab_2xyz_with_opts(inp: &VipsImage, lab_2xyz_options: &Lab2XyzOptions) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14647,7 +14647,7 @@ pub fn Lab2XYZ_with_opts(inp: &VipsImage, lab_2xyz_options: &Lab2XYZOptions) -> 
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::Lab2XYZError,
+            Error::Lab2XyzError,
         )
     }
 }
@@ -14655,7 +14655,7 @@ pub fn Lab2XYZ_with_opts(inp: &VipsImage, lab_2xyz_options: &Lab2XYZOptions) -> 
 /// VipsXYZ2Lab (XYZ2Lab), transform XYZ to Lab
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn XYZ2Lab(inp: &VipsImage) -> Result<VipsImage> {
+pub fn xyz2_lab(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14669,7 +14669,7 @@ pub fn XYZ2Lab(inp: &VipsImage) -> Result<VipsImage> {
     }
 }
 
-/// Options for XYZ2Lab operation
+/// Options for xyz2_lab operation
 #[derive(Clone, Debug)]
 pub struct Xyz2LabOptions {
     /// temp: `Vec<f64>` -> Colour temperature
@@ -14684,14 +14684,17 @@ impl std::default::Default for Xyz2LabOptions {
 
 /// VipsXYZ2Lab (XYZ2Lab), transform XYZ to Lab
 /// inp: `&VipsImage` -> Input image
-/// XYZ2Lab_options: `&Xyz2LabOptions` -> optional arguments
+/// xyz2_lab_options: `&Xyz2LabOptions` -> optional arguments
 /// returns `VipsImage` - Output image
-pub fn XYZ2Lab_with_opts(inp: &VipsImage, xyz2_lab_options: &Xyz2LabOptions) -> Result<VipsImage> {
+pub fn xyz2_lab_with_opts(
+    inp: &VipsImage,
+    xyz_2_lab_options: &Xyz2LabOptions,
+) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
-        let temp_wrapper = utils::VipsArrayDoubleWrapper::from(&xyz2_lab_options.temp[..]);
+        let temp_wrapper = utils::VipsArrayDoubleWrapper::from(&xyz_2_lab_options.temp[..]);
         let temp_in = temp_wrapper.ctx;
         let temp_in_name = utils::new_c_string("temp")?;
 
@@ -14708,7 +14711,7 @@ pub fn XYZ2Lab_with_opts(inp: &VipsImage, xyz2_lab_options: &Xyz2LabOptions) -> 
 /// VipsLab2LCh (Lab2LCh), transform Lab to LCh
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn Lab2LCh(inp: &VipsImage) -> Result<VipsImage> {
+pub fn lab_2l_ch(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14725,7 +14728,7 @@ pub fn Lab2LCh(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsLCh2Lab (LCh2Lab), transform LCh to Lab
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn LCh2Lab(inp: &VipsImage) -> Result<VipsImage> {
+pub fn l_ch_2_lab(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14734,7 +14737,7 @@ pub fn LCh2Lab(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::Lch2LabError,
+            Error::LCh2LabError,
         )
     }
 }
@@ -14742,7 +14745,7 @@ pub fn LCh2Lab(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsLCh2CMC (LCh2CMC), transform LCh to CMC
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn LCh2CMC(inp: &VipsImage) -> Result<VipsImage> {
+pub fn l_ch_2cmc(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14751,7 +14754,7 @@ pub fn LCh2CMC(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::Lch2CMCError,
+            Error::LCh2CmcError,
         )
     }
 }
@@ -14759,7 +14762,7 @@ pub fn LCh2CMC(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsCMC2LCh (CMC2LCh), transform LCh to CMC
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn CMC2LCh(inp: &VipsImage) -> Result<VipsImage> {
+pub fn cmc2l_ch(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14768,7 +14771,7 @@ pub fn CMC2LCh(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::Cmc2LchError,
+            Error::Cmc2LChError,
         )
     }
 }
@@ -14776,7 +14779,7 @@ pub fn CMC2LCh(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsXYZ2Yxy (XYZ2Yxy), transform XYZ to Yxy
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn XYZ2Yxy(inp: &VipsImage) -> Result<VipsImage> {
+pub fn xyz2_yxy(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14793,7 +14796,7 @@ pub fn XYZ2Yxy(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsYxy2XYZ (Yxy2XYZ), transform Yxy to XYZ
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn Yxy2XYZ(inp: &VipsImage) -> Result<VipsImage> {
+pub fn yxy_2xyz(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14802,7 +14805,7 @@ pub fn Yxy2XYZ(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::Yxy2XYZError,
+            Error::Yxy2XyzError,
         )
     }
 }
@@ -14810,7 +14813,7 @@ pub fn Yxy2XYZ(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsscRGB2XYZ (scRGB2XYZ), transform scRGB to XYZ
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn scRGB2XYZ(inp: &VipsImage) -> Result<VipsImage> {
+pub fn sc_rgb2xyz(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14819,7 +14822,7 @@ pub fn scRGB2XYZ(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::ScRGB2XYZError,
+            Error::ScRgb2XyzError,
         )
     }
 }
@@ -14827,7 +14830,7 @@ pub fn scRGB2XYZ(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsXYZ2scRGB (XYZ2scRGB), transform XYZ to scRGB
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn XYZ2scRGB(inp: &VipsImage) -> Result<VipsImage> {
+pub fn xyz_2sc_rgb(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14836,7 +14839,7 @@ pub fn XYZ2scRGB(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::Xyz2ScRGBError,
+            Error::Xyz2ScRgbError,
         )
     }
 }
@@ -14844,7 +14847,7 @@ pub fn XYZ2scRGB(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsLabQ2Lab (LabQ2Lab), unpack a LabQ image to float Lab
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn LabQ2Lab(inp: &VipsImage) -> Result<VipsImage> {
+pub fn lab_q2_lab(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14861,7 +14864,7 @@ pub fn LabQ2Lab(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsLab2LabQ (Lab2LabQ), transform float Lab to LabQ coding
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn Lab2LabQ(inp: &VipsImage) -> Result<VipsImage> {
+pub fn lab_2_lab_q(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14878,7 +14881,7 @@ pub fn Lab2LabQ(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsLabQ2LabS (LabQ2LabS), unpack a LabQ image to short Lab
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn LabQ2LabS(inp: &VipsImage) -> Result<VipsImage> {
+pub fn lab_q2_lab_s(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14895,7 +14898,7 @@ pub fn LabQ2LabS(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsLabS2LabQ (LabS2LabQ), transform short Lab to LabQ coding
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn LabS2LabQ(inp: &VipsImage) -> Result<VipsImage> {
+pub fn lab_s2_lab_q(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14912,7 +14915,7 @@ pub fn LabS2LabQ(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsLabS2Lab (LabS2Lab), transform signed short Lab to float
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn LabS2Lab(inp: &VipsImage) -> Result<VipsImage> {
+pub fn lab_s2_lab(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14929,7 +14932,7 @@ pub fn LabS2Lab(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsLab2LabS (Lab2LabS), transform float Lab to signed short
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn Lab2LabS(inp: &VipsImage) -> Result<VipsImage> {
+pub fn lab_2_lab_s(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14946,7 +14949,7 @@ pub fn Lab2LabS(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsRad2float (rad2float), unpack Radiance coding to float RGB
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn rad2float(inp: &VipsImage) -> Result<VipsImage> {
+pub fn rad_2float(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14963,7 +14966,7 @@ pub fn rad2float(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsFloat2rad (float2rad), transform float RGB to Radiance coding
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn float2rad(inp: &VipsImage) -> Result<VipsImage> {
+pub fn float_2rad(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14980,7 +14983,7 @@ pub fn float2rad(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsLabQ2sRGB (LabQ2sRGB), convert a LabQ image to sRGB
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn LabQ2sRGB(inp: &VipsImage) -> Result<VipsImage> {
+pub fn lab_q_2s_rgb(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -14989,7 +14992,7 @@ pub fn LabQ2sRGB(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::LabQ2SRGBError,
+            Error::LabQ2SRgbError,
         )
     }
 }
@@ -14997,7 +15000,7 @@ pub fn LabQ2sRGB(inp: &VipsImage) -> Result<VipsImage> {
 /// VipssRGB2HSV (sRGB2HSV), transform sRGB to HSV
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn sRGB2HSV(inp: &VipsImage) -> Result<VipsImage> {
+pub fn s_rgb2hsv(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -15006,7 +15009,7 @@ pub fn sRGB2HSV(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::Srgb2HsvError,
+            Error::SRgb2HsvError,
         )
     }
 }
@@ -15014,7 +15017,7 @@ pub fn sRGB2HSV(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsHSV2sRGB (HSV2sRGB), transform HSV to sRGB
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn HSV2sRGB(inp: &VipsImage) -> Result<VipsImage> {
+pub fn hsv_2s_rgb(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -15023,7 +15026,7 @@ pub fn HSV2sRGB(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::Hsv2SrgbError,
+            Error::Hsv2SRgbError,
         )
     }
 }
@@ -15333,7 +15336,7 @@ pub fn icc_transform_with_opts(
 /// left: `&VipsImage` -> Left-hand input image
 /// right: `&VipsImage` -> Right-hand input image
 /// returns `VipsImage` - Output image
-pub fn dE76(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
+pub fn d_e76(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let left_in: *mut bindings::VipsImage = left.ctx;
         let right_in: *mut bindings::VipsImage = right.ctx;
@@ -15343,7 +15346,7 @@ pub fn dE76(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::De76Error,
+            Error::DE76Error,
         )
     }
 }
@@ -15352,7 +15355,7 @@ pub fn dE76(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
 /// left: `&VipsImage` -> Left-hand input image
 /// right: `&VipsImage` -> Right-hand input image
 /// returns `VipsImage` - Output image
-pub fn dE00(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
+pub fn d_e00(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let left_in: *mut bindings::VipsImage = left.ctx;
         let right_in: *mut bindings::VipsImage = right.ctx;
@@ -15362,7 +15365,7 @@ pub fn dE00(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::De00Error,
+            Error::DE00Error,
         )
     }
 }
@@ -15371,7 +15374,7 @@ pub fn dE00(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
 /// left: `&VipsImage` -> Left-hand input image
 /// right: `&VipsImage` -> Right-hand input image
 /// returns `VipsImage` - Output image
-pub fn dECMC(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
+pub fn d_ecmc(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let left_in: *mut bindings::VipsImage = left.ctx;
         let right_in: *mut bindings::VipsImage = right.ctx;
@@ -15381,7 +15384,7 @@ pub fn dECMC(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::DecmcError,
+            Error::DEcmcError,
         )
     }
 }
@@ -15389,7 +15392,7 @@ pub fn dECMC(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
 /// VipssRGB2scRGB (sRGB2scRGB), convert an sRGB image to scRGB
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn sRGB2scRGB(inp: &VipsImage) -> Result<VipsImage> {
+pub fn s_rgb_2sc_rgb(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -15398,7 +15401,7 @@ pub fn sRGB2scRGB(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::Srgb2ScRGBError,
+            Error::SRgb2ScRgbError,
         )
     }
 }
@@ -15406,7 +15409,7 @@ pub fn sRGB2scRGB(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsscRGB2BW (scRGB2BW), convert scRGB to BW
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn scRGB2BW(inp: &VipsImage) -> Result<VipsImage> {
+pub fn sc_rgb2bw(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -15415,22 +15418,22 @@ pub fn scRGB2BW(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::ScRGB2BWError,
+            Error::ScRgb2BwError,
         )
     }
 }
 
-/// Options for scRGB2BW operation
+/// Options for sc_rgb2bw operation
 #[derive(Clone, Debug)]
-pub struct ScRGB2BWOptions {
+pub struct ScRgb2BwOptions {
     /// depth: `i32` -> Output device space depth in bits
     /// min: 8, max: 16, default: 8
     pub depth: i32,
 }
 
-impl std::default::Default for ScRGB2BWOptions {
+impl std::default::Default for ScRgb2BwOptions {
     fn default() -> Self {
-        ScRGB2BWOptions {
+        ScRgb2BwOptions {
             depth: i32::from(8),
         }
     }
@@ -15438,17 +15441,17 @@ impl std::default::Default for ScRGB2BWOptions {
 
 /// VipsscRGB2BW (scRGB2BW), convert scRGB to BW
 /// inp: `&VipsImage` -> Input image
-/// scRGB2BW_options: `&ScRGB2BWOptions` -> optional arguments
+/// sc_rgb2bw_options: `&ScRgb2BwOptions` -> optional arguments
 /// returns `VipsImage` - Output image
-pub fn scRGB2BW_with_opts(
+pub fn sc_rgb2bw_with_opts(
     inp: &VipsImage,
-    sc_rgb2bw_options: &ScRGB2BWOptions,
+    sc_rgb_2bw_options: &ScRgb2BwOptions,
 ) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
-        let depth_in: i32 = sc_rgb2bw_options.depth;
+        let depth_in: i32 = sc_rgb_2bw_options.depth;
         let depth_in_name = utils::new_c_string("depth")?;
 
         let vips_op_response =
@@ -15456,7 +15459,7 @@ pub fn scRGB2BW_with_opts(
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::ScRGB2BWError,
+            Error::ScRgb2BwError,
         )
     }
 }
@@ -15464,7 +15467,7 @@ pub fn scRGB2BW_with_opts(
 /// VipsscRGB2sRGB (scRGB2sRGB), convert an scRGB image to sRGB
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn scRGB2sRGB(inp: &VipsImage) -> Result<VipsImage> {
+pub fn sc_rgb_2s_rgb(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -15473,22 +15476,22 @@ pub fn scRGB2sRGB(inp: &VipsImage) -> Result<VipsImage> {
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::ScRGB2SRGBError,
+            Error::ScRgb2SRgbError,
         )
     }
 }
 
-/// Options for scRGB2sRGB operation
+/// Options for sc_rgb_2s_rgb operation
 #[derive(Clone, Debug)]
-pub struct ScRGB2SRGBOptions {
+pub struct ScRgb2SRgbOptions {
     /// depth: `i32` -> Output device space depth in bits
     /// min: 8, max: 16, default: 8
     pub depth: i32,
 }
 
-impl std::default::Default for ScRGB2SRGBOptions {
+impl std::default::Default for ScRgb2SRgbOptions {
     fn default() -> Self {
-        ScRGB2SRGBOptions {
+        ScRgb2SRgbOptions {
             depth: i32::from(8),
         }
     }
@@ -15496,11 +15499,11 @@ impl std::default::Default for ScRGB2SRGBOptions {
 
 /// VipsscRGB2sRGB (scRGB2sRGB), convert an scRGB image to sRGB
 /// inp: `&VipsImage` -> Input image
-/// scRGB2sRGB_options: `&ScRGB2SRGBOptions` -> optional arguments
+/// sc_rgb_2s_rgb_options: `&ScRgb2SRgbOptions` -> optional arguments
 /// returns `VipsImage` - Output image
-pub fn scRGB2sRGB_with_opts(
+pub fn sc_rgb_2s_rgb_with_opts(
     inp: &VipsImage,
-    sc_rgb_2s_rgb_options: &ScRGB2SRGBOptions,
+    sc_rgb_2s_rgb_options: &ScRgb2SRgbOptions,
 ) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
@@ -15514,7 +15517,7 @@ pub fn scRGB2sRGB_with_opts(
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
-            Error::ScRGB2SRGBError,
+            Error::ScRgb2SRgbError,
         )
     }
 }
@@ -15522,7 +15525,7 @@ pub fn scRGB2sRGB_with_opts(
 /// VipsCMYK2XYZ (CMYK2XYZ), transform CMYK to XYZ
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn CMYK2XYZ(inp: &VipsImage) -> Result<VipsImage> {
+pub fn cmyk2xyz(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -15539,7 +15542,7 @@ pub fn CMYK2XYZ(inp: &VipsImage) -> Result<VipsImage> {
 /// VipsXYZ2CMYK (XYZ2CMYK), transform XYZ to CMYK
 /// inp: `&VipsImage` -> Input image
 /// returns `VipsImage` - Output image
-pub fn XYZ2CMYK(inp: &VipsImage) -> Result<VipsImage> {
+pub fn xyz2cmyk(inp: &VipsImage) -> Result<VipsImage> {
     unsafe {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let mut out_out: *mut bindings::VipsImage = null_mut();
@@ -17985,7 +17988,7 @@ pub fn mosaic_with_opts(
 /// ys_2: `i32` -> Position of second secondary tie-point
 /// min: -1000000000, max: 1000000000, default: 1
 /// returns `VipsImage` - Output image
-pub fn mosaic1(
+pub fn mosaic_1(
     refp: &VipsImage,
     sec: &VipsImage,
     direction: Direction,
@@ -18035,7 +18038,7 @@ pub fn mosaic1(
     }
 }
 
-/// Options for mosaic1 operation
+/// Options for mosaic_1 operation
 #[derive(Clone, Debug)]
 pub struct Mosaic1Options {
     /// hwindow: `i32` -> Half window size
@@ -18093,9 +18096,9 @@ impl std::default::Default for Mosaic1Options {
 /// min: -1000000000, max: 1000000000, default: 1
 /// ys_2: `i32` -> Position of second secondary tie-point
 /// min: -1000000000, max: 1000000000, default: 1
-/// mosaic1_options: `&Mosaic1Options` -> optional arguments
+/// mosaic_1_options: `&Mosaic1Options` -> optional arguments
 /// returns `VipsImage` - Output image
-pub fn mosaic1_with_opts(
+pub fn mosaic_1_with_opts(
     refp: &VipsImage,
     sec: &VipsImage,
     direction: Direction,

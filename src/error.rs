@@ -170,16 +170,16 @@ pub enum Error {
     RotateError,
     ResizeError,
     ColourspaceError,
-    Lab2XYZError,
+    Lab2XyzError,
     Xyz2LabError,
     Lab2LChError,
-    Lch2LabError,
-    Lch2CMCError,
-    Cmc2LchError,
+    LCh2LabError,
+    LCh2CmcError,
+    Cmc2LChError,
     Xyz2YxyError,
-    Yxy2XYZError,
-    ScRGB2XYZError,
-    Xyz2ScRGBError,
+    Yxy2XyzError,
+    ScRgb2XyzError,
+    Xyz2ScRgbError,
     LabQ2LabError,
     Lab2LabQError,
     LabQ2LabSError,
@@ -188,18 +188,18 @@ pub enum Error {
     Lab2LabSError,
     Rad2FloatError,
     Float2RadError,
-    LabQ2SRGBError,
-    Srgb2HsvError,
-    Hsv2SrgbError,
+    LabQ2SRgbError,
+    SRgb2HsvError,
+    Hsv2SRgbError,
     IccImportError,
     IccExportError,
     IccTransformError,
-    De76Error,
-    De00Error,
-    DecmcError,
-    Srgb2ScRGBError,
-    ScRGB2BWError,
-    ScRGB2SRGBError,
+    DE76Error,
+    DE00Error,
+    DEcmcError,
+    SRgb2ScRgbError,
+    ScRgb2BwError,
+    ScRgb2SRgbError,
     Cmyk2XyzError,
     Xyz2CmykError,
     ProfileLoadError,
@@ -926,9 +926,9 @@ impl std::fmt::Display for Error {
                 f,
                 "vips error: ColourspaceError. Check error buffer for more details"
             ),
-            Error::Lab2XYZError => write!(
+            Error::Lab2XyzError => write!(
                 f,
-                "vips error: Lab2XYZError. Check error buffer for more details"
+                "vips error: Lab2XyzError. Check error buffer for more details"
             ),
             Error::Xyz2LabError => write!(
                 f,
@@ -938,33 +938,33 @@ impl std::fmt::Display for Error {
                 f,
                 "vips error: Lab2LChError. Check error buffer for more details"
             ),
-            Error::Lch2LabError => write!(
+            Error::LCh2LabError => write!(
                 f,
-                "vips error: Lch2LabError. Check error buffer for more details"
+                "vips error: LCh2LabError. Check error buffer for more details"
             ),
-            Error::Lch2CMCError => write!(
+            Error::LCh2CmcError => write!(
                 f,
-                "vips error: Lch2CMCError. Check error buffer for more details"
+                "vips error: LCh2CmcError. Check error buffer for more details"
             ),
-            Error::Cmc2LchError => write!(
+            Error::Cmc2LChError => write!(
                 f,
-                "vips error: Cmc2LchError. Check error buffer for more details"
+                "vips error: Cmc2LChError. Check error buffer for more details"
             ),
             Error::Xyz2YxyError => write!(
                 f,
                 "vips error: Xyz2YxyError. Check error buffer for more details"
             ),
-            Error::Yxy2XYZError => write!(
+            Error::Yxy2XyzError => write!(
                 f,
-                "vips error: Yxy2XYZError. Check error buffer for more details"
+                "vips error: Yxy2XyzError. Check error buffer for more details"
             ),
-            Error::ScRGB2XYZError => write!(
+            Error::ScRgb2XyzError => write!(
                 f,
-                "vips error: ScRGB2XYZError. Check error buffer for more details"
+                "vips error: ScRgb2XyzError. Check error buffer for more details"
             ),
-            Error::Xyz2ScRGBError => write!(
+            Error::Xyz2ScRgbError => write!(
                 f,
-                "vips error: Xyz2ScRGBError. Check error buffer for more details"
+                "vips error: Xyz2ScRgbError. Check error buffer for more details"
             ),
             Error::LabQ2LabError => write!(
                 f,
@@ -998,17 +998,17 @@ impl std::fmt::Display for Error {
                 f,
                 "vips error: Float2RadError. Check error buffer for more details"
             ),
-            Error::LabQ2SRGBError => write!(
+            Error::LabQ2SRgbError => write!(
                 f,
-                "vips error: LabQ2SRGBError. Check error buffer for more details"
+                "vips error: LabQ2SRgbError. Check error buffer for more details"
             ),
-            Error::Srgb2HsvError => write!(
+            Error::SRgb2HsvError => write!(
                 f,
-                "vips error: Srgb2HsvError. Check error buffer for more details"
+                "vips error: SRgb2HsvError. Check error buffer for more details"
             ),
-            Error::Hsv2SrgbError => write!(
+            Error::Hsv2SRgbError => write!(
                 f,
-                "vips error: Hsv2SrgbError. Check error buffer for more details"
+                "vips error: Hsv2SRgbError. Check error buffer for more details"
             ),
             Error::IccImportError => write!(
                 f,
@@ -1022,29 +1022,29 @@ impl std::fmt::Display for Error {
                 f,
                 "vips error: IccTransformError. Check error buffer for more details"
             ),
-            Error::De76Error => write!(
+            Error::DE76Error => write!(
                 f,
-                "vips error: De76Error. Check error buffer for more details"
+                "vips error: DE76Error. Check error buffer for more details"
             ),
-            Error::De00Error => write!(
+            Error::DE00Error => write!(
                 f,
-                "vips error: De00Error. Check error buffer for more details"
+                "vips error: DE00Error. Check error buffer for more details"
             ),
-            Error::DecmcError => write!(
+            Error::DEcmcError => write!(
                 f,
-                "vips error: DecmcError. Check error buffer for more details"
+                "vips error: DEcmcError. Check error buffer for more details"
             ),
-            Error::Srgb2ScRGBError => write!(
+            Error::SRgb2ScRgbError => write!(
                 f,
-                "vips error: Srgb2ScRGBError. Check error buffer for more details"
+                "vips error: SRgb2ScRgbError. Check error buffer for more details"
             ),
-            Error::ScRGB2BWError => write!(
+            Error::ScRgb2BwError => write!(
                 f,
-                "vips error: ScRGB2BWError. Check error buffer for more details"
+                "vips error: ScRgb2BwError. Check error buffer for more details"
             ),
-            Error::ScRGB2SRGBError => write!(
+            Error::ScRgb2SRgbError => write!(
                 f,
-                "vips error: ScRGB2SRGBError. Check error buffer for more details"
+                "vips error: ScRgb2SRgbError. Check error buffer for more details"
             ),
             Error::Cmyk2XyzError => write!(
                 f,

@@ -1083,7 +1083,7 @@ fn parse_output(output: String) -> Vec<Operation> {
                 name: if name_split[0] == "match" {
                     String::from("matches")
                 } else {
-                    String::from(name_split[0])
+                    String::from(name_split[0]).to_snake_case()
                 },
                 vips_name: String::from(name_split[0]),
                 vips_operation: String::from(name_split[1]),
