@@ -84,16 +84,16 @@ pub(crate) fn new_c_string(string: &str) -> Result<CString> {
 }
 
 #[inline]
-pub(crate) unsafe fn new_byte_array(buf: *mut c_void, size: usize) -> Vec<u8> {
-    Vec::from_raw_parts(buf as *mut u8, size, size)
+pub(crate) unsafe fn new_byte_array(buf: *mut c_void, size: u64) -> Vec<u8> {
+    Vec::from_raw_parts(buf as *mut u8, size as usize, size as usize)
 }
 
 #[inline]
-pub unsafe fn new_int_array(array: *mut i32, size: usize) -> Vec<i32> {
-    Vec::from(std::slice::from_raw_parts(array as *mut i32, size))
+pub unsafe fn new_int_array(array: *mut i32, size: u64) -> Vec<i32> {
+    Vec::from(std::slice::from_raw_parts(array as *mut i32, size as usize))
 }
 
 #[inline]
-pub unsafe fn new_double_array(array: *mut f64, size: usize) -> Vec<f64> {
-    Vec::from(std::slice::from_raw_parts(array as *mut f64, size))
+pub unsafe fn new_double_array(array: *mut f64, size: u64) -> Vec<f64> {
+    Vec::from(std::slice::from_raw_parts(array as *mut f64, size as usize))
 }

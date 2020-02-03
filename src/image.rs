@@ -106,7 +106,7 @@ impl VipsImage {
             let options = utils::new_c_string(option_str)?;
             let res = bindings::vips_image_new_from_buffer(
                 buffer.as_ptr() as *const c_void,
-                buffer.len(),
+                buffer.len() as u64,
                 options.as_ptr(),
                 NULL,
             );
@@ -387,7 +387,7 @@ impl VipsImage {
 
     pub fn image_write_to_buffer(&self, suffix: &str) -> Result<Vec<u8>> {
         unsafe {
-            let mut buffer_buf_size: usize = 0;
+            let mut buffer_buf_size: u64 = 0;
             let mut buffer_out: *mut c_void = null_mut();
             let suffix_c_str = utils::new_c_string(suffix)?;
             let res = bindings::vips_image_write_to_buffer(
@@ -539,9 +539,9 @@ impl Drop for VipsBlob {
 impl Into<Vec<u8>> for VipsBlob {
     fn into(self) -> Vec<u8> {
         unsafe {
-            let mut size: usize = 0;
+            let mut size: u64 = 0;
             let bytes = bindings::vips_blob_get(self.ctx, &mut size);
-            Vec::from_raw_parts(bytes as *mut u8, size, size)
+            Vec::from_raw_parts(bytes as *mut u8, size as usize, size as usize)
         }
     }
 }

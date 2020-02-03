@@ -173,7 +173,7 @@ impl Operation {
                             format!("{}_in, {}.len() as i32", p.name, p.name)
                         }
                         ParamType::ArrayImage => format!("{}_in", p.name),
-                        ParamType::ArrayByte => format!("{}_in, {}.len()", p.name, p.name),
+                        ParamType::ArrayByte => format!("{}_in, {}.len() as u64", p.name, p.name),
                         ParamType::Enum { .. } => format!("{}_in.try_into().unwrap()", p.name),
                         ParamType::Str => format!("{}_in.as_ptr()", p.name),
                         _ => format!("{}_in", p.name),
@@ -553,7 +553,7 @@ impl Parameter {
     fn declare_out_variable(&self) -> String {
         match self.param_type {
             ParamType::ArrayByte { .. } => format!(
-                "let mut {}_buf_size: usize = 0;\nlet mut {}_out: {} = null_mut();",
+                "let mut {}_buf_size: u64 = 0;\nlet mut {}_out: {} = null_mut();",
                 self.name,
                 self.name,
                 self.param_type.vips_out_type()
@@ -949,7 +949,7 @@ fn parse_param(param_list: Vec<&str>, order: u8, prev: Option<String>) -> (bool,
             default: default,
         }
     } else {
-        panic!("Unsupported type")
+        panic!("Unsupported type: {}", param_list[3])
     };
     (
         is_output,
@@ -1175,7 +1175,7 @@ fn main() {
     let mut cmd = Command::new("pkg-config");
     cmd.args(&["--cflags", "vips"]);
     let flags = run(cmd);
-    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    let out_path = PathBuf::from(env::var("BINDINGS_DIR").unwrap());
 
     let mut generator = bindgen::Builder::default()
         .header("vips.h")
@@ -1208,7 +1208,7 @@ fn main() {
     let mut cc_cmd = cc_builder
         .no_default_flags(true)
         .out_dir("./")
-        .flag(format!("-o{}", out_path.join("introspect").to_str().unwrap()).as_str())
+        .flag("-ointrospect")
         .flag("-g")
         .get_compiler()
         .to_command();
@@ -1223,7 +1223,7 @@ fn main() {
         }
     }
 
-    let vips_introspection = Command::new(out_path.join("introspect"))
+    let vips_introspection = Command::new("./introspect")
         .output()
         .expect("Failed to run vips introspection");
 

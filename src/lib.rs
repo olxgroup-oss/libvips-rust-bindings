@@ -126,7 +126,7 @@ impl VipsApp {
         }
     }
 
-    pub fn cache_set_max_mem(&self, max: usize) {
+    pub fn cache_set_max_mem(&self, max: u64) {
         unsafe {
             bindings::vips_cache_set_max_mem(max);
         }
@@ -138,7 +138,7 @@ impl VipsApp {
         }
     }
 
-    pub fn cache_get_max_mem(&self) -> usize {
+    pub fn cache_get_max_mem(&self) -> u64 {
         unsafe {
             bindings::vips_cache_get_max_mem()
         }
@@ -188,13 +188,13 @@ impl VipsApp {
         }
     }
 
-    pub fn tracked_get_mem(&self) -> usize {
+    pub fn tracked_get_mem(&self) -> u64 {
         unsafe {
             bindings::vips_tracked_get_mem()
         }
     }
 
-    pub fn tracked_get_mem_highwater(&self) -> usize {
+    pub fn tracked_get_mem_highwater(&self) -> u64 {
         unsafe {
             bindings::vips_tracked_get_mem_highwater()
         }
