@@ -1285,6 +1285,8 @@ fn main() {
     use crate::Result;
 
     const NULL: *const c_void = null_mut();
+
+    include!("manual.rs");
     {}
     {}
     "#,

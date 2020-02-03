@@ -226,7 +226,7 @@ dependencies = [
 
 [[package]]
 name = "libvips-bindings"
-version = "1.1.2"
+version = "0.0.1"
 dependencies = [
  "Inflector",
  "bindgen",
