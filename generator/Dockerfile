@@ -1,6 +1,6 @@
 FROM rust:1.41-alpine3.11
 
-ENV VIPS_VERSION=8.8.4
+ENV VIPS_VERSION=8.9.1
 
 RUN apk add --update --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
             build-base \
