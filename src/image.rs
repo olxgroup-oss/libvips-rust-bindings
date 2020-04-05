@@ -4,7 +4,7 @@ use crate::ops::*;
 use crate::utils;
 use crate::Result;
 
-use num_traits::FromPrimitive;
+use num_traits::{FromPrimitive, ToPrimitive};
 use std::ffi::*;
 use std::ptr::null_mut;
 use std::mem;
@@ -115,6 +115,27 @@ impl VipsImage {
                 res,
                 Error::InitializationError("Could not initialise VipsImage from file"),
             )
+        }
+    }
+
+    pub fn image_new_from_memory(buffer: &[u8], width: i32, height: i32, bands: i32, format: BandFormat) -> Result<VipsImage> {
+        unsafe {
+            if let Some(format) = format.to_i32() {
+                let res = bindings::vips_image_new_from_memory(
+                    buffer.as_ptr() as *const c_void,
+                    buffer.len() as u64,
+                    width,
+                    height,
+                    bands,
+                    format
+                );
+                vips_image_result(
+                    res,
+                    Error::InitializationError("Could not initialise VipsImage from file"),
+                )
+            } else {
+                Err(Error::InitializationError("Invalid BandFormat. Please file a bug report, as this should never happen."))
+            }
         }
     }
 
