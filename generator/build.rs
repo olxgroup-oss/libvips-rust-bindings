@@ -804,7 +804,7 @@ impl ParamType {
                     .join("\n");
                 format!(
                     r#"
-                #[derive(Copy, Clone, Debug, FromPrimitive)]
+                #[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
                 pub enum {} {{
                     {}
                 }}

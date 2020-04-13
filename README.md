@@ -13,6 +13,15 @@ Those are basically safe wrappers on top of the also genereated bindings. Though
 
 Both the bindings and the generated operations were pushed to crates.io with most of optional dependencies from libvips included. Be careful when calling functions that are dependent on those sub-dependencies (most of them format related).
 
+### Contributing
+
+Everything in ops.rs and error.rs (and of course bindings.rs) is generated programmatically. You need to make changes for these files to the builder for these. Then, run the following shell scripts from the `generator` directory.
+
+```
+$ ./build.sh     # Builds the libvips-builder docker image
+$ ./generate.sh  # Actually generates the bindings
+```
+
 ## How to use it
 
 The main entity from this crate is the `VipsApp` struct. It doesn't store any information, but as long as it is not dropped, vips should be working as expected.
