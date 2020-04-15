@@ -14,7 +14,7 @@ const NULL: *const c_void = null_mut();
 
 include!("manual.rs");
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Access {
     ///  `Random` -> VIPS_ACCESS_RANDOM = 0
     Random = 0,
@@ -26,7 +26,7 @@ pub enum Access {
     Last = 3,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Align {
     ///  `Low` -> VIPS_ALIGN_LOW = 0
     Low = 0,
@@ -38,7 +38,7 @@ pub enum Align {
     Last = 3,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Angle {
     ///  `D0` -> VIPS_ANGLE_D0 = 0
     D0 = 0,
@@ -52,7 +52,7 @@ pub enum Angle {
     Last = 4,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Angle45 {
     ///  `D0` -> VIPS_ANGLE45_D0 = 0
     D0 = 0,
@@ -102,7 +102,7 @@ pub enum BandFormat {
     Last = 10,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum BlendMode {
     ///  `Clear` -> VIPS_BLEND_MODE_CLEAR = 0
     Clear = 0,
@@ -158,7 +158,7 @@ pub enum BlendMode {
     Last = 25,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Coding {
     ///  `Error` -> VIPS_CODING_ERROR = -1
     Error = -1,
@@ -172,7 +172,7 @@ pub enum Coding {
     Last = 7,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Combine {
     ///  `Max` -> VIPS_COMBINE_MAX = 0
     Max = 0,
@@ -184,7 +184,7 @@ pub enum Combine {
     Last = 3,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum CombineMode {
     ///  `Set` -> VIPS_COMBINE_MODE_SET = 0
     Set = 0,
@@ -194,7 +194,7 @@ pub enum CombineMode {
     Last = 2,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum CompassDirection {
     ///  `Centre` -> VIPS_COMPASS_DIRECTION_CENTRE = 0
     Centre = 0,
@@ -218,7 +218,7 @@ pub enum CompassDirection {
     Last = 9,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Direction {
     ///  `Horizontal` -> VIPS_DIRECTION_HORIZONTAL = 0
     Horizontal = 0,
@@ -228,7 +228,7 @@ pub enum Direction {
     Last = 2,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Extend {
     ///  `Black` -> VIPS_EXTEND_BLACK = 0
     Black = 0,
@@ -246,7 +246,7 @@ pub enum Extend {
     Last = 6,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum ForeignDzContainer {
     ///  `F` -> VIPS_FOREIGN_DZ_CONTAINER_FS = 0
     F = 0,
@@ -258,7 +258,7 @@ pub enum ForeignDzContainer {
     Last = 3,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum ForeignDzDepth {
     ///  `Onepixel` -> VIPS_FOREIGN_DZ_DEPTH_ONEPIXEL = 0
     Onepixel = 0,
@@ -270,7 +270,7 @@ pub enum ForeignDzDepth {
     Last = 3,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum ForeignDzLayout {
     ///  `Dz` -> VIPS_FOREIGN_DZ_LAYOUT_DZ = 0
     Dz = 0,
@@ -282,7 +282,7 @@ pub enum ForeignDzLayout {
     Last = 3,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum ForeignFlags {
     ///  `None` -> VIPS_FOREIGN_NONE = 0
     None = 0,
@@ -296,7 +296,7 @@ pub enum ForeignFlags {
     All = 7,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum ForeignPngFilter {
     ///  `None` -> VIPS_FOREIGN_PNG_FILTER_NONE = 8
     None = 8,
@@ -312,7 +312,7 @@ pub enum ForeignPngFilter {
     All = 248,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum ForeignTiffCompression {
     ///  `None` -> VIPS_FOREIGN_TIFF_COMPRESSION_NONE = 0
     None = 0,
@@ -330,7 +330,7 @@ pub enum ForeignTiffCompression {
     Last = 6,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum ForeignTiffPredictor {
     ///  `None` -> VIPS_FOREIGN_TIFF_PREDICTOR_NONE = 1
     None = 1,
@@ -342,7 +342,7 @@ pub enum ForeignTiffPredictor {
     Last = 4,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum ForeignTiffResunit {
     ///  `Cm` -> VIPS_FOREIGN_TIFF_RESUNIT_CM = 0
     Cm = 0,
@@ -352,7 +352,7 @@ pub enum ForeignTiffResunit {
     Last = 2,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum ForeignWebpPreset {
     ///  `Default` -> VIPS_FOREIGN_WEBP_PRESET_DEFAULT = 0
     Default = 0,
@@ -370,7 +370,7 @@ pub enum ForeignWebpPreset {
     Last = 6,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Intent {
     ///  `Perceptual` -> VIPS_INTENT_PERCEPTUAL = 0
     Perceptual = 0,
@@ -384,7 +384,7 @@ pub enum Intent {
     Last = 4,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Interesting {
     ///  `None` -> VIPS_INTERESTING_NONE = 0
     None = 0,
@@ -402,7 +402,7 @@ pub enum Interesting {
     Last = 6,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Interpretation {
     ///  `Error` -> VIPS_INTERPRETATION_ERROR = -1
     Error = -1,
@@ -448,7 +448,7 @@ pub enum Interpretation {
     Last = 30,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Kernel {
     ///  `Nearest` -> VIPS_KERNEL_NEAREST = 0
     Nearest = 0,
@@ -466,7 +466,7 @@ pub enum Kernel {
     Last = 6,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum OperationBoolean {
     ///  `And` -> VIPS_OPERATION_BOOLEAN_AND = 0
     And = 0,
@@ -482,7 +482,7 @@ pub enum OperationBoolean {
     Last = 5,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum OperationComplex {
     ///  `Polar` -> VIPS_OPERATION_COMPLEX_POLAR = 0
     Polar = 0,
@@ -494,7 +494,7 @@ pub enum OperationComplex {
     Last = 3,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum OperationComplex2 {
     ///  `CrossPhase` -> VIPS_OPERATION_COMPLEX2_CROSS_PHASE = 0
     CrossPhase = 0,
@@ -502,7 +502,7 @@ pub enum OperationComplex2 {
     Last = 1,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum OperationComplexget {
     ///  `Real` -> VIPS_OPERATION_COMPLEXGET_REAL = 0
     Real = 0,
@@ -512,7 +512,7 @@ pub enum OperationComplexget {
     Last = 2,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum OperationMath {
     ///  `Sin` -> VIPS_OPERATION_MATH_SIN = 0
     Sin = 0,
@@ -538,7 +538,7 @@ pub enum OperationMath {
     Last = 10,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum OperationMath2 {
     ///  `Pow` -> VIPS_OPERATION_MATH2_POW = 0
     Pow = 0,
@@ -548,7 +548,7 @@ pub enum OperationMath2 {
     Last = 2,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum OperationMorphology {
     ///  `Erode` -> VIPS_OPERATION_MORPHOLOGY_ERODE = 0
     Erode = 0,
@@ -558,7 +558,7 @@ pub enum OperationMorphology {
     Last = 2,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum OperationRelational {
     ///  `Equal` -> VIPS_OPERATION_RELATIONAL_EQUAL = 0
     Equal = 0,
@@ -576,7 +576,7 @@ pub enum OperationRelational {
     Last = 6,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum OperationRound {
     ///  `Rint` -> VIPS_OPERATION_ROUND_RINT = 0
     Rint = 0,
@@ -588,7 +588,7 @@ pub enum OperationRound {
     Last = 3,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum PCS {
     ///  `Lab` -> VIPS_PCS_LAB = 0
     Lab = 0,
@@ -598,7 +598,7 @@ pub enum PCS {
     Last = 2,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Precision {
     ///  `Integer` -> VIPS_PRECISION_INTEGER = 0
     Integer = 0,
@@ -610,7 +610,7 @@ pub enum Precision {
     Last = 3,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum RegionShrink {
     ///  `Mean` -> VIPS_REGION_SHRINK_MEAN = 0
     Mean = 0,
@@ -622,7 +622,7 @@ pub enum RegionShrink {
     Last = 3,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum Size {
     ///  `Both` -> VIPS_SIZE_BOTH = 0
     Both = 0,
