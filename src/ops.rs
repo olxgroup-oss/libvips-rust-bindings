@@ -74,7 +74,7 @@ pub enum Angle45 {
     Last = 8,
 }
 
-#[derive(Copy, Clone, Debug, FromPrimitive)]
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum BandFormat {
     ///  `Notset` -> VIPS_FORMAT_NOTSET = -1
     Notset = -1,
