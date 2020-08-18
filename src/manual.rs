@@ -1,3 +1,4 @@
+// (c) Copyright 2019-2020 OLX
 // this is manually created because it doesn't follow the standard from the introspection output
 
 /// VipsLinear (linear), calculate (a * in + b)
@@ -105,6 +106,27 @@ pub fn getpoint(inp: &VipsImage, x: i32, y: i32) -> Result<Vec<f64>> {
             vips_op_response,
             utils::new_double_array(out_array, out_array_size.try_into().unwrap()),
             Error::GetpointError,
+        )
+    }
+}
+
+/// VipsCase (case), use pixel values to pick cases from an array of images
+/// index: `&VipsImage` -> Index image
+/// cases: `&mut [VipsImage]` -> Array of case images
+/// n: `i32` -> number of case images
+/// returns `VipsImage` - Output image
+pub fn case(index: &VipsImage, cases: &mut [VipsImage], n: i32) -> Result<VipsImage> {
+    unsafe {
+        let index_in: *mut bindings::VipsImage = index.ctx;
+        let cases_in: *mut *mut bindings::VipsImage =
+            cases.iter().map(|v| v.ctx).collect::<Vec<_>>().as_mut_ptr();
+        let mut out_out: *mut bindings::VipsImage = null_mut();
+
+        let vips_op_response = bindings::vips_case(index_in, cases_in, &mut out_out, n, NULL);
+        utils::result(
+            vips_op_response,
+            VipsImage { ctx: out_out },
+            Error::CaseError,
         )
     }
 }

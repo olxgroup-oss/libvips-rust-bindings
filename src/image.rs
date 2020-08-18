@@ -1,3 +1,4 @@
+// (c) Copyright 2019-2020 OLX
 use crate::bindings;
 use crate::error::Error;
 use crate::ops::*;
@@ -5,9 +6,11 @@ use crate::utils;
 use crate::Result;
 
 use num_traits::{FromPrimitive, ToPrimitive};
+use std::borrow::Cow;
+use std::convert::TryInto;
 use std::ffi::*;
-use std::ptr::null_mut;
 use std::mem;
+use std::ptr::null_mut;
 
 const NULL: *const c_void = null_mut();
 
@@ -22,8 +25,23 @@ pub struct VipsInterpolate {
 }
 
 #[derive(Debug)]
-pub(crate) struct VipsBlob {
+pub struct VipsBlob {
     pub(crate) ctx: *mut bindings::VipsBlob,
+}
+
+#[derive(Debug)]
+pub struct VipsConnection {
+    pub(crate) ctx: *mut bindings::VipsConnection,
+}
+
+#[derive(Debug)]
+pub struct VipsSource {
+    pub(crate) ctx: *mut bindings::VipsSource,
+}
+
+#[derive(Debug)]
+pub struct VipsTarget {
+    pub(crate) ctx: *mut bindings::VipsTarget,
 }
 
 /// This is the main type of vips. It represents an image and most operations will take one as input and output a new one.
@@ -102,7 +120,7 @@ impl VipsImage {
         }
     }
 
-    pub fn image_new_from_buffer(buffer: &[u8], option_str: &str) -> Result<VipsImage> {
+    pub fn new_from_buffer(buffer: &[u8], option_str: &str) -> Result<VipsImage> {
         unsafe {
             let options = utils::new_c_string(option_str)?;
             let res = bindings::vips_image_new_from_buffer(
@@ -118,7 +136,13 @@ impl VipsImage {
         }
     }
 
-    pub fn image_new_from_memory(buffer: &[u8], width: i32, height: i32, bands: i32, format: BandFormat) -> Result<VipsImage> {
+    pub fn new_from_memory(
+        buffer: &[u8],
+        width: i32,
+        height: i32,
+        bands: i32,
+        format: BandFormat,
+    ) -> Result<VipsImage> {
         unsafe {
             if let Some(format) = format.to_i32() {
                 let res = bindings::vips_image_new_from_memory(
@@ -127,14 +151,16 @@ impl VipsImage {
                     width,
                     height,
                     bands,
-                    format
+                    format,
                 );
                 vips_image_result(
                     res,
-                    Error::InitializationError("Could not initialise VipsImage from file"),
+                    Error::InitializationError("Could not initialise VipsImage from memory"),
                 )
             } else {
-                Err(Error::InitializationError("Invalid BandFormat. Please file a bug report, as this should never happen."))
+                Err(Error::InitializationError(
+                    "Invalid BandFormat. Please file a bug report, as this should never happen.",
+                ))
             }
         }
     }
@@ -168,7 +194,7 @@ impl VipsImage {
         }
     }
 
-    pub fn image_new_from_image(image: &VipsImage, array: &[f64]) -> Result<VipsImage> {
+    pub fn new_from_image(image: &VipsImage, array: &[f64]) -> Result<VipsImage> {
         unsafe {
             let res =
                 bindings::vips_image_new_from_image(image.ctx, array.as_ptr(), array.len() as i32);
@@ -179,7 +205,7 @@ impl VipsImage {
         }
     }
 
-    pub fn image_new_from_image1(image: &VipsImage, c: f64) -> Result<VipsImage> {
+    pub fn new_from_image1(image: &VipsImage, c: f64) -> Result<VipsImage> {
         unsafe {
             let res = bindings::vips_image_new_from_image1(image.ctx, c);
             vips_image_result(
@@ -203,17 +229,18 @@ impl VipsImage {
     pub fn image_copy_memory(image: VipsImage) -> Result<VipsImage> {
         unsafe {
             let result = bindings::vips_image_copy_memory(image.ctx);
-            vips_image_result(
-                result,
-                Error::InitializationError("Could not copy memory"),
-            )
+            vips_image_result(result, Error::OperationError("Could not copy memory"))
         }
     }
 
     pub fn image_wio_input(&mut self) -> Result<()> {
         unsafe {
             let result = bindings::vips_image_wio_input(self.ctx);
-            utils::result(result, (), Error::InitializationError("Error on vips)image_wio_input"))
+            utils::result(
+                result,
+                (),
+                Error::OperationError("Error on vips image_wio_input"),
+            )
         }
     }
 
@@ -471,11 +498,314 @@ impl VipsImage {
     }
 }
 
+impl VipsConnection {
+    pub fn connection_filename(&self) -> Option<String> {
+        unsafe {
+            let result = bindings::vips_connection_filename(self.ctx);
+            if result.is_null() {
+                None
+            } else {
+                let cstr = CStr::from_ptr(result);
+                match cstr.to_string_lossy() {
+                    Cow::Borrowed(slice) => Some(slice.to_string()),
+                    Cow::Owned(string) => Some(string),
+                }
+            }
+        }
+    }
+
+    pub fn connection_nick(&self) -> Option<String> {
+        unsafe {
+            let result = bindings::vips_connection_nick(self.ctx);
+            if result.is_null() {
+                None
+            } else {
+                let cstr = CStr::from_ptr(result);
+                match cstr.to_string_lossy() {
+                    Cow::Borrowed(slice) => Some(slice.to_string()),
+                    Cow::Owned(string) => Some(string),
+                }
+            }
+        }
+    }
+}
+
+impl VipsSource {
+    pub fn new_from_descriptor(descriptor: i32) -> Result<Self> {
+        unsafe {
+            let res = bindings::vips_source_new_from_descriptor(descriptor);
+            vips_source_result(
+                res,
+                Error::InitializationError("Could not initialise VipsSource from descriptor"),
+            )
+        }
+    }
+
+    pub fn new_from_file(filename: &str) -> Result<Self> {
+        unsafe {
+            let f = utils::new_c_string(filename)?;
+            let res = bindings::vips_source_new_from_file(f.as_ptr());
+            vips_source_result(
+                res,
+                Error::InitializationError("Could not initialise VipsSource from file"),
+            )
+        }
+    }
+
+    // not sure if it this is safe
+    // should test before making it public
+    fn new_from_blob(blob: VipsBlob) -> Result<Self> {
+        unsafe {
+            let res = bindings::vips_source_new_from_blob(blob.ctx);
+            vips_source_result(
+                res,
+                Error::InitializationError("Could not initialise VipsSource from blob"),
+            )
+        }
+    }
+
+    pub fn new_from_memory(buffer: &[u8]) -> Result<Self> {
+        unsafe {
+            let res = bindings::vips_source_new_from_memory(
+                buffer.as_ptr() as *const c_void,
+                buffer.len() as u64,
+            );
+            vips_source_result(
+                res,
+                Error::InitializationError("Could not initialise VipsSource from memory"),
+            )
+        }
+    }
+
+    pub fn new_from_options(option_str: &str) -> Result<Self> {
+        unsafe {
+            let options = utils::new_c_string(option_str)?;
+            let res = bindings::vips_source_new_from_options(options.as_ptr());
+            vips_source_result(
+                res,
+                Error::InitializationError("Could not initialise VipsSource from options"),
+            )
+        }
+    }
+
+    pub fn minimise(&mut self) {
+        unsafe {
+            bindings::vips_source_minimise(self.ctx);
+        }
+    }
+
+    pub fn unminimise(&mut self) -> Result<()> {
+        unsafe {
+            let result = bindings::vips_source_unminimise(self.ctx);
+            utils::result(
+                result,
+                (),
+                Error::OperationError("Error on vips unminimise"),
+            )
+        }
+    }
+
+    pub fn decode(&mut self) -> Result<()> {
+        unsafe {
+            let result = bindings::vips_source_decode(self.ctx);
+            utils::result(
+                result,
+                (),
+                Error::OperationError("Error on vips decode"),
+            )
+        }
+    }
+
+    pub fn read(&mut self, length: u64) -> Result<Vec<u8>> {
+        unsafe {
+            let bytes: *mut c_void = null_mut();
+            let result = bindings::vips_source_read(self.ctx, bytes, length);
+            if result != -1 {
+                let buffer =
+                    Vec::from_raw_parts(bytes as *mut u8, result as usize, result as usize);
+                Ok(buffer)
+            } else {
+                Err(Error::OperationError("Error on vips read"))
+            }
+        }
+    }
+
+    pub fn is_mappable(&self) -> bool {
+        unsafe { bindings::vips_source_is_mappable(self.ctx) == 1 }
+    }
+
+    pub fn seek(&mut self, offset: i64, whence: i32) -> Result<i64> {
+        unsafe {
+            let result = bindings::vips_source_seek(self.ctx, offset, whence);
+            if result == -1 {
+                Err(Error::OperationError("Error on vips seek"))
+            } else {
+                Ok(result)
+            }
+        }
+    }
+
+    pub fn rewind(&mut self) -> Result<()> {
+        unsafe {
+            let result = bindings::vips_source_rewind(self.ctx);
+            if result == -1 {
+                Err(Error::OperationError("Error on vips rewind"))
+            } else {
+                Ok(())
+            }
+        }
+    }
+
+    pub fn length(&self) -> Result<i64> {
+        unsafe {
+            let result = bindings::vips_source_length(self.ctx);
+            if result == -1 {
+                Err(Error::OperationError("Error on vips length"))
+            } else {
+                Ok(result)
+            }
+        }
+    }
+}
+
+impl<'a> VipsSource {
+    pub fn map(&'a self) -> Result<&'a [u8]> {
+        unsafe {
+            let length: *mut u64 = null_mut();
+            let result = bindings::vips_source_map(self.ctx, length);
+            if length.is_null() {
+                Err(Error::OperationError("Error on vips map"))
+            } else {
+                let size = (*length)
+                    .try_into()
+                    .map_err(|_| Error::OperationError("Can't get size of array"))?;
+                Ok(std::slice::from_raw_parts(result as *mut u8, size))
+            }
+        }
+    }
+
+    // pub fn map_blob(&'a self) -> Result<&'a VipsBlob> {
+    //     unsafe {
+    //         let result = bindings::vips_source_map_blob(self.ctx);
+    //         if result.is_null() {
+    //             Err(Error::OperationError("Error on vips map blob"))
+    //         } else {
+    //             Ok(&VipsBlob { ctx: result })
+    //         }
+    //     }
+    // }
+}
+
+impl VipsTarget {
+    pub fn new_to_descriptor(descriptor: i32) -> Result<Self> {
+        unsafe {
+            let res = bindings::vips_target_new_to_descriptor(descriptor);
+            vips_target_result(
+                res,
+                Error::InitializationError("Could not initialise VipsTarget from descriptor"),
+            )
+        }
+    }
+
+    pub fn new_to_file(filename: &str) -> Result<Self> {
+        unsafe {
+            let f = utils::new_c_string(filename)?;
+            let res = bindings::vips_target_new_to_file(f.as_ptr());
+            vips_target_result(
+                res,
+                Error::InitializationError("Could not initialise VipsTarget from file"),
+            )
+        }
+    }
+
+    pub fn new_to_memory() -> Result<Self> {
+        unsafe {
+            let res = bindings::vips_target_new_to_memory();
+            vips_target_result(
+                res,
+                Error::InitializationError("Could not initialise VipsTarget from memory"),
+            )
+        }
+    }
+
+    pub fn write(&mut self, buffer: &[u8]) -> Result<()> {
+        unsafe {
+            let res = bindings::vips_target_write(
+                self.ctx,
+                buffer.as_ptr() as *const c_void,
+                buffer.len() as u64,
+            );
+            if res == -1 {
+                Err(Error::OperationError("Could not write to buffer"))
+            } else {
+                Ok(())
+            }
+        }
+    }
+
+    pub fn finish(self) {
+        unsafe {
+            bindings::vips_target_finish(self.ctx);
+        }
+    }
+
+    pub fn putc(&mut self, ch: char) -> Result<()> {
+        unsafe {
+            let res = bindings::vips_target_putc(self.ctx, ch as i32);
+            if res == -1 {
+                Err(Error::OperationError("Could not write to buffer"))
+            } else {
+                Ok(())
+            }
+        }
+    }
+
+    pub fn writes(&mut self, text: &str) -> Result<()> {
+        unsafe {
+            let cstr = CString::new(text).map_err(|_| Error::OperationError("Cannot initialize C string"))?;
+            let res = bindings::vips_target_writes(self.ctx, cstr.as_ptr());
+            if res == -1 {
+                Err(Error::OperationError("Could not write to buffer"))
+            } else {
+                Ok(())
+            }
+        }
+    }
+
+    pub fn write_amp(&mut self, text: &str) -> Result<()> {
+        unsafe {
+            let cstr = CString::new(text).map_err(|_| Error::OperationError("Cannot initialize C string"))?;
+            let res = bindings::vips_target_write_amp(self.ctx, cstr.as_ptr());
+            if res == -1 {
+                Err(Error::OperationError("Could not write to buffer"))
+            } else {
+                Ok(())
+            }
+        }
+    }
+}
+
 unsafe fn vips_image_result(res: *mut bindings::VipsImage, err: Error) -> Result<VipsImage> {
     if res.is_null() {
         Err(err)
     } else {
         Ok(VipsImage { ctx: res })
+    }
+}
+
+unsafe fn vips_source_result(res: *mut bindings::VipsSource, err: Error) -> Result<VipsSource> {
+    if res.is_null() {
+        Err(err)
+    } else {
+        Ok(VipsSource { ctx: res })
+    }
+}
+
+unsafe fn vips_target_result(res: *mut bindings::VipsTarget, err: Error) -> Result<VipsTarget> {
+    if res.is_null() {
+        Err(err)
+    } else {
+        Ok(VipsTarget { ctx: res })
     }
 }
 
@@ -534,9 +864,7 @@ impl Clone for VipsImage {
             let size = mem::size_of_val(&*self.ctx);
             let dest = null_mut::<bindings::VipsImage>();
             std::ptr::copy(self.ctx, dest, size);
-            VipsImage {
-                ctx: dest
-            }
+            VipsImage { ctx: dest }
         }
     }
 }
@@ -547,9 +875,7 @@ impl Clone for VipsBlob {
             let size = mem::size_of_val(&*self.ctx);
             let dest = null_mut::<bindings::VipsBlob>();
             std::ptr::copy(self.ctx, dest, size);
-            VipsBlob {
-                ctx: dest
-            }
+            VipsBlob { ctx: dest }
         }
     }
 }
@@ -560,9 +886,7 @@ impl Clone for VipsInterpolate {
             let size = mem::size_of_val(&*self.ctx);
             let dest = null_mut::<bindings::VipsInterpolate>();
             std::ptr::copy(self.ctx, dest, size);
-            VipsInterpolate {
-                ctx: dest
-            }
+            VipsInterpolate { ctx: dest }
         }
     }
 }
@@ -588,6 +912,36 @@ impl Drop for VipsInterpolate {
 }
 
 impl Drop for VipsBlob {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.ctx.is_null() {
+                bindings::g_object_unref(self.ctx as *mut c_void);
+            }
+        }
+    }
+}
+
+impl Drop for VipsConnection {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.ctx.is_null() {
+                bindings::g_object_unref(self.ctx as *mut c_void);
+            }
+        }
+    }
+}
+
+impl Drop for VipsSource {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.ctx.is_null() {
+                bindings::g_object_unref(self.ctx as *mut c_void);
+            }
+        }
+    }
+}
+
+impl Drop for VipsTarget {
     fn drop(&mut self) {
         unsafe {
             if !self.ctx.is_null() {

@@ -1,3 +1,4 @@
+// (c) Copyright 2019-2020 OLX
 use inflector::Inflector;
 use std::env;
 use std::fs::File;
@@ -450,19 +451,11 @@ impl Parameter {
                 self.param_type.vips_in_type(false),
                 self.name
             ),
-            ParamType::VipsInterpolate => format!(
-                "let {}_in: {} = {}.ctx;",
-                self.name,
-                self.param_type.vips_in_type(false),
-                self.name
-            ),
-            ParamType::VipsImage { .. } => format!(
-                "let {}_in: {} = {}.ctx;",
-                self.name,
-                self.param_type.vips_in_type(false),
-                self.name
-            ),
-            ParamType::VipsBlob => format!(
+            ParamType::VipsBlob
+            | ParamType::VipsImage { .. }
+            | ParamType::VipsSource
+            | ParamType::VipsTarget
+            | ParamType::VipsInterpolate => format!(
                 "let {}_in: {} = {}.ctx;",
                 self.name,
                 self.param_type.vips_in_type(false),
@@ -516,15 +509,17 @@ impl Parameter {
                 opt_name,
                 self.name
             ),
-            ParamType::VipsBlob | ParamType::VipsImage { .. } | ParamType::VipsInterpolate => {
-                format!(
-                    "let {}_in: {} = {}_options.{}.ctx;",
-                    self.name,
-                    self.param_type.vips_in_type(true),
-                    opt_name,
-                    self.name
-                )
-            }
+            ParamType::VipsBlob
+            | ParamType::VipsImage { .. }
+            | ParamType::VipsSource
+            | ParamType::VipsTarget
+            | ParamType::VipsInterpolate => format!(
+                "let {}_in: {} = {}_options.{}.ctx;",
+                self.name,
+                self.param_type.vips_in_type(true),
+                opt_name,
+                self.name
+            ),
             ParamType::Enum { .. } => format!(
                 "let {}_in: {} = {}_options.{} as i32;",
                 self.name,
@@ -632,6 +627,8 @@ enum ParamType {
     ArrayImage,
     ArrayByte,
     VipsInterpolate,
+    VipsSource,
+    VipsTarget,
     VipsImage {
         prev: Option<String>,
     },
@@ -681,6 +678,8 @@ impl ParamType {
             ParamType::ArrayImage => String::from("Vec<VipsImage>"),
             ParamType::VipsInterpolate => String::from("VipsInterpolate"),
             ParamType::VipsImage { .. } => String::from("VipsImage"),
+            ParamType::VipsSource => String::from("VipsSource"),
+            ParamType::VipsTarget => String::from("VipsTarget"),
             ParamType::VipsBlob => String::from("Vec<u8>"),
             ParamType::Enum { name, .. } => Self::enum_name(name),
         }
@@ -699,6 +698,8 @@ impl ParamType {
             ParamType::ArrayImage => String::from("&mut [VipsImage]"),
             ParamType::VipsInterpolate => String::from("&VipsInterpolate"),
             ParamType::VipsImage { .. } => String::from("&VipsImage"),
+            ParamType::VipsSource => String::from("&VipsSource"),
+            ParamType::VipsTarget => String::from("&VipsTarget"),
             ParamType::VipsBlob => String::from("&[u8]"),
             ParamType::Enum { name, .. } => Self::enum_name(name),
         }
@@ -744,6 +745,8 @@ impl ParamType {
             }
             ParamType::VipsInterpolate => String::from("*mut bindings::VipsInterpolate"),
             ParamType::VipsImage { .. } => String::from("*mut bindings::VipsImage"),
+            ParamType::VipsSource => String::from("*mut bindings::VipsSource"),
+            ParamType::VipsTarget => String::from("*mut bindings::VipsTarget"),
             ParamType::VipsBlob => String::from("*mut bindings::VipsBlob"),
             ParamType::Enum { .. } => String::from("i32"),
         }
@@ -762,6 +765,8 @@ impl ParamType {
             ParamType::ArrayImage => String::from("*mut bindings::VipsImage"),
             ParamType::VipsInterpolate => String::from("*mut bindings::VipsInterpolate"),
             ParamType::VipsImage { .. } => String::from("*mut bindings::VipsImage"),
+            ParamType::VipsSource => String::from("*mut bindings::VipsSource"),
+            ParamType::VipsTarget => String::from("*mut bindings::VipsTarget"),
             ParamType::VipsBlob => String::from("*mut bindings::VipsBlob"),
             ParamType::Enum { .. } => String::from("*mut i32"),
         }
@@ -780,6 +785,8 @@ impl ParamType {
             ParamType::ArrayImage => String::from("Vec::new()"),
             ParamType::VipsInterpolate => String::from("VipsInterpolate::new()"),
             ParamType::VipsImage { .. } => String::from("VipsImage::new()"),
+            ParamType::VipsSource => String::from("VipsSource::new()"),
+            ParamType::VipsTarget => String::from("VipsTarget::new()"),
             ParamType::VipsBlob => String::from("Vec::new()"),
             ParamType::Enum {
                 name,
@@ -898,6 +905,10 @@ fn parse_param(param_list: Vec<&str>, order: u8, prev: Option<String>) -> (bool,
         ParamType::VipsBlob
     } else if param_list[3].starts_with("VipsInterpolate") {
         ParamType::VipsInterpolate
+    } else if param_list[3].starts_with("VipsSource") {
+        ParamType::VipsSource
+    } else if param_list[3].starts_with("VipsTarget") {
+        ParamType::VipsTarget
     } else if param_list[3].starts_with("bool") {
         let default = param_list[3].split(':').collect::<Vec<&str>>()[1] == "1";
         ParamType::Bool { default }
@@ -1166,6 +1177,10 @@ fn main() {
         "crop",
         "VipsLinear",
         "VipsGetpoint",
+        "VipsCase",
+        // TODO: remove after a new version from libvips is generated including those functions in the C library
+        "VipsForeignLoadJpegSource",
+        "VipsForeignLoadSvgSource",
     ];
 
     println!("cargo:rustc-link-lib=vips");
@@ -1212,9 +1227,7 @@ fn main() {
         .flag("-g")
         .get_compiler()
         .to_command();
-    let result = cc_cmd
-        .arg("introspect.c")
-        .status();
+    let result = cc_cmd.arg("introspect.c").status();
     if result.is_ok() && !result.unwrap().success() {
         let mut cmd = Command::new("./compile.sh");
         let res = cmd.status().expect("Couldn't compile introspect.c");
@@ -1273,12 +1286,15 @@ fn main() {
         .expect("Couldn't write bindings!");
     let ops_content = format!(
         r#"
+    // (c) Copyright 2019-2020 OLX
     use std::ffi::*;
     use std::ptr::null_mut;
     use std::convert::TryInto;
     use crate::bindings;
     use crate::utils;
     use crate::VipsImage;
+    use crate::VipsSource;
+    use crate::VipsTarget;
     use crate::VipsInterpolate;
     use crate::VipsBlob;
     use crate::error::*;
@@ -1299,8 +1315,10 @@ fn main() {
     #[derive(Debug)]
     pub enum Error {{
         InitializationError(&'static str),
+        OperationError(&'static str),
         IOError(&'static str),
         LinearError,
+        CaseError,
         GetpointError,
         {}
     }}
@@ -1309,8 +1327,10 @@ fn main() {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {{
             match self {{
                 Error::InitializationError(msg) => write!(f, "vips error: InitializationError - {{}}", msg),
+                Error::OperationError(msg) => write!(f, "vips error: OperationError - {{}}", msg),
                 Error::IOError(msg) => write!(f, "vips error: IOError - {{}}", msg),
                 Error::LinearError => write!(f, "vips error: LinearError. Check error buffer for more details"),
+                Error::CaseError => write!(f, "vips error: CaseError. Check error buffer for more details"),
                 Error::GetpointError => write!(f, "vips error: GetpointError. Check error buffer for more details"),
                 {}
             }}

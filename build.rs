@@ -1,4 +1,4 @@
-
+// (c) Copyright 2019-2020 OLX
 fn main() {
     println!("cargo:rustc-link-lib=vips");
     println!("cargo:rustc-link-lib=glib-2.0");

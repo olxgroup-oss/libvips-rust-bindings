@@ -1,3 +1,4 @@
+# (c) Copyright 2019-2020 OLX
 [package]
 name = "libvips-bindings"
 description = "Safe bindings for libvips"

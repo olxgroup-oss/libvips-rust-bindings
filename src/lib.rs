@@ -1,3 +1,4 @@
+// (c) Copyright 2019-2020 OLX
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
@@ -203,6 +204,12 @@ impl VipsApp {
     pub fn tracked_get_allocs(&self) -> i32 {
         unsafe {
             bindings::vips_tracked_get_allocs()
+        }
+    }
+
+    pub fn pipe_read_limit_set(&self, limit: i64) {
+        unsafe {
+            bindings::vips_pipe_read_limit_set(limit);
         }
     }
 }

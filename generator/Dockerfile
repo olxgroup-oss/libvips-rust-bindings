@@ -1,6 +1,7 @@
-FROM rust:1.41-alpine3.11
+# (c) Copyright 2019-2020 OLX
+FROM rust:1.45-alpine3.12
 
-ENV VIPS_VERSION=8.9.1
+ENV VIPS_VERSION=8.10.0
 
 RUN apk add --update --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
             build-base \
@@ -47,4 +48,4 @@ RUN rm -rf vips
 
 RUN rm -f vips-${VIPS_VERSION}.tar.gz
 
-RUN rustup component add rustfmt --toolchain 1.41.0-x86_64-unknown-linux-musl
+RUN rustup component add rustfmt --toolchain 1.45.2-x86_64-unknown-linux-musl

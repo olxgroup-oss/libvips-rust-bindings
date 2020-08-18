@@ -1,3 +1,4 @@
+// (c) Copyright 2019-2020 OLX
 /* vips8 introspection
  *
  * compile with:
@@ -37,10 +38,6 @@ show_argument(GParamSpec * pspec, VipsArgumentClass * argument_class) {
         (oclass = g_type_class_ref(otype))) {
         const char * name;
         name = g_type_name(otype);
-        if (strncmp(name, "VipsInterpolate", 100) != 0) {
-            printf("Object %s not mapped!!!", name);
-            vips_error_exit(NULL);
-        }
         printf("%s-%s\n", name, oclass->description);
     } else if (G_IS_PARAM_SPEC_BOOLEAN(pspec)) {
         GParamSpecBoolean * pspec_bool = G_PARAM_SPEC_BOOLEAN(pspec);
