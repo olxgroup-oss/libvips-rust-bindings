@@ -8,7 +8,7 @@ checksum = "1d49d90015b3c36167a20fe2810c5cd875ad504b39cff3d4eae7977e6b7c1cb2"
 
 [[package]]
 name = "libvips"
-version = "1.4.0"
+version = "1.4.1"
 dependencies = [
  "num-derive",
  "num-traits",
