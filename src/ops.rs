@@ -1016,11 +1016,17 @@ pub fn complexform(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
 /// returns `VipsImage` - Output image
 pub fn sum(inp: &mut [VipsImage]) -> Result<VipsImage> {
     unsafe {
-        let inp_in: *mut *mut bindings::VipsImage =
-            inp.iter().map(|v| v.ctx).collect::<Vec<_>>().as_mut_ptr();
+        let (inp_len, mut inp_in) = {
+            let len = inp.len();
+            let mut input = Vec::new();
+            for img in inp {
+                input.push(img.ctx)
+            }
+            (len as i32, input)
+        };
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
-        let vips_op_response = bindings::vips_sum(inp_in, &mut out_out, inp.len() as i32, NULL);
+        let vips_op_response = bindings::vips_sum(inp_in.as_mut_ptr(), &mut out_out, inp_len, NULL);
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
@@ -3145,12 +3151,18 @@ pub fn join_with_opts(
 /// returns `VipsImage` - Output image
 pub fn arrayjoin(inp: &mut [VipsImage]) -> Result<VipsImage> {
     unsafe {
-        let inp_in: *mut *mut bindings::VipsImage =
-            inp.iter().map(|v| v.ctx).collect::<Vec<_>>().as_mut_ptr();
+        let (inp_len, mut inp_in) = {
+            let len = inp.len();
+            let mut input = Vec::new();
+            for img in inp {
+                input.push(img.ctx)
+            }
+            (len as i32, input)
+        };
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
         let vips_op_response =
-            bindings::vips_arrayjoin(inp_in, &mut out_out, inp.len() as i32, NULL);
+            bindings::vips_arrayjoin(inp_in.as_mut_ptr(), &mut out_out, inp_len, NULL);
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
@@ -3213,8 +3225,14 @@ pub fn arrayjoin_with_opts(
     arrayjoin_options: &ArrayjoinOptions,
 ) -> Result<VipsImage> {
     unsafe {
-        let inp_in: *mut *mut bindings::VipsImage =
-            inp.iter().map(|v| v.ctx).collect::<Vec<_>>().as_mut_ptr();
+        let (inp_len, mut inp_in) = {
+            let len = inp.len();
+            let mut input = Vec::new();
+            for img in inp {
+                input.push(img.ctx)
+            }
+            (len as i32, input)
+        };
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
         let across_in: i32 = arrayjoin_options.across;
@@ -3241,9 +3259,9 @@ pub fn arrayjoin_with_opts(
         let vspacing_in_name = utils::new_c_string("vspacing")?;
 
         let vips_op_response = bindings::vips_arrayjoin(
-            inp_in,
+            inp_in.as_mut_ptr(),
             &mut out_out,
-            inp.len() as i32,
+            inp_len,
             across_in_name.as_ptr(),
             across_in,
             shim_in_name.as_ptr(),
@@ -3472,12 +3490,18 @@ pub fn extract_band_with_opts(
 /// returns `VipsImage` - Output image
 pub fn bandjoin(inp: &mut [VipsImage]) -> Result<VipsImage> {
     unsafe {
-        let inp_in: *mut *mut bindings::VipsImage =
-            inp.iter().map(|v| v.ctx).collect::<Vec<_>>().as_mut_ptr();
+        let (inp_len, mut inp_in) = {
+            let len = inp.len();
+            let mut input = Vec::new();
+            for img in inp {
+                input.push(img.ctx)
+            }
+            (len as i32, input)
+        };
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
         let vips_op_response =
-            bindings::vips_bandjoin(inp_in, &mut out_out, inp.len() as i32, NULL);
+            bindings::vips_bandjoin(inp_in.as_mut_ptr(), &mut out_out, inp_len, NULL);
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
@@ -3511,12 +3535,18 @@ pub fn bandjoin_const(inp: &VipsImage, c: &mut [f64]) -> Result<VipsImage> {
 /// returns `VipsImage` - Output image
 pub fn bandrank(inp: &mut [VipsImage]) -> Result<VipsImage> {
     unsafe {
-        let inp_in: *mut *mut bindings::VipsImage =
-            inp.iter().map(|v| v.ctx).collect::<Vec<_>>().as_mut_ptr();
+        let (inp_len, mut inp_in) = {
+            let len = inp.len();
+            let mut input = Vec::new();
+            for img in inp {
+                input.push(img.ctx)
+            }
+            (len as i32, input)
+        };
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
         let vips_op_response =
-            bindings::vips_bandrank(inp_in, &mut out_out, inp.len() as i32, NULL);
+            bindings::vips_bandrank(inp_in.as_mut_ptr(), &mut out_out, inp_len, NULL);
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },
@@ -3550,17 +3580,23 @@ pub fn bandrank_with_opts(
     bandrank_options: &BandrankOptions,
 ) -> Result<VipsImage> {
     unsafe {
-        let inp_in: *mut *mut bindings::VipsImage =
-            inp.iter().map(|v| v.ctx).collect::<Vec<_>>().as_mut_ptr();
+        let (inp_len, mut inp_in) = {
+            let len = inp.len();
+            let mut input = Vec::new();
+            for img in inp {
+                input.push(img.ctx)
+            }
+            (len as i32, input)
+        };
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
         let index_in: i32 = bandrank_options.index;
         let index_in_name = utils::new_c_string("index")?;
 
         let vips_op_response = bindings::vips_bandrank(
-            inp_in,
+            inp_in.as_mut_ptr(),
             &mut out_out,
-            inp.len() as i32,
+            inp_len,
             index_in_name.as_ptr(),
             index_in,
             NULL,
@@ -4805,15 +4841,21 @@ pub fn gamma_with_opts(inp: &VipsImage, gamma_options: &GammaOptions) -> Result<
 /// returns `VipsImage` - Output image
 pub fn composite(inp: &mut [VipsImage], mode: &mut [i32]) -> Result<VipsImage> {
     unsafe {
-        let inp_in: *mut *mut bindings::VipsImage =
-            inp.iter().map(|v| v.ctx).collect::<Vec<_>>().as_mut_ptr();
+        let (inp_len, mut inp_in) = {
+            let len = inp.len();
+            let mut input = Vec::new();
+            for img in inp {
+                input.push(img.ctx)
+            }
+            (len as i32, input)
+        };
         let mode_in: *mut i32 = mode.as_mut_ptr();
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
         let vips_op_response = bindings::vips_composite(
-            inp_in,
+            inp_in.as_mut_ptr(),
             &mut out_out,
-            inp.len() as i32,
+            inp_len,
             mode_in,
             mode.len() as i32,
             NULL,
@@ -4883,8 +4925,14 @@ pub fn composite_with_opts(
     composite_options: &CompositeOptions,
 ) -> Result<VipsImage> {
     unsafe {
-        let inp_in: *mut *mut bindings::VipsImage =
-            inp.iter().map(|v| v.ctx).collect::<Vec<_>>().as_mut_ptr();
+        let (inp_len, mut inp_in) = {
+            let len = inp.len();
+            let mut input = Vec::new();
+            for img in inp {
+                input.push(img.ctx)
+            }
+            (len as i32, input)
+        };
         let mode_in: *mut i32 = mode.as_mut_ptr();
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
@@ -4907,9 +4955,9 @@ pub fn composite_with_opts(
         let premultiplied_in_name = utils::new_c_string("premultiplied")?;
 
         let vips_op_response = bindings::vips_composite(
-            inp_in,
+            inp_in.as_mut_ptr(),
             &mut out_out,
-            inp.len() as i32,
+            inp_len,
             mode_in,
             mode.len() as i32,
             x_in_name.as_ptr(),
@@ -7859,12 +7907,18 @@ pub fn perlin_with_opts(
 /// returns `VipsImage` - Output image
 pub fn switch(tests: &mut [VipsImage]) -> Result<VipsImage> {
     unsafe {
-        let tests_in: *mut *mut bindings::VipsImage =
-            tests.iter().map(|v| v.ctx).collect::<Vec<_>>().as_mut_ptr();
+        let (tests_len, mut tests_in) = {
+            let len = tests.len();
+            let mut input = Vec::new();
+            for img in tests {
+                input.push(img.ctx)
+            }
+            (len as i32, input)
+        };
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
         let vips_op_response =
-            bindings::vips_switch(tests_in, &mut out_out, tests.len() as i32, NULL);
+            bindings::vips_switch(tests_in.as_mut_ptr(), &mut out_out, tests_len, NULL);
         utils::result(
             vips_op_response,
             VipsImage { ctx: out_out },

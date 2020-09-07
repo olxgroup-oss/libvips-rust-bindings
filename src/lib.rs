@@ -8,7 +8,7 @@
 extern crate num_derive;
 extern crate num_traits;
 
-mod bindings;
+pub mod bindings;
 pub mod error;
 mod image;
 pub mod ops;

@@ -164,7 +164,7 @@ impl Operation {
                             format!("&mut {}_out, &mut {}_array_size", p.name, p.name)
                         }
                         ParamType::VipsImage { prev: Some(prev) } => {
-                            format!("&mut {}_out, {}.len() as i32", p.name, prev)
+                            format!("&mut {}_out, {}_len", p.name, prev)
                         }
                         _ => format!("&mut {}_out", p.name),
                     }
@@ -173,7 +173,7 @@ impl Operation {
                         ParamType::ArrayInt | ParamType::ArrayDouble => {
                             format!("{}_in, {}.len() as i32", p.name, p.name)
                         }
-                        ParamType::ArrayImage => format!("{}_in", p.name),
+                        ParamType::ArrayImage => format!("{}_in.as_mut_ptr()", p.name),
                         ParamType::ArrayByte => format!("{}_in, {}.len() as u64", p.name, p.name),
                         ParamType::Enum { .. } => format!("{}_in.try_into().unwrap()", p.name),
                         ParamType::Str => format!("{}_in.as_ptr()", p.name),
@@ -446,9 +446,10 @@ impl Parameter {
                 self.param_type.vips_in_type(false)
             ),
             ParamType::ArrayImage => format!(
-                "let {}_in: {} = {}.iter().map(|v| v.ctx).collect::<Vec<_>>().as_mut_ptr();",
+                "let ({}_len, mut {}_in) = {{ let len = {}.len(); let mut input = Vec::new(); for img in {} {{ input.push(img.ctx) }} (len as i32, input) }};",
                 self.name,
-                self.param_type.vips_in_type(false),
+                self.name,
+                self.name,
                 self.name
             ),
             ParamType::VipsBlob

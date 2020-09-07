@@ -257,7 +257,7 @@ pub const G_GINTPTR_FORMAT: &'static [u8; 3usize] = b"li\0";
 pub const G_GUINTPTR_FORMAT: &'static [u8; 3usize] = b"lu\0";
 pub const GLIB_MAJOR_VERSION: u32 = 2;
 pub const GLIB_MINOR_VERSION: u32 = 64;
-pub const GLIB_MICRO_VERSION: u32 = 4;
+pub const GLIB_MICRO_VERSION: u32 = 5;
 pub const G_VA_COPY_AS_ARRAY: u32 = 1;
 pub const G_HAVE_ISO_VARARGS: u32 = 1;
 pub const G_HAVE_GROWING_STACK: u32 = 0;
@@ -1042,11 +1042,11 @@ pub const VIPS_PATH_MAX: u32 = 4096;
 pub const VIPS_TARGET_BUFFER_SIZE: u32 = 8500;
 pub const VIPS_TARGET_CUSTOM_BUFFER_SIZE: u32 = 4096;
 pub const VIPS_SBUF_BUFFER_SIZE: u32 = 4096;
-pub const VIPS_VERSION: &'static [u8; 7usize] = b"8.10.0\0";
-pub const VIPS_VERSION_STRING: &'static [u8; 36usize] = b"8.10.0-Sat Jul 18 13:45:47 UTC 2020\0";
+pub const VIPS_VERSION: &'static [u8; 7usize] = b"8.10.1\0";
+pub const VIPS_VERSION_STRING: &'static [u8; 36usize] = b"8.10.1-Fri Sep  4 11:40:49 UTC 2020\0";
 pub const VIPS_MAJOR_VERSION: u32 = 8;
 pub const VIPS_MINOR_VERSION: u32 = 10;
-pub const VIPS_MICRO_VERSION: u32 = 0;
+pub const VIPS_MICRO_VERSION: u32 = 1;
 pub const VIPS_LIBRARY_CURRENT: u32 = 54;
 pub const VIPS_LIBRARY_REVISION: u32 = 3;
 pub const VIPS_LIBRARY_AGE: u32 = 12;
@@ -61920,14 +61920,14 @@ pub const VipsAccess_VIPS_ACCESS_LAST: VipsAccess = 3;
 pub type VipsAccess = u32;
 pub type VipsStartFn = ::std::option::Option<
     unsafe extern "C" fn(
-        out: *mut _VipsImage,
+        out: *mut VipsImage,
         a: *mut ::std::os::raw::c_void,
         b: *mut ::std::os::raw::c_void,
     ) -> *mut ::std::os::raw::c_void,
 >;
 pub type VipsGenerateFn = ::std::option::Option<
     unsafe extern "C" fn(
-        out: *mut _VipsRegion,
+        out: *mut VipsRegion,
         seq: *mut ::std::os::raw::c_void,
         a: *mut ::std::os::raw::c_void,
         b: *mut ::std::os::raw::c_void,
@@ -61944,7 +61944,7 @@ pub type VipsStopFn = ::std::option::Option<
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct _VipsProgress {
-    pub im: *mut _VipsImage,
+    pub im: *mut VipsImage,
     pub run: ::std::os::raw::c_int,
     pub eta: ::std::os::raw::c_int,
     pub tpels: gint64,
@@ -62083,7 +62083,7 @@ pub struct _VipsImage {
     pub downstream: *mut GSList,
     pub serial: ::std::os::raw::c_int,
     pub history_list: *mut GSList,
-    pub progress_signal: *mut _VipsImage,
+    pub progress_signal: *mut VipsImage,
     pub file_length: gint64,
     pub hint_set: gboolean,
     pub delete_on_close: gboolean,
@@ -63008,7 +63008,7 @@ extern "C" {
 extern "C" {
     pub fn vips_reorder_prepare_many(
         image: *mut VipsImage,
-        regions: *mut *mut _VipsRegion,
+        regions: *mut *mut VipsRegion,
         r: *mut VipsRect,
     ) -> ::std::os::raw::c_int;
 }
