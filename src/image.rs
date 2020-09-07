@@ -9,7 +9,6 @@ use num_traits::{FromPrimitive, ToPrimitive};
 use std::borrow::Cow;
 use std::convert::TryInto;
 use std::ffi::*;
-use std::mem;
 use std::ptr::null_mut;
 
 const NULL: *const c_void = null_mut();
