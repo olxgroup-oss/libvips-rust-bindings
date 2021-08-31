@@ -453,6 +453,16 @@ impl VipsImage {
         }
     }
 
+    pub fn image_write_to_memory(&self) -> Vec<u8> {
+        unsafe {
+            let mut buffer_buf_size: u64 = 0;
+            let buffer_out = bindings::vips_image_write_to_memory(self.ctx, &mut buffer_buf_size);
+            let buf = std::slice::from_raw_parts(buffer_out as *mut u8, buffer_buf_size as usize).to_vec();
+            bindings::g_free(buffer_out);
+            buf
+        }
+    }
+
     pub fn image_decode_predict(&self) -> Result<(i32, BandFormat)> {
         unsafe {
             let mut out_bands = 0;
