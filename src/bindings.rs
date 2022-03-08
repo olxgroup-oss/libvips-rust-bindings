@@ -257,7 +257,7 @@ pub const G_GINTPTR_FORMAT: &'static [u8; 3usize] = b"li\0";
 pub const G_GUINTPTR_FORMAT: &'static [u8; 3usize] = b"lu\0";
 pub const GLIB_MAJOR_VERSION: u32 = 2;
 pub const GLIB_MINOR_VERSION: u32 = 64;
-pub const GLIB_MICRO_VERSION: u32 = 5;
+pub const GLIB_MICRO_VERSION: u32 = 6;
 pub const G_VA_COPY_AS_ARRAY: u32 = 1;
 pub const G_HAVE_ISO_VARARGS: u32 = 1;
 pub const G_HAVE_GROWING_STACK: u32 = 0;
@@ -1042,15 +1042,15 @@ pub const VIPS_PATH_MAX: u32 = 4096;
 pub const VIPS_TARGET_BUFFER_SIZE: u32 = 8500;
 pub const VIPS_TARGET_CUSTOM_BUFFER_SIZE: u32 = 4096;
 pub const VIPS_SBUF_BUFFER_SIZE: u32 = 4096;
-pub const VIPS_VERSION: &'static [u8; 7usize] = b"8.10.1\0";
-pub const VIPS_VERSION_STRING: &'static [u8; 36usize] = b"8.10.1-Fri Sep  4 11:40:49 UTC 2020\0";
+pub const VIPS_VERSION: &'static [u8; 7usize] = b"8.11.0\0";
+pub const VIPS_VERSION_STRING: &'static [u8; 36usize] = b"8.11.0-Wed Jun  9 18:20:35 UTC 2021\0";
 pub const VIPS_MAJOR_VERSION: u32 = 8;
-pub const VIPS_MINOR_VERSION: u32 = 10;
-pub const VIPS_MICRO_VERSION: u32 = 1;
-pub const VIPS_LIBRARY_CURRENT: u32 = 54;
-pub const VIPS_LIBRARY_REVISION: u32 = 3;
-pub const VIPS_LIBRARY_AGE: u32 = 12;
-pub const VIPS_CONFIG : & 'static [ u8 ; 1204usize ] = b"native win32: no, native OS X: no, open files in binary mode: no, enable debug: no, enable deprecated library components: yes, enable docs with gtkdoc: no, gobject introspection: yes, enable radiance support: yes, enable analyze support: yes, enable PPM support: yes, use fftw3 for FFT: yes, Magick package: none, Magick API version: none, load with libMagick: no, save with libMagick: no, accelerate loops with orc: yes, ICC profile support with lcms: yes (lcms2), file import with niftiio: no, file import with libheif: yes, file import with OpenEXR: no, file import with OpenSlide: no, file import with matio: no, PDF import with PDFium: no, PDF import with poppler-glib: no, SVG import with librsvg-2.0: yes, zlib: yes, file import with cfitsio: no, file import/export with libwebp: yes, text rendering with pangoft2: yes, file import/export with libspng: no, file import/export with libpng: yes (pkg-config libpng >= 1.2.9), support 8bpp PNG quantisation: yes, file import/export with libtiff: yes (pkg-config libtiff-4), file import/export with giflib: yes (found by search), file import/export with libjpeg: yes (pkg-config), image pyramid export: yes, use libexif to load/save JPEG metadata: yes\0" ;
+pub const VIPS_MINOR_VERSION: u32 = 11;
+pub const VIPS_MICRO_VERSION: u32 = 0;
+pub const VIPS_LIBRARY_CURRENT: u32 = 55;
+pub const VIPS_LIBRARY_REVISION: u32 = 0;
+pub const VIPS_LIBRARY_AGE: u32 = 13;
+pub const VIPS_CONFIG : & 'static [ u8 ; 1317usize ] = b"enable debug: no, enable deprecated library components: yes, enable modules: yes, enable docs with gtkdoc: no, gobject introspection:  yes, RAD load/save: yes, Analyze7 load/save: yes, PPM load/save: yes, GIF load:  yes, generate C++ docs: no, use fftw3 for FFT: yes, accelerate loops with orc: yes, ICC profile support with lcms: yes (lcms2), zlib: yes, text rendering with pangocairo: yes, font file support with fontconfig: yes, EXIF metadata support with libexif: yes, JPEG load/save with libjpeg: yes (pkg-config), JXL load/save with libjxl: no (dynamic module: no), JPEG2000 load/save with libopenjp2: no, PNG load with libspng: no, PNG load/save with libpng: yes (pkg-config libpng >= 1.2.9), 8bpp PNG quantisation: yes, TIFF load/save with libtiff: yes (pkg-config libtiff-4), image pyramid save: yes, HEIC/AVIF load/save with libheif: yes (dynamic module: yes), WebP load/save with libwebp: yes, PDF load with PDFium:  no, PDF load with poppler-glib: no (dynamic module: no), SVG load with librsvg-2.0: yes, EXR load with OpenEXR: no, slide load with OpenSlide: no (dynamic module: no), Matlab load with matio: no, NIfTI load/save with niftiio: no, FITS load/save with cfitsio: no, Magick package: none (dynamic module: no), Magick API version: none, load with libMagickCore: no, save with libMagickCore: no\0" ;
 pub const VIPS_SONAME: &'static [u8; 14usize] = b"libvips.so.42\0";
 pub const VIPS_EXEEXT: &'static [u8; 1usize] = b"\0";
 pub const VIPS_ENABLE_DEPRECATED: u32 = 1;
@@ -60453,6 +60453,108 @@ extern "C" {
     pub fn vips_g_input_stream_new_from_source(source: *mut VipsSource) -> *mut GInputStream;
 }
 #[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub struct _VipsSourceGInputStream {
+    pub parent_instance: VipsSource,
+    pub stream: *mut GInputStream,
+    pub seekable: *mut GSeekable,
+    pub info: *mut GFileInfo,
+}
+#[test]
+fn bindgen_test_layout__VipsSourceGInputStream() {
+    assert_eq!(
+        ::std::mem::size_of::<_VipsSourceGInputStream>(),
+        208usize,
+        concat!("Size of: ", stringify!(_VipsSourceGInputStream))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<_VipsSourceGInputStream>(),
+        8usize,
+        concat!("Alignment of ", stringify!(_VipsSourceGInputStream))
+    );
+    assert_eq!(
+        unsafe {
+            &(*(::std::ptr::null::<_VipsSourceGInputStream>())).parent_instance as *const _ as usize
+        },
+        0usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(_VipsSourceGInputStream),
+            "::",
+            stringify!(parent_instance)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<_VipsSourceGInputStream>())).stream as *const _ as usize },
+        184usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(_VipsSourceGInputStream),
+            "::",
+            stringify!(stream)
+        )
+    );
+    assert_eq!(
+        unsafe {
+            &(*(::std::ptr::null::<_VipsSourceGInputStream>())).seekable as *const _ as usize
+        },
+        192usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(_VipsSourceGInputStream),
+            "::",
+            stringify!(seekable)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<_VipsSourceGInputStream>())).info as *const _ as usize },
+        200usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(_VipsSourceGInputStream),
+            "::",
+            stringify!(info)
+        )
+    );
+}
+pub type VipsSourceGInputStream = _VipsSourceGInputStream;
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub struct _VipsSourceGInputStreamClass {
+    pub parent_class: VipsSourceClass,
+}
+#[test]
+fn bindgen_test_layout__VipsSourceGInputStreamClass() {
+    assert_eq!(
+        ::std::mem::size_of::<_VipsSourceGInputStreamClass>(),
+        344usize,
+        concat!("Size of: ", stringify!(_VipsSourceGInputStreamClass))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<_VipsSourceGInputStreamClass>(),
+        8usize,
+        concat!("Alignment of ", stringify!(_VipsSourceGInputStreamClass))
+    );
+    assert_eq!(
+        unsafe {
+            &(*(::std::ptr::null::<_VipsSourceGInputStreamClass>())).parent_class as *const _
+                as usize
+        },
+        0usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(_VipsSourceGInputStreamClass),
+            "::",
+            stringify!(parent_class)
+        )
+    );
+}
+pub type VipsSourceGInputStreamClass = _VipsSourceGInputStreamClass;
+extern "C" {
+    pub fn vips_source_g_input_stream_new(stream: *mut GInputStream)
+        -> *mut VipsSourceGInputStream;
+}
+#[repr(C)]
 #[derive(Copy, Clone)]
 pub struct _VipsTarget {
     pub parent_object: VipsConnection,
@@ -63016,6 +63118,9 @@ extern "C" {
     pub fn vips_reorder_margin_hint(image: *mut VipsImage, margin: ::std::os::raw::c_int);
 }
 extern "C" {
+    pub fn vips_image_free_buffer(image: *mut VipsImage, buffer: *mut ::std::os::raw::c_void);
+}
+extern "C" {
     pub fn vips_malloc(object: *mut VipsObject, size: size_t) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
@@ -64822,6 +64927,22 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    pub fn vips_image_get_array_double(
+        image: *mut VipsImage,
+        name: *const ::std::os::raw::c_char,
+        out: *mut *mut f64,
+        n: *mut ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_image_set_array_double(
+        image: *mut VipsImage,
+        name: *const ::std::os::raw::c_char,
+        array: *const f64,
+        n: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
     pub fn vips_image_history_printf(
         image: *mut VipsImage,
         format: *const ::std::os::raw::c_char,
@@ -65691,9 +65812,23 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    pub fn vips_vipsload_source(
+        source: *mut VipsSource,
+        out: *mut *mut VipsImage,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
     pub fn vips_vipssave(
         in_: *mut VipsImage,
         filename: *const ::std::os::raw::c_char,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_vipssave_target(
+        in_: *mut VipsImage,
+        target: *mut VipsTarget,
         ...
     ) -> ::std::os::raw::c_int;
 }
@@ -65704,6 +65839,18 @@ extern "C" {
         ...
     ) -> ::std::os::raw::c_int;
 }
+extern "C" {
+    pub fn vips_openslideload_source(
+        source: *mut VipsSource,
+        out: *mut *mut VipsImage,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+pub const VipsForeignSubsample_VIPS_FOREIGN_SUBSAMPLE_AUTO: VipsForeignSubsample = 0;
+pub const VipsForeignSubsample_VIPS_FOREIGN_SUBSAMPLE_ON: VipsForeignSubsample = 1;
+pub const VipsForeignSubsample_VIPS_FOREIGN_SUBSAMPLE_OFF: VipsForeignSubsample = 2;
+pub const VipsForeignSubsample_VIPS_FOREIGN_SUBSAMPLE_LAST: VipsForeignSubsample = 3;
+pub type VipsForeignSubsample = u32;
 pub const VipsForeignJpegSubsample_VIPS_FOREIGN_JPEG_SUBSAMPLE_AUTO: VipsForeignJpegSubsample = 0;
 pub const VipsForeignJpegSubsample_VIPS_FOREIGN_JPEG_SUBSAMPLE_ON: VipsForeignJpegSubsample = 1;
 pub const VipsForeignJpegSubsample_VIPS_FOREIGN_JPEG_SUBSAMPLE_OFF: VipsForeignJpegSubsample = 2;
@@ -65720,6 +65867,13 @@ extern "C" {
     pub fn vips_jpegload_buffer(
         buf: *mut ::std::os::raw::c_void,
         len: size_t,
+        out: *mut *mut VipsImage,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_jpegload_source(
+        source: *mut VipsSource,
         out: *mut *mut VipsImage,
         ...
     ) -> ::std::os::raw::c_int;
@@ -65820,8 +65974,10 @@ pub const VipsForeignTiffCompression_VIPS_FOREIGN_TIFF_COMPRESSION_WEBP:
     VipsForeignTiffCompression = 6;
 pub const VipsForeignTiffCompression_VIPS_FOREIGN_TIFF_COMPRESSION_ZSTD:
     VipsForeignTiffCompression = 7;
-pub const VipsForeignTiffCompression_VIPS_FOREIGN_TIFF_COMPRESSION_LAST:
+pub const VipsForeignTiffCompression_VIPS_FOREIGN_TIFF_COMPRESSION_JP2K:
     VipsForeignTiffCompression = 8;
+pub const VipsForeignTiffCompression_VIPS_FOREIGN_TIFF_COMPRESSION_LAST:
+    VipsForeignTiffCompression = 9;
 pub type VipsForeignTiffCompression = u32;
 pub const VipsForeignTiffPredictor_VIPS_FOREIGN_TIFF_PREDICTOR_NONE: VipsForeignTiffPredictor = 1;
 pub const VipsForeignTiffPredictor_VIPS_FOREIGN_TIFF_PREDICTOR_HORIZONTAL:
@@ -66179,6 +66335,13 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    pub fn vips_svgload_source(
+        source: *mut VipsSource,
+        out: *mut *mut VipsImage,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
     pub fn vips_gifload(
         filename: *const ::std::os::raw::c_char,
         out: *mut *mut VipsImage,
@@ -66252,9 +66415,82 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    pub fn vips_niftiload_source(
+        source: *mut VipsSource,
+        out: *mut *mut VipsImage,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
     pub fn vips_niftisave(
         in_: *mut VipsImage,
         filename: *const ::std::os::raw::c_char,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_jp2kload(
+        filename: *const ::std::os::raw::c_char,
+        out: *mut *mut VipsImage,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_jp2kload_buffer(
+        buf: *mut ::std::os::raw::c_void,
+        len: size_t,
+        out: *mut *mut VipsImage,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_jp2kload_source(
+        source: *mut VipsSource,
+        out: *mut *mut VipsImage,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_jp2ksave(
+        in_: *mut VipsImage,
+        filename: *const ::std::os::raw::c_char,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_jp2ksave_buffer(
+        in_: *mut VipsImage,
+        buf: *mut *mut ::std::os::raw::c_void,
+        len: *mut size_t,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_jp2ksave_target(
+        in_: *mut VipsImage,
+        target: *mut VipsTarget,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_jxlload_source(
+        source: *mut VipsSource,
+        out: *mut *mut VipsImage,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_jxlload_buffer(
+        buf: *mut ::std::os::raw::c_void,
+        len: size_t,
+        out: *mut *mut VipsImage,
+        ...
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn vips_jxlload(
+        filename: *const ::std::os::raw::c_char,
+        out: *mut *mut VipsImage,
         ...
     ) -> ::std::os::raw::c_int;
 }
@@ -66360,6 +66596,9 @@ extern "C" {
 }
 extern "C" {
     pub fn vips_saveable_get_type() -> GType;
+}
+extern "C" {
+    pub fn vips_foreign_subsample_get_type() -> GType;
 }
 extern "C" {
     pub fn vips_foreign_jpeg_subsample_get_type() -> GType;
@@ -69063,22 +69302,13 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn vips_gmic(
-        in_: *mut *mut VipsImage,
-        out: *mut *mut VipsImage,
-        n: ::std::os::raw::c_int,
-        padding: ::std::os::raw::c_int,
-        x_scale: f64,
-        y_scale: f64,
-        command: *const ::std::os::raw::c_char,
-        ...
-    ) -> ::std::os::raw::c_int;
-}
-extern "C" {
     pub fn vips_init(argv0: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn vips_get_argv0() -> *const ::std::os::raw::c_char;
+}
+extern "C" {
+    pub fn vips_get_prgname() -> *const ::std::os::raw::c_char;
 }
 extern "C" {
     pub fn vips_shutdown();
