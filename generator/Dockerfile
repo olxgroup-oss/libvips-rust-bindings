@@ -3,7 +3,7 @@ FROM rust:1.45-alpine3.12
 
 ENV VIPS_VERSION=8.10.0
 
-RUN apk add --update --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
+RUN apk add --update --no-cache \
             build-base \
             pkgconfig \
             openssl-dev\
