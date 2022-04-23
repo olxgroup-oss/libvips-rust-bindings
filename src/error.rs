@@ -127,6 +127,9 @@ pub enum Error {
     RadloadError,
     RadloadBufferError,
     RadloadSourceError,
+    PdfloadError,
+    PdfloadBufferError,
+    PdfloadSourceError,
     SvgloadError,
     SvgloadBufferError,
     GifloadError,
@@ -773,6 +776,18 @@ impl std::fmt::Display for Error {
             Error::RadloadSourceError => write!(
                 f,
                 "vips error: RadloadSourceError. Check error buffer for more details"
+            ),
+            Error::PdfloadError => write!(
+                f,
+                "vips error: PdfloadError. Check error buffer for more details"
+            ),
+            Error::PdfloadBufferError => write!(
+                f,
+                "vips error: PdfloadBufferError. Check error buffer for more details"
+            ),
+            Error::PdfloadSourceError => write!(
+                f,
+                "vips error: PdfloadSourceError. Check error buffer for more details"
             ),
             Error::SvgloadError => write!(
                 f,

@@ -24,7 +24,8 @@ RUN apk add --update --no-cache \
             gobject-introspection-dev \
             fftw-dev \
             pango-dev \
-            libgsf-dev 
+            libgsf-dev \
+            poppler-dev
 
 RUN wget https://github.com/libvips/libvips/releases/download/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.gz
 

@@ -85,12 +85,11 @@ pub const G_ANALYZER_ANALYZING: u32 = 0;
 pub const FALSE: u32 = 0;
 pub const _BSD_SOURCE: u32 = 1;
 pub const _XOPEN_SOURCE: u32 = 700;
-pub const PAGESIZE: u32 = 4096;
 pub const LONG_BIT: u32 = 64;
 pub const LONG_MAX: u64 = 9223372036854775807;
 pub const LLONG_MAX: u64 = 9223372036854775807;
-pub const CHAR_MIN: i32 = -128;
-pub const CHAR_MAX: u32 = 127;
+pub const CHAR_MIN: u32 = 0;
+pub const CHAR_MAX: u32 = 255;
 pub const CHAR_BIT: u32 = 8;
 pub const SCHAR_MIN: i32 = -128;
 pub const SCHAR_MAX: u32 = 127;
@@ -140,7 +139,6 @@ pub const NL_ARGMAX: u32 = 9;
 pub const NL_MSGMAX: u32 = 32767;
 pub const NL_SETMAX: u32 = 255;
 pub const NL_TEXTMAX: u32 = 2048;
-pub const PAGE_SIZE: u32 = 4096;
 pub const NZERO: u32 = 20;
 pub const NL_LANGMAX: u32 = 32;
 pub const NL_NMAX: u32 = 16;
@@ -212,13 +210,14 @@ pub const DBL_DECIMAL_DIG: u32 = 17;
 pub const DBL_MIN_10_EXP: i32 = -307;
 pub const DBL_MAX_10_EXP: u32 = 308;
 pub const LDBL_HAS_SUBNORM: u32 = 1;
-pub const LDBL_MANT_DIG: u32 = 64;
+pub const FLT_EVAL_METHOD: u32 = 0;
+pub const LDBL_MANT_DIG: u32 = 113;
 pub const LDBL_MIN_EXP: i32 = -16381;
 pub const LDBL_MAX_EXP: u32 = 16384;
-pub const LDBL_DIG: u32 = 18;
+pub const LDBL_DIG: u32 = 33;
 pub const LDBL_MIN_10_EXP: i32 = -4931;
 pub const LDBL_MAX_10_EXP: u32 = 4932;
-pub const DECIMAL_DIG: u32 = 21;
+pub const DECIMAL_DIG: u32 = 36;
 pub const G_MINSHORT: i32 = -32768;
 pub const G_MAXSHORT: u32 = 32767;
 pub const G_MAXUSHORT: u32 = 65535;
@@ -257,8 +256,7 @@ pub const G_GINTPTR_FORMAT: &'static [u8; 3usize] = b"li\0";
 pub const G_GUINTPTR_FORMAT: &'static [u8; 3usize] = b"lu\0";
 pub const GLIB_MAJOR_VERSION: u32 = 2;
 pub const GLIB_MINOR_VERSION: u32 = 64;
-pub const GLIB_MICRO_VERSION: u32 = 5;
-pub const G_VA_COPY_AS_ARRAY: u32 = 1;
+pub const GLIB_MICRO_VERSION: u32 = 6;
 pub const G_HAVE_ISO_VARARGS: u32 = 1;
 pub const G_HAVE_GROWING_STACK: u32 = 0;
 pub const G_HAVE_GNUC_VISIBILITY: u32 = 1;
@@ -320,8 +318,19 @@ pub const SI_TIMER: i32 = -2;
 pub const SI_QUEUE: i32 = -1;
 pub const SI_USER: u32 = 0;
 pub const SI_KERNEL: u32 = 128;
-pub const MINSIGSTKSZ: u32 = 2048;
-pub const SIGSTKSZ: u32 = 8192;
+pub const MINSIGSTKSZ: u32 = 6144;
+pub const SIGSTKSZ: u32 = 12288;
+pub const FPSIMD_MAGIC: u32 = 1179680769;
+pub const ESR_MAGIC: u32 = 1163088385;
+pub const EXTRA_MAGIC: u32 = 1163416577;
+pub const SVE_MAGIC: u32 = 1398162689;
+pub const SVE_VQ_BYTES: u32 = 16;
+pub const SVE_VQ_MIN: u32 = 1;
+pub const SVE_VQ_MAX: u32 = 512;
+pub const SVE_VL_MIN: u32 = 16;
+pub const SVE_VL_MAX: u32 = 8192;
+pub const SVE_NUM_ZREGS: u32 = 32;
+pub const SVE_NUM_PREGS: u32 = 16;
 pub const SA_NOCLDSTOP: u32 = 1;
 pub const SA_NOCLDWAIT: u32 = 2;
 pub const SA_SIGINFO: u32 = 4;
@@ -1042,15 +1051,15 @@ pub const VIPS_PATH_MAX: u32 = 4096;
 pub const VIPS_TARGET_BUFFER_SIZE: u32 = 8500;
 pub const VIPS_TARGET_CUSTOM_BUFFER_SIZE: u32 = 4096;
 pub const VIPS_SBUF_BUFFER_SIZE: u32 = 4096;
-pub const VIPS_VERSION: &'static [u8; 7usize] = b"8.10.1\0";
-pub const VIPS_VERSION_STRING: &'static [u8; 36usize] = b"8.10.1-Fri Sep  4 11:40:49 UTC 2020\0";
+pub const VIPS_VERSION: &'static [u8; 7usize] = b"8.10.0\0";
+pub const VIPS_VERSION_STRING: &'static [u8; 36usize] = b"8.10.0-Sat Jul 18 13:45:47 UTC 2020\0";
 pub const VIPS_MAJOR_VERSION: u32 = 8;
 pub const VIPS_MINOR_VERSION: u32 = 10;
-pub const VIPS_MICRO_VERSION: u32 = 1;
+pub const VIPS_MICRO_VERSION: u32 = 0;
 pub const VIPS_LIBRARY_CURRENT: u32 = 54;
 pub const VIPS_LIBRARY_REVISION: u32 = 3;
 pub const VIPS_LIBRARY_AGE: u32 = 12;
-pub const VIPS_CONFIG : & 'static [ u8 ; 1204usize ] = b"native win32: no, native OS X: no, open files in binary mode: no, enable debug: no, enable deprecated library components: yes, enable docs with gtkdoc: no, gobject introspection: yes, enable radiance support: yes, enable analyze support: yes, enable PPM support: yes, use fftw3 for FFT: yes, Magick package: none, Magick API version: none, load with libMagick: no, save with libMagick: no, accelerate loops with orc: yes, ICC profile support with lcms: yes (lcms2), file import with niftiio: no, file import with libheif: yes, file import with OpenEXR: no, file import with OpenSlide: no, file import with matio: no, PDF import with PDFium: no, PDF import with poppler-glib: no, SVG import with librsvg-2.0: yes, zlib: yes, file import with cfitsio: no, file import/export with libwebp: yes, text rendering with pangoft2: yes, file import/export with libspng: no, file import/export with libpng: yes (pkg-config libpng >= 1.2.9), support 8bpp PNG quantisation: yes, file import/export with libtiff: yes (pkg-config libtiff-4), file import/export with giflib: yes (found by search), file import/export with libjpeg: yes (pkg-config), image pyramid export: yes, use libexif to load/save JPEG metadata: yes\0" ;
+pub const VIPS_CONFIG : & 'static [ u8 ; 1205usize ] = b"native win32: no, native OS X: no, open files in binary mode: no, enable debug: no, enable deprecated library components: yes, enable docs with gtkdoc: no, gobject introspection: yes, enable radiance support: yes, enable analyze support: yes, enable PPM support: yes, use fftw3 for FFT: yes, Magick package: none, Magick API version: none, load with libMagick: no, save with libMagick: no, accelerate loops with orc: yes, ICC profile support with lcms: yes (lcms2), file import with niftiio: no, file import with libheif: yes, file import with OpenEXR: no, file import with OpenSlide: no, file import with matio: no, PDF import with PDFium: no, PDF import with poppler-glib: yes, SVG import with librsvg-2.0: yes, zlib: yes, file import with cfitsio: no, file import/export with libwebp: yes, text rendering with pangoft2: yes, file import/export with libspng: no, file import/export with libpng: yes (pkg-config libpng >= 1.2.9), support 8bpp PNG quantisation: yes, file import/export with libtiff: yes (pkg-config libtiff-4), file import/export with giflib: yes (found by search), file import/export with libjpeg: yes (pkg-config), image pyramid export: yes, use libexif to load/save JPEG metadata: yes\0" ;
 pub const VIPS_SONAME: &'static [u8; 14usize] = b"libvips.so.42\0";
 pub const VIPS_EXEEXT: &'static [u8; 1usize] = b"\0";
 pub const VIPS_ENABLE_DEPRECATED: u32 = 1;
@@ -1112,7 +1121,7 @@ pub const VIPS_E_Z0: f64 = 100.0;
 pub const VIPS_D3250_X0: f64 = 105.659;
 pub const VIPS_D3250_Y0: f64 = 100.0;
 pub const VIPS_D3250_Z0: f64 = 45.8501;
-pub type wchar_t = ::std::os::raw::c_int;
+pub type wchar_t = ::std::os::raw::c_uint;
 pub type size_t = ::std::os::raw::c_ulong;
 extern "C" {
     pub fn __flt_rounds() -> ::std::os::raw::c_int;
@@ -2354,7 +2363,7 @@ extern "C" {
         domain: GQuark,
         code: gint,
         format: *const gchar,
-        args: *mut __va_list_tag,
+        args: va_list,
     ) -> *mut GError;
 }
 extern "C" {
@@ -2515,12 +2524,7 @@ extern "C" {
     pub fn g_snprintf(string: *mut gchar, n: gulong, format: *const gchar, ...) -> gint;
 }
 extern "C" {
-    pub fn g_vsnprintf(
-        string: *mut gchar,
-        n: gulong,
-        format: *const gchar,
-        args: *mut __va_list_tag,
-    ) -> gint;
+    pub fn g_vsnprintf(string: *mut gchar, n: gulong, format: *const gchar, args: va_list) -> gint;
 }
 extern "C" {
     pub fn g_nullify_pointer(nullify_location: *mut gpointer);
@@ -3627,599 +3631,408 @@ fn bindgen_test_layout___sigset_t() {
 }
 pub type sigset_t = __sigset_t;
 pub type stack_t = sigaltstack;
-pub type greg_t = ::std::os::raw::c_longlong;
-pub type gregset_t = [::std::os::raw::c_longlong; 23usize];
+pub type greg_t = ::std::os::raw::c_ulong;
+pub type gregset_t = [::std::os::raw::c_ulong; 34usize];
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub struct _fpstate {
-    pub cwd: ::std::os::raw::c_ushort,
-    pub swd: ::std::os::raw::c_ushort,
-    pub ftw: ::std::os::raw::c_ushort,
-    pub fop: ::std::os::raw::c_ushort,
-    pub rip: ::std::os::raw::c_ulonglong,
-    pub rdp: ::std::os::raw::c_ulonglong,
-    pub mxcsr: ::std::os::raw::c_uint,
-    pub mxcr_mask: ::std::os::raw::c_uint,
-    pub _st: [_fpstate__bindgen_ty_1; 8usize],
-    pub _xmm: [_fpstate__bindgen_ty_2; 16usize],
-    pub padding: [::std::os::raw::c_uint; 24usize],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub struct _fpstate__bindgen_ty_1 {
-    pub significand: [::std::os::raw::c_ushort; 4usize],
-    pub exponent: ::std::os::raw::c_ushort,
-    pub padding: [::std::os::raw::c_ushort; 3usize],
+#[repr(align(16))]
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct fpregset_t {
+    pub vregs: [u128; 32usize],
+    pub fpsr: ::std::os::raw::c_uint,
+    pub fpcr: ::std::os::raw::c_uint,
 }
 #[test]
-fn bindgen_test_layout__fpstate__bindgen_ty_1() {
+fn bindgen_test_layout_fpregset_t() {
     assert_eq!(
-        ::std::mem::size_of::<_fpstate__bindgen_ty_1>(),
+        ::std::mem::size_of::<fpregset_t>(),
+        528usize,
+        concat!("Size of: ", stringify!(fpregset_t))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<fpregset_t>(),
         16usize,
-        concat!("Size of: ", stringify!(_fpstate__bindgen_ty_1))
+        concat!("Alignment of ", stringify!(fpregset_t))
     );
     assert_eq!(
-        ::std::mem::align_of::<_fpstate__bindgen_ty_1>(),
-        2usize,
-        concat!("Alignment of ", stringify!(_fpstate__bindgen_ty_1))
-    );
-    assert_eq!(
-        unsafe {
-            &(*(::std::ptr::null::<_fpstate__bindgen_ty_1>())).significand as *const _ as usize
-        },
+        unsafe { &(*(::std::ptr::null::<fpregset_t>())).vregs as *const _ as usize },
         0usize,
         concat!(
             "Offset of field: ",
-            stringify!(_fpstate__bindgen_ty_1),
+            stringify!(fpregset_t),
             "::",
-            stringify!(significand)
+            stringify!(vregs)
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate__bindgen_ty_1>())).exponent as *const _ as usize },
-        8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate__bindgen_ty_1),
-            "::",
-            stringify!(exponent)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate__bindgen_ty_1>())).padding as *const _ as usize },
-        10usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate__bindgen_ty_1),
-            "::",
-            stringify!(padding)
-        )
-    );
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub struct _fpstate__bindgen_ty_2 {
-    pub element: [::std::os::raw::c_uint; 4usize],
-}
-#[test]
-fn bindgen_test_layout__fpstate__bindgen_ty_2() {
-    assert_eq!(
-        ::std::mem::size_of::<_fpstate__bindgen_ty_2>(),
-        16usize,
-        concat!("Size of: ", stringify!(_fpstate__bindgen_ty_2))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<_fpstate__bindgen_ty_2>(),
-        4usize,
-        concat!("Alignment of ", stringify!(_fpstate__bindgen_ty_2))
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate__bindgen_ty_2>())).element as *const _ as usize },
-        0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate__bindgen_ty_2),
-            "::",
-            stringify!(element)
-        )
-    );
-}
-#[test]
-fn bindgen_test_layout__fpstate() {
-    assert_eq!(
-        ::std::mem::size_of::<_fpstate>(),
+        unsafe { &(*(::std::ptr::null::<fpregset_t>())).fpsr as *const _ as usize },
         512usize,
-        concat!("Size of: ", stringify!(_fpstate))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<_fpstate>(),
-        8usize,
-        concat!("Alignment of ", stringify!(_fpstate))
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate>())).cwd as *const _ as usize },
-        0usize,
         concat!(
             "Offset of field: ",
-            stringify!(_fpstate),
+            stringify!(fpregset_t),
             "::",
-            stringify!(cwd)
+            stringify!(fpsr)
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate>())).swd as *const _ as usize },
-        2usize,
+        unsafe { &(*(::std::ptr::null::<fpregset_t>())).fpcr as *const _ as usize },
+        516usize,
         concat!(
             "Offset of field: ",
-            stringify!(_fpstate),
+            stringify!(fpregset_t),
             "::",
-            stringify!(swd)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate>())).ftw as *const _ as usize },
-        4usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate),
-            "::",
-            stringify!(ftw)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate>())).fop as *const _ as usize },
-        6usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate),
-            "::",
-            stringify!(fop)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate>())).rip as *const _ as usize },
-        8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate),
-            "::",
-            stringify!(rip)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate>())).rdp as *const _ as usize },
-        16usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate),
-            "::",
-            stringify!(rdp)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate>())).mxcsr as *const _ as usize },
-        24usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate),
-            "::",
-            stringify!(mxcsr)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate>())).mxcr_mask as *const _ as usize },
-        28usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate),
-            "::",
-            stringify!(mxcr_mask)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate>()))._st as *const _ as usize },
-        32usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate),
-            "::",
-            stringify!(_st)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate>()))._xmm as *const _ as usize },
-        160usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate),
-            "::",
-            stringify!(_xmm)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<_fpstate>())).padding as *const _ as usize },
-        416usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(_fpstate),
-            "::",
-            stringify!(padding)
+            stringify!(fpcr)
         )
     );
 }
-pub type fpregset_t = *mut _fpstate;
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[repr(align(16))]
+#[derive(Copy, Clone)]
 pub struct sigcontext {
-    pub r8: ::std::os::raw::c_ulong,
-    pub r9: ::std::os::raw::c_ulong,
-    pub r10: ::std::os::raw::c_ulong,
-    pub r11: ::std::os::raw::c_ulong,
-    pub r12: ::std::os::raw::c_ulong,
-    pub r13: ::std::os::raw::c_ulong,
-    pub r14: ::std::os::raw::c_ulong,
-    pub r15: ::std::os::raw::c_ulong,
-    pub rdi: ::std::os::raw::c_ulong,
-    pub rsi: ::std::os::raw::c_ulong,
-    pub rbp: ::std::os::raw::c_ulong,
-    pub rbx: ::std::os::raw::c_ulong,
-    pub rdx: ::std::os::raw::c_ulong,
-    pub rax: ::std::os::raw::c_ulong,
-    pub rcx: ::std::os::raw::c_ulong,
-    pub rsp: ::std::os::raw::c_ulong,
-    pub rip: ::std::os::raw::c_ulong,
-    pub eflags: ::std::os::raw::c_ulong,
-    pub cs: ::std::os::raw::c_ushort,
-    pub gs: ::std::os::raw::c_ushort,
-    pub fs: ::std::os::raw::c_ushort,
-    pub __pad0: ::std::os::raw::c_ushort,
-    pub err: ::std::os::raw::c_ulong,
-    pub trapno: ::std::os::raw::c_ulong,
-    pub oldmask: ::std::os::raw::c_ulong,
-    pub cr2: ::std::os::raw::c_ulong,
-    pub fpstate: *mut _fpstate,
-    pub __reserved1: [::std::os::raw::c_ulong; 8usize],
+    pub fault_address: ::std::os::raw::c_ulong,
+    pub regs: [::std::os::raw::c_ulong; 31usize],
+    pub sp: ::std::os::raw::c_ulong,
+    pub pc: ::std::os::raw::c_ulong,
+    pub pstate: ::std::os::raw::c_ulong,
+    pub __bindgen_padding_0: u64,
+    pub __reserved: [u128; 256usize],
 }
 #[test]
 fn bindgen_test_layout_sigcontext() {
     assert_eq!(
         ::std::mem::size_of::<sigcontext>(),
-        256usize,
+        4384usize,
         concat!("Size of: ", stringify!(sigcontext))
     );
     assert_eq!(
         ::std::mem::align_of::<sigcontext>(),
-        8usize,
+        16usize,
         concat!("Alignment of ", stringify!(sigcontext))
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).r8 as *const _ as usize },
+        unsafe { &(*(::std::ptr::null::<sigcontext>())).fault_address as *const _ as usize },
         0usize,
         concat!(
             "Offset of field: ",
             stringify!(sigcontext),
             "::",
-            stringify!(r8)
+            stringify!(fault_address)
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).r9 as *const _ as usize },
+        unsafe { &(*(::std::ptr::null::<sigcontext>())).regs as *const _ as usize },
         8usize,
         concat!(
             "Offset of field: ",
             stringify!(sigcontext),
             "::",
-            stringify!(r9)
+            stringify!(regs)
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).r10 as *const _ as usize },
+        unsafe { &(*(::std::ptr::null::<sigcontext>())).sp as *const _ as usize },
+        256usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(sigcontext),
+            "::",
+            stringify!(sp)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<sigcontext>())).pc as *const _ as usize },
+        264usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(sigcontext),
+            "::",
+            stringify!(pc)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<sigcontext>())).pstate as *const _ as usize },
+        272usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(sigcontext),
+            "::",
+            stringify!(pstate)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<sigcontext>())).__reserved as *const _ as usize },
+        288usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(sigcontext),
+            "::",
+            stringify!(__reserved)
+        )
+    );
+}
+impl ::std::fmt::Debug for sigcontext {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write ! ( f , "sigcontext {{ fault_address: {:?}, regs: {:?}, sp: {:?}, pc: {:?}, pstate: {:?}, __reserved: [{}] }}" , self . fault_address , self . regs , self . sp , self . pc , self . pstate , self . __reserved . iter ( ) . enumerate ( ) . map ( | ( i , v ) | format ! ( "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: < String > ( ) )
+    }
+}
+impl ::std::cmp::PartialEq for sigcontext {
+    fn eq(&self, other: &sigcontext) -> bool {
+        self.fault_address == other.fault_address
+            && self.regs == other.regs
+            && self.sp == other.sp
+            && self.pc == other.pc
+            && self.pstate == other.pstate
+            && &self.__reserved[..] == &other.__reserved[..]
+    }
+}
+pub type mcontext_t = sigcontext;
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub struct _aarch64_ctx {
+    pub magic: ::std::os::raw::c_uint,
+    pub size: ::std::os::raw::c_uint,
+}
+#[test]
+fn bindgen_test_layout__aarch64_ctx() {
+    assert_eq!(
+        ::std::mem::size_of::<_aarch64_ctx>(),
+        8usize,
+        concat!("Size of: ", stringify!(_aarch64_ctx))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<_aarch64_ctx>(),
+        4usize,
+        concat!("Alignment of ", stringify!(_aarch64_ctx))
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<_aarch64_ctx>())).magic as *const _ as usize },
+        0usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(_aarch64_ctx),
+            "::",
+            stringify!(magic)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<_aarch64_ctx>())).size as *const _ as usize },
+        4usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(_aarch64_ctx),
+            "::",
+            stringify!(size)
+        )
+    );
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct fpsimd_context {
+    pub head: _aarch64_ctx,
+    pub fpsr: ::std::os::raw::c_uint,
+    pub fpcr: ::std::os::raw::c_uint,
+    pub vregs: [u128; 32usize],
+}
+#[test]
+fn bindgen_test_layout_fpsimd_context() {
+    assert_eq!(
+        ::std::mem::size_of::<fpsimd_context>(),
+        528usize,
+        concat!("Size of: ", stringify!(fpsimd_context))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<fpsimd_context>(),
+        16usize,
+        concat!("Alignment of ", stringify!(fpsimd_context))
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<fpsimd_context>())).head as *const _ as usize },
+        0usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(fpsimd_context),
+            "::",
+            stringify!(head)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<fpsimd_context>())).fpsr as *const _ as usize },
+        8usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(fpsimd_context),
+            "::",
+            stringify!(fpsr)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<fpsimd_context>())).fpcr as *const _ as usize },
+        12usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(fpsimd_context),
+            "::",
+            stringify!(fpcr)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<fpsimd_context>())).vregs as *const _ as usize },
         16usize,
         concat!(
             "Offset of field: ",
-            stringify!(sigcontext),
+            stringify!(fpsimd_context),
             "::",
-            stringify!(r10)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).r11 as *const _ as usize },
-        24usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(r11)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).r12 as *const _ as usize },
-        32usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(r12)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).r13 as *const _ as usize },
-        40usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(r13)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).r14 as *const _ as usize },
-        48usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(r14)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).r15 as *const _ as usize },
-        56usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(r15)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).rdi as *const _ as usize },
-        64usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(rdi)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).rsi as *const _ as usize },
-        72usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(rsi)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).rbp as *const _ as usize },
-        80usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(rbp)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).rbx as *const _ as usize },
-        88usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(rbx)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).rdx as *const _ as usize },
-        96usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(rdx)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).rax as *const _ as usize },
-        104usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(rax)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).rcx as *const _ as usize },
-        112usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(rcx)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).rsp as *const _ as usize },
-        120usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(rsp)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).rip as *const _ as usize },
-        128usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(rip)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).eflags as *const _ as usize },
-        136usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(eflags)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).cs as *const _ as usize },
-        144usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(cs)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).gs as *const _ as usize },
-        146usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(gs)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).fs as *const _ as usize },
-        148usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(fs)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).__pad0 as *const _ as usize },
-        150usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(__pad0)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).err as *const _ as usize },
-        152usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(err)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).trapno as *const _ as usize },
-        160usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(trapno)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).oldmask as *const _ as usize },
-        168usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(oldmask)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).cr2 as *const _ as usize },
-        176usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(cr2)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).fpstate as *const _ as usize },
-        184usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(fpstate)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<sigcontext>())).__reserved1 as *const _ as usize },
-        192usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(sigcontext),
-            "::",
-            stringify!(__reserved1)
+            stringify!(vregs)
         )
     );
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub struct mcontext_t {
-    pub gregs: gregset_t,
-    pub fpregs: fpregset_t,
-    pub __reserved1: [::std::os::raw::c_ulonglong; 8usize],
+pub struct esr_context {
+    pub head: _aarch64_ctx,
+    pub esr: ::std::os::raw::c_ulong,
 }
 #[test]
-fn bindgen_test_layout_mcontext_t() {
+fn bindgen_test_layout_esr_context() {
     assert_eq!(
-        ::std::mem::size_of::<mcontext_t>(),
-        256usize,
-        concat!("Size of: ", stringify!(mcontext_t))
+        ::std::mem::size_of::<esr_context>(),
+        16usize,
+        concat!("Size of: ", stringify!(esr_context))
     );
     assert_eq!(
-        ::std::mem::align_of::<mcontext_t>(),
+        ::std::mem::align_of::<esr_context>(),
         8usize,
-        concat!("Alignment of ", stringify!(mcontext_t))
+        concat!("Alignment of ", stringify!(esr_context))
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<mcontext_t>())).gregs as *const _ as usize },
+        unsafe { &(*(::std::ptr::null::<esr_context>())).head as *const _ as usize },
         0usize,
         concat!(
             "Offset of field: ",
-            stringify!(mcontext_t),
+            stringify!(esr_context),
             "::",
-            stringify!(gregs)
+            stringify!(head)
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<mcontext_t>())).fpregs as *const _ as usize },
-        184usize,
+        unsafe { &(*(::std::ptr::null::<esr_context>())).esr as *const _ as usize },
+        8usize,
         concat!(
             "Offset of field: ",
-            stringify!(mcontext_t),
+            stringify!(esr_context),
             "::",
-            stringify!(fpregs)
+            stringify!(esr)
+        )
+    );
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub struct extra_context {
+    pub head: _aarch64_ctx,
+    pub datap: ::std::os::raw::c_ulong,
+    pub size: ::std::os::raw::c_uint,
+    pub __reserved: [::std::os::raw::c_uint; 3usize],
+}
+#[test]
+fn bindgen_test_layout_extra_context() {
+    assert_eq!(
+        ::std::mem::size_of::<extra_context>(),
+        32usize,
+        concat!("Size of: ", stringify!(extra_context))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<extra_context>(),
+        8usize,
+        concat!("Alignment of ", stringify!(extra_context))
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<extra_context>())).head as *const _ as usize },
+        0usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(extra_context),
+            "::",
+            stringify!(head)
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<mcontext_t>())).__reserved1 as *const _ as usize },
-        192usize,
+        unsafe { &(*(::std::ptr::null::<extra_context>())).datap as *const _ as usize },
+        8usize,
         concat!(
             "Offset of field: ",
-            stringify!(mcontext_t),
+            stringify!(extra_context),
             "::",
-            stringify!(__reserved1)
+            stringify!(datap)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<extra_context>())).size as *const _ as usize },
+        16usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(extra_context),
+            "::",
+            stringify!(size)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<extra_context>())).__reserved as *const _ as usize },
+        20usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(extra_context),
+            "::",
+            stringify!(__reserved)
+        )
+    );
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub struct sve_context {
+    pub head: _aarch64_ctx,
+    pub vl: ::std::os::raw::c_ushort,
+    pub __reserved: [::std::os::raw::c_ushort; 3usize],
+}
+#[test]
+fn bindgen_test_layout_sve_context() {
+    assert_eq!(
+        ::std::mem::size_of::<sve_context>(),
+        16usize,
+        concat!("Size of: ", stringify!(sve_context))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<sve_context>(),
+        4usize,
+        concat!("Alignment of ", stringify!(sve_context))
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<sve_context>())).head as *const _ as usize },
+        0usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(sve_context),
+            "::",
+            stringify!(head)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<sve_context>())).vl as *const _ as usize },
+        8usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(sve_context),
+            "::",
+            stringify!(vl)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<sve_context>())).__reserved as *const _ as usize },
+        10usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(sve_context),
+            "::",
+            stringify!(__reserved)
         )
     );
 }
@@ -4274,25 +4087,26 @@ fn bindgen_test_layout_sigaltstack() {
     );
 }
 #[repr(C)]
+#[repr(align(16))]
 #[derive(Copy, Clone)]
 pub struct __ucontext {
     pub uc_flags: ::std::os::raw::c_ulong,
     pub uc_link: *mut __ucontext,
     pub uc_stack: stack_t,
-    pub uc_mcontext: mcontext_t,
     pub uc_sigmask: sigset_t,
-    pub __fpregs_mem: [::std::os::raw::c_ulong; 64usize],
+    pub __bindgen_padding_0: u64,
+    pub uc_mcontext: mcontext_t,
 }
 #[test]
 fn bindgen_test_layout___ucontext() {
     assert_eq!(
         ::std::mem::size_of::<__ucontext>(),
-        936usize,
+        4560usize,
         concat!("Size of: ", stringify!(__ucontext))
     );
     assert_eq!(
         ::std::mem::align_of::<__ucontext>(),
-        8usize,
+        16usize,
         concat!("Alignment of ", stringify!(__ucontext))
     );
     assert_eq!(
@@ -4326,18 +4140,8 @@ fn bindgen_test_layout___ucontext() {
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<__ucontext>())).uc_mcontext as *const _ as usize },
-        40usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(__ucontext),
-            "::",
-            stringify!(uc_mcontext)
-        )
-    );
-    assert_eq!(
         unsafe { &(*(::std::ptr::null::<__ucontext>())).uc_sigmask as *const _ as usize },
-        296usize,
+        40usize,
         concat!(
             "Offset of field: ",
             stringify!(__ucontext),
@@ -4346,19 +4150,19 @@ fn bindgen_test_layout___ucontext() {
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<__ucontext>())).__fpregs_mem as *const _ as usize },
-        424usize,
+        unsafe { &(*(::std::ptr::null::<__ucontext>())).uc_mcontext as *const _ as usize },
+        176usize,
         concat!(
             "Offset of field: ",
             stringify!(__ucontext),
             "::",
-            stringify!(__fpregs_mem)
+            stringify!(uc_mcontext)
         )
     );
 }
 impl ::std::fmt::Debug for __ucontext {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! ( f , "__ucontext {{ uc_flags: {:?}, uc_link: {:?}, uc_stack: {:?}, uc_mcontext: {:?}, uc_sigmask: {:?}, __fpregs_mem: [{}] }}" , self . uc_flags , self . uc_link , self . uc_stack , self . uc_mcontext , self . uc_sigmask , self . __fpregs_mem . iter ( ) . enumerate ( ) . map ( | ( i , v ) | format ! ( "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: < String > ( ) )
+        write ! ( f , "__ucontext {{ uc_flags: {:?}, uc_link: {:?}, uc_stack: {:?}, uc_sigmask: {:?}, uc_mcontext: {:?} }}" , self . uc_flags , self . uc_link , self . uc_stack , self . uc_sigmask , self . uc_mcontext )
     }
 }
 impl ::std::cmp::PartialEq for __ucontext {
@@ -4366,9 +4170,8 @@ impl ::std::cmp::PartialEq for __ucontext {
         self.uc_flags == other.uc_flags
             && self.uc_link == other.uc_link
             && self.uc_stack == other.uc_stack
-            && self.uc_mcontext == other.uc_mcontext
             && self.uc_sigmask == other.uc_sigmask
-            && &self.__fpregs_mem[..] == &other.__fpregs_mem[..]
+            && self.uc_mcontext == other.uc_mcontext
     }
 }
 pub type ucontext_t = __ucontext;
@@ -9923,17 +9726,13 @@ extern "C" {
     pub fn g_string_ascii_up(string: *mut GString) -> *mut GString;
 }
 extern "C" {
-    pub fn g_string_vprintf(string: *mut GString, format: *const gchar, args: *mut __va_list_tag);
+    pub fn g_string_vprintf(string: *mut GString, format: *const gchar, args: va_list);
 }
 extern "C" {
     pub fn g_string_printf(string: *mut GString, format: *const gchar, ...);
 }
 extern "C" {
-    pub fn g_string_append_vprintf(
-        string: *mut GString,
-        format: *const gchar,
-        args: *mut __va_list_tag,
-    );
+    pub fn g_string_append_vprintf(string: *mut GString, format: *const gchar, args: va_list);
 }
 extern "C" {
     pub fn g_string_append_printf(string: *mut GString, format: *const gchar, ...);
@@ -11244,7 +11043,7 @@ extern "C" {
 extern "C" {
     pub fn g_markup_vprintf_escaped(
         format: *const ::std::os::raw::c_char,
-        args: *mut __va_list_tag,
+        args: va_list,
     ) -> *mut gchar;
 }
 pub const GMarkupCollectType_G_MARKUP_COLLECT_INVALID: GMarkupCollectType = 0;
@@ -12210,7 +12009,7 @@ extern "C" {
     pub fn g_variant_dict_unref(dict: *mut GVariantDict);
 }
 extern "C" {
-    pub fn g_printf_string_upper_bound(format: *const gchar, args: *mut __va_list_tag) -> gsize;
+    pub fn g_printf_string_upper_bound(format: *const gchar, args: va_list) -> gsize;
 }
 pub const GLogLevelFlags_G_LOG_FLAG_RECURSION: GLogLevelFlags = 1;
 pub const GLogLevelFlags_G_LOG_FLAG_FATAL: GLogLevelFlags = 2;
@@ -12269,7 +12068,7 @@ extern "C" {
         log_domain: *const gchar,
         log_level: GLogLevelFlags,
         format: *const gchar,
-        args: *mut __va_list_tag,
+        args: va_list,
     );
 }
 extern "C" {
@@ -14946,7 +14745,7 @@ extern "C" {
     pub fn g_strdup_printf(format: *const gchar, ...) -> *mut gchar;
 }
 extern "C" {
-    pub fn g_strdup_vprintf(format: *const gchar, args: *mut __va_list_tag) -> *mut gchar;
+    pub fn g_strdup_vprintf(format: *const gchar, args: va_list) -> *mut gchar;
 }
 extern "C" {
     pub fn g_strndup(str: *const gchar, n: gsize) -> *mut gchar;
@@ -16899,6 +16698,8 @@ extern "C" {
 extern "C" {
     pub fn g_thread_foreach(thread_func: GFunc, user_data: gpointer);
 }
+pub type blksize_t = ::std::os::raw::c_int;
+pub type nlink_t = ::std::os::raw::c_uint;
 pub type suseconds_t = ::std::os::raw::c_long;
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -17284,9 +17085,7 @@ pub type ssize_t = ::std::os::raw::c_long;
 pub type register_t = ::std::os::raw::c_long;
 pub type u_int64_t = ::std::os::raw::c_ulong;
 pub type mode_t = ::std::os::raw::c_uint;
-pub type nlink_t = ::std::os::raw::c_ulong;
 pub type dev_t = ::std::os::raw::c_ulong;
-pub type blksize_t = ::std::os::raw::c_long;
 pub type blkcnt_t = ::std::os::raw::c_long;
 pub type fsblkcnt_t = ::std::os::raw::c_ulong;
 pub type fsfilcnt_t = ::std::os::raw::c_ulong;
@@ -18992,21 +18791,21 @@ extern "C" {
 extern "C" {
     pub fn vprintf(
         arg1: *const ::std::os::raw::c_char,
-        arg2: *mut __va_list_tag,
+        arg2: __builtin_va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn vfprintf(
         arg1: *mut FILE,
         arg2: *const ::std::os::raw::c_char,
-        arg3: *mut __va_list_tag,
+        arg3: __builtin_va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn vsprintf(
         arg1: *mut ::std::os::raw::c_char,
         arg2: *const ::std::os::raw::c_char,
-        arg3: *mut __va_list_tag,
+        arg3: __builtin_va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -19014,7 +18813,7 @@ extern "C" {
         arg1: *mut ::std::os::raw::c_char,
         arg2: ::std::os::raw::c_ulong,
         arg3: *const ::std::os::raw::c_char,
-        arg4: *mut __va_list_tag,
+        arg4: __builtin_va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -19037,21 +18836,21 @@ extern "C" {
 extern "C" {
     pub fn vscanf(
         arg1: *const ::std::os::raw::c_char,
-        arg2: *mut __va_list_tag,
+        arg2: __builtin_va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn vfscanf(
         arg1: *mut FILE,
         arg2: *const ::std::os::raw::c_char,
-        arg3: *mut __va_list_tag,
+        arg3: __builtin_va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn vsscanf(
         arg1: *const ::std::os::raw::c_char,
         arg2: *const ::std::os::raw::c_char,
-        arg3: *mut __va_list_tag,
+        arg3: __builtin_va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -19120,7 +18919,7 @@ extern "C" {
     pub fn vdprintf(
         arg1: ::std::os::raw::c_int,
         arg2: *const ::std::os::raw::c_char,
-        arg3: *mut __va_list_tag,
+        arg3: __isoc_va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -19242,7 +19041,7 @@ extern "C" {
     pub fn vasprintf(
         arg1: *mut *mut ::std::os::raw::c_char,
         arg2: *const ::std::os::raw::c_char,
-        arg3: *mut __va_list_tag,
+        arg3: __isoc_va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -19255,45 +19054,42 @@ extern "C" {
     pub fn g_sprintf(string: *mut gchar, format: *const gchar, ...) -> gint;
 }
 extern "C" {
-    pub fn g_vprintf(format: *const gchar, args: *mut __va_list_tag) -> gint;
+    pub fn g_vprintf(format: *const gchar, args: va_list) -> gint;
 }
 extern "C" {
-    pub fn g_vfprintf(file: *mut FILE, format: *const gchar, args: *mut __va_list_tag) -> gint;
+    pub fn g_vfprintf(file: *mut FILE, format: *const gchar, args: va_list) -> gint;
 }
 extern "C" {
-    pub fn g_vsprintf(string: *mut gchar, format: *const gchar, args: *mut __va_list_tag) -> gint;
+    pub fn g_vsprintf(string: *mut gchar, format: *const gchar, args: va_list) -> gint;
 }
 extern "C" {
-    pub fn g_vasprintf(
-        string: *mut *mut gchar,
-        format: *const gchar,
-        args: *mut __va_list_tag,
-    ) -> gint;
+    pub fn g_vasprintf(string: *mut *mut gchar, format: *const gchar, args: va_list) -> gint;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct stat {
     pub st_dev: dev_t,
     pub st_ino: ino_t,
-    pub st_nlink: nlink_t,
     pub st_mode: mode_t,
+    pub st_nlink: nlink_t,
     pub st_uid: uid_t,
     pub st_gid: gid_t,
-    pub __pad0: ::std::os::raw::c_uint,
     pub st_rdev: dev_t,
+    pub __pad: ::std::os::raw::c_ulong,
     pub st_size: off_t,
     pub st_blksize: blksize_t,
+    pub __pad2: ::std::os::raw::c_int,
     pub st_blocks: blkcnt_t,
     pub st_atim: timespec,
     pub st_mtim: timespec,
     pub st_ctim: timespec,
-    pub __unused: [::std::os::raw::c_long; 3usize],
+    pub __unused: [::std::os::raw::c_uint; 2usize],
 }
 #[test]
 fn bindgen_test_layout_stat() {
     assert_eq!(
         ::std::mem::size_of::<stat>(),
-        144usize,
+        128usize,
         concat!("Size of: ", stringify!(stat))
     );
     assert_eq!(
@@ -19322,18 +19118,8 @@ fn bindgen_test_layout_stat() {
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<stat>())).st_nlink as *const _ as usize },
-        16usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(stat),
-            "::",
-            stringify!(st_nlink)
-        )
-    );
-    assert_eq!(
         unsafe { &(*(::std::ptr::null::<stat>())).st_mode as *const _ as usize },
-        24usize,
+        16usize,
         concat!(
             "Offset of field: ",
             stringify!(stat),
@@ -19342,8 +19128,18 @@ fn bindgen_test_layout_stat() {
         )
     );
     assert_eq!(
+        unsafe { &(*(::std::ptr::null::<stat>())).st_nlink as *const _ as usize },
+        20usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(stat),
+            "::",
+            stringify!(st_nlink)
+        )
+    );
+    assert_eq!(
         unsafe { &(*(::std::ptr::null::<stat>())).st_uid as *const _ as usize },
-        28usize,
+        24usize,
         concat!(
             "Offset of field: ",
             stringify!(stat),
@@ -19353,7 +19149,7 @@ fn bindgen_test_layout_stat() {
     );
     assert_eq!(
         unsafe { &(*(::std::ptr::null::<stat>())).st_gid as *const _ as usize },
-        32usize,
+        28usize,
         concat!(
             "Offset of field: ",
             stringify!(stat),
@@ -19362,23 +19158,23 @@ fn bindgen_test_layout_stat() {
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<stat>())).__pad0 as *const _ as usize },
-        36usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(stat),
-            "::",
-            stringify!(__pad0)
-        )
-    );
-    assert_eq!(
         unsafe { &(*(::std::ptr::null::<stat>())).st_rdev as *const _ as usize },
-        40usize,
+        32usize,
         concat!(
             "Offset of field: ",
             stringify!(stat),
             "::",
             stringify!(st_rdev)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<stat>())).__pad as *const _ as usize },
+        40usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(stat),
+            "::",
+            stringify!(__pad)
         )
     );
     assert_eq!(
@@ -19399,6 +19195,16 @@ fn bindgen_test_layout_stat() {
             stringify!(stat),
             "::",
             stringify!(st_blksize)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<stat>())).__pad2 as *const _ as usize },
+        60usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(stat),
+            "::",
+            stringify!(__pad2)
         )
     );
     assert_eq!(
@@ -21181,7 +20987,7 @@ pub type GVaClosureMarshal = ::std::option::Option<
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21598,7 +21404,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args_list: *mut __va_list_tag,
+        args_list: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21619,7 +21425,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21640,7 +21446,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21661,7 +21467,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21682,7 +21488,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21703,7 +21509,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21724,7 +21530,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21745,7 +21551,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21766,7 +21572,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21787,7 +21593,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21808,7 +21614,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21829,7 +21635,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21850,7 +21656,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21871,7 +21677,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21892,7 +21698,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21913,7 +21719,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21934,7 +21740,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21955,7 +21761,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21976,7 +21782,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -21997,7 +21803,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -22018,7 +21824,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -22039,7 +21845,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -22060,7 +21866,7 @@ extern "C" {
         closure: *mut GClosure,
         return_value: *mut GValue,
         instance: gpointer,
-        args: *mut __va_list_tag,
+        args: va_list,
         marshal_data: gpointer,
         n_params: ::std::os::raw::c_int,
         param_types: *mut GType,
@@ -22277,7 +22083,7 @@ extern "C" {
         c_marshaller: GSignalCMarshaller,
         return_type: GType,
         n_params: guint,
-        args: *mut __va_list_tag,
+        args: va_list,
     ) -> guint;
 }
 extern "C" {
@@ -22328,7 +22134,7 @@ extern "C" {
         instance: gpointer,
         signal_id: guint,
         detail: GQuark,
-        var_args: *mut __va_list_tag,
+        var_args: va_list,
     );
 }
 extern "C" {
@@ -23010,7 +22816,7 @@ extern "C" {
     pub fn g_object_new_valist(
         object_type: GType,
         first_property_name: *const gchar,
-        var_args: *mut __va_list_tag,
+        var_args: va_list,
     ) -> *mut GObject;
 }
 extern "C" {
@@ -23037,7 +22843,7 @@ extern "C" {
     pub fn g_object_set_valist(
         object: *mut GObject,
         first_property_name: *const gchar,
-        var_args: *mut __va_list_tag,
+        var_args: va_list,
     );
 }
 extern "C" {
@@ -23052,7 +22858,7 @@ extern "C" {
     pub fn g_object_get_valist(
         object: *mut GObject,
         first_property_name: *const gchar,
-        var_args: *mut __va_list_tag,
+        var_args: va_list,
     );
 }
 extern "C" {
@@ -29514,7 +29320,7 @@ extern "C" {
     pub fn g_initable_new_valist(
         object_type: GType,
         first_property_name: *const gchar,
-        var_args: *mut __va_list_tag,
+        var_args: va_list,
         cancellable: *mut GCancellable,
         error: *mut *mut GError,
     ) -> *mut GObject;
@@ -29631,7 +29437,7 @@ extern "C" {
     pub fn g_async_initable_new_valist_async(
         object_type: GType,
         first_property_name: *const gchar,
-        var_args: *mut __va_list_tag,
+        var_args: va_list,
         io_priority: ::std::os::raw::c_int,
         cancellable: *mut GCancellable,
         callback: GAsyncReadyCallback,
@@ -31065,7 +30871,7 @@ extern "C" {
         cancellable: *mut GCancellable,
         error: *mut *mut GError,
         format: *const gchar,
-        args: *mut __va_list_tag,
+        args: va_list,
     ) -> gboolean;
 }
 extern "C" {
@@ -34253,7 +34059,7 @@ extern "C" {
         dbus_error_name: *const gchar,
         dbus_error_message: *const gchar,
         format: *const gchar,
-        var_args: *mut __va_list_tag,
+        var_args: va_list,
     );
 }
 extern "C" {
@@ -35270,7 +35076,7 @@ extern "C" {
         method_call_message: *mut GDBusMessage,
         error_name: *const gchar,
         error_message_format: *const gchar,
-        var_args: *mut __va_list_tag,
+        var_args: va_list,
     ) -> *mut GDBusMessage;
 }
 extern "C" {
@@ -35517,7 +35323,7 @@ extern "C" {
         domain: GQuark,
         code: gint,
         format: *const gchar,
-        var_args: *mut __va_list_tag,
+        var_args: va_list,
     );
 }
 extern "C" {
@@ -50925,7 +50731,7 @@ extern "C" {
         domain: GQuark,
         code: gint,
         format: *const ::std::os::raw::c_char,
-        args: *mut __va_list_tag,
+        args: va_list,
     );
 }
 extern "C" {
@@ -57214,7 +57020,7 @@ extern "C" {
     pub fn vips_buf_vappendf(
         buf: *mut VipsBuf,
         fmt: *const ::std::os::raw::c_char,
-        ap: *mut __va_list_tag,
+        ap: va_list,
     ) -> gboolean;
 }
 extern "C" {
@@ -58125,7 +57931,7 @@ extern "C" {
         str: *mut ::std::os::raw::c_char,
         size: size_t,
         format: *const ::std::os::raw::c_char,
-        ap: *mut __va_list_tag,
+        ap: va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -59207,10 +59013,7 @@ extern "C" {
     ) -> *mut VipsObject;
 }
 extern "C" {
-    pub fn vips_object_set_valist(
-        object: *mut VipsObject,
-        ap: *mut __va_list_tag,
-    ) -> ::std::os::raw::c_int;
+    pub fn vips_object_set_valist(object: *mut VipsObject, ap: va_list) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn vips_object_set(object: *mut VipsObject, ...) -> ::std::os::raw::c_int;
@@ -61920,14 +61723,14 @@ pub const VipsAccess_VIPS_ACCESS_LAST: VipsAccess = 3;
 pub type VipsAccess = u32;
 pub type VipsStartFn = ::std::option::Option<
     unsafe extern "C" fn(
-        out: *mut VipsImage,
+        out: *mut _VipsImage,
         a: *mut ::std::os::raw::c_void,
         b: *mut ::std::os::raw::c_void,
     ) -> *mut ::std::os::raw::c_void,
 >;
 pub type VipsGenerateFn = ::std::option::Option<
     unsafe extern "C" fn(
-        out: *mut VipsRegion,
+        out: *mut _VipsRegion,
         seq: *mut ::std::os::raw::c_void,
         a: *mut ::std::os::raw::c_void,
         b: *mut ::std::os::raw::c_void,
@@ -61944,7 +61747,7 @@ pub type VipsStopFn = ::std::option::Option<
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct _VipsProgress {
-    pub im: *mut VipsImage,
+    pub im: *mut _VipsImage,
     pub run: ::std::os::raw::c_int,
     pub eta: ::std::os::raw::c_int,
     pub tpels: gint64,
@@ -62083,7 +61886,7 @@ pub struct _VipsImage {
     pub downstream: *mut GSList,
     pub serial: ::std::os::raw::c_int,
     pub history_list: *mut GSList,
-    pub progress_signal: *mut VipsImage,
+    pub progress_signal: *mut _VipsImage,
     pub file_length: gint64,
     pub hint_set: gboolean,
     pub delete_on_close: gboolean,
@@ -63008,7 +62811,7 @@ extern "C" {
 extern "C" {
     pub fn vips_reorder_prepare_many(
         image: *mut VipsImage,
-        regions: *mut *mut VipsRegion,
+        regions: *mut *mut _VipsRegion,
         r: *mut VipsRect,
     ) -> ::std::os::raw::c_int;
 }
@@ -63078,7 +62881,7 @@ extern "C" {
     pub fn vips_verror(
         domain: *const ::std::os::raw::c_char,
         fmt: *const ::std::os::raw::c_char,
-        ap: *mut __va_list_tag,
+        ap: va_list,
     );
 }
 extern "C" {
@@ -63094,7 +62897,7 @@ extern "C" {
         err: ::std::os::raw::c_int,
         domain: *const ::std::os::raw::c_char,
         fmt: *const ::std::os::raw::c_char,
-        ap: *mut __va_list_tag,
+        ap: va_list,
     );
 }
 extern "C" {
@@ -65003,7 +64806,7 @@ extern "C" {
 extern "C" {
     pub fn vips_operation_call_valist(
         operation: *mut VipsOperation,
-        ap: *mut __va_list_tag,
+        ap: va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -65012,8 +64815,8 @@ extern "C" {
 extern "C" {
     pub fn vips_call_required_optional(
         operation: *mut *mut VipsOperation,
-        required: *mut __va_list_tag,
-        optional: *mut __va_list_tag,
+        required: va_list,
+        optional: va_list,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -65022,7 +64825,7 @@ extern "C" {
 extern "C" {
     pub fn vips_call_split(
         operation_name: *const ::std::os::raw::c_char,
-        optional: *mut __va_list_tag,
+        optional: va_list,
         ...
     ) -> ::std::os::raw::c_int;
 }
@@ -65030,7 +64833,7 @@ extern "C" {
     pub fn vips_call_split_option_string(
         operation_name: *const ::std::os::raw::c_char,
         option_string: *const ::std::os::raw::c_char,
-        optional: *mut __va_list_tag,
+        optional: va_list,
         ...
     ) -> ::std::os::raw::c_int;
 }
@@ -69110,65 +68913,76 @@ extern "C" {
         env_name: *const ::std::os::raw::c_char,
     ) -> *const ::std::os::raw::c_char;
 }
-pub type __builtin_va_list = [__va_list_tag; 1usize];
+pub type __builtin_va_list = __va_list;
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub struct __va_list_tag {
-    pub gp_offset: ::std::os::raw::c_uint,
-    pub fp_offset: ::std::os::raw::c_uint,
-    pub overflow_arg_area: *mut ::std::os::raw::c_void,
-    pub reg_save_area: *mut ::std::os::raw::c_void,
+pub struct __va_list {
+    pub __stack: *mut ::std::os::raw::c_void,
+    pub __gr_top: *mut ::std::os::raw::c_void,
+    pub __vr_top: *mut ::std::os::raw::c_void,
+    pub __gr_offs: ::std::os::raw::c_int,
+    pub __vr_offs: ::std::os::raw::c_int,
 }
 #[test]
-fn bindgen_test_layout___va_list_tag() {
+fn bindgen_test_layout___va_list() {
     assert_eq!(
-        ::std::mem::size_of::<__va_list_tag>(),
-        24usize,
-        concat!("Size of: ", stringify!(__va_list_tag))
+        ::std::mem::size_of::<__va_list>(),
+        32usize,
+        concat!("Size of: ", stringify!(__va_list))
     );
     assert_eq!(
-        ::std::mem::align_of::<__va_list_tag>(),
+        ::std::mem::align_of::<__va_list>(),
         8usize,
-        concat!("Alignment of ", stringify!(__va_list_tag))
+        concat!("Alignment of ", stringify!(__va_list))
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<__va_list_tag>())).gp_offset as *const _ as usize },
+        unsafe { &(*(::std::ptr::null::<__va_list>())).__stack as *const _ as usize },
         0usize,
         concat!(
             "Offset of field: ",
-            stringify!(__va_list_tag),
+            stringify!(__va_list),
             "::",
-            stringify!(gp_offset)
+            stringify!(__stack)
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<__va_list_tag>())).fp_offset as *const _ as usize },
-        4usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(__va_list_tag),
-            "::",
-            stringify!(fp_offset)
-        )
-    );
-    assert_eq!(
-        unsafe { &(*(::std::ptr::null::<__va_list_tag>())).overflow_arg_area as *const _ as usize },
+        unsafe { &(*(::std::ptr::null::<__va_list>())).__gr_top as *const _ as usize },
         8usize,
         concat!(
             "Offset of field: ",
-            stringify!(__va_list_tag),
+            stringify!(__va_list),
             "::",
-            stringify!(overflow_arg_area)
+            stringify!(__gr_top)
         )
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<__va_list_tag>())).reg_save_area as *const _ as usize },
+        unsafe { &(*(::std::ptr::null::<__va_list>())).__vr_top as *const _ as usize },
         16usize,
         concat!(
             "Offset of field: ",
-            stringify!(__va_list_tag),
+            stringify!(__va_list),
             "::",
-            stringify!(reg_save_area)
+            stringify!(__vr_top)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<__va_list>())).__gr_offs as *const _ as usize },
+        24usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(__va_list),
+            "::",
+            stringify!(__gr_offs)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<__va_list>())).__vr_offs as *const _ as usize },
+        28usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(__va_list),
+            "::",
+            stringify!(__vr_offs)
         )
     );
 }
