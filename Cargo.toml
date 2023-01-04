@@ -1,4 +1,4 @@
-# (c) Copyright 2019-2020 OLX
+# (c) Copyright 2019-2023 OLX
 [package]
 name = "libvips"
 description = "Safe bindings for libvips"
