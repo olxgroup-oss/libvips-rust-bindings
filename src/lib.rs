@@ -1,4 +1,4 @@
-// (c) Copyright 2019-2020 OLX
+// (c) Copyright 2019-2023 OLX
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
@@ -111,7 +111,6 @@ impl VipsApp {
         unsafe {
             let c_str_error = utils::new_c_string(error)?;
             bindings::vips_error_exit(c_str_error.as_ptr());
-            Ok(())
         }
     }
 

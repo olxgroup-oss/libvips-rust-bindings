@@ -1,13 +1,14 @@
-# (c) Copyright 2019-2020 OLX
-FROM rust:1.45-alpine3.12
+# (c) Copyright 2019-2023 OLX
+FROM rust:1.66.0-alpine3.17
 
-ENV VIPS_VERSION=8.10.0
+ENV VIPS_VERSION=8.13.3
 
-RUN apk add --update --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
+RUN apk add --update --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/v3.17/main \
             build-base \
             pkgconfig \
-            openssl-dev\
+            openssl-dev \
             clang \
+            clang-libclang \
             glib-dev \
             expat-dev \
             tiff-dev \
@@ -48,4 +49,4 @@ RUN rm -rf vips
 
 RUN rm -f vips-${VIPS_VERSION}.tar.gz
 
-RUN rustup component add rustfmt --toolchain 1.45.2-x86_64-unknown-linux-musl
+RUN rustup component add rustfmt --toolchain 1.66.0-x86_64-unknown-linux-musl

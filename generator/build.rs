@@ -1,4 +1,4 @@
-// (c) Copyright 2019-2020 OLX
+// (c) Copyright 2019-2023 OLX
 use inflector::Inflector;
 use std::env;
 use std::fs::File;
@@ -1195,12 +1195,23 @@ fn main() {
 
     let mut generator = bindgen::Builder::default()
         .header("vips.h")
-        .blacklist_type("max_align_t")
-        .blacklist_item("FP_NAN")
-        .blacklist_item("FP_INFINITE")
-        .blacklist_item("FP_ZERO")
-        .blacklist_item("FP_SUBNORMAL")
-        .blacklist_item("FP_NORMAL")
+        /*
+        The previous version of bindgen(v0.53) that was used to generate the bindings had the
+        following parameter (size_t_is_usize) set to false by default. In the current
+        release (v.0.63.0) it is set to true by default which might actually make sense as
+        usize could be a better alternative for size_t. For the sake of backward compatibility I've
+        explicitly set it to false thus we'll have the same bindings output. Later we can look into
+        converting this crate to use `usize` for `size_t`.
+
+        More details are available here: https://github.com/rust-lang/rust-bindgen/issues/1901
+         */
+        .size_t_is_usize(false)
+        .blocklist_type("max_align_t")
+        .blocklist_item("FP_NAN")
+        .blocklist_item("FP_INFINITE")
+        .blocklist_item("FP_ZERO")
+        .blocklist_item("FP_SUBNORMAL")
+        .blocklist_item("FP_NORMAL")
         .constified_enum("*")
         .generate_comments(true)
         .impl_debug(true)
@@ -1287,7 +1298,7 @@ fn main() {
         .expect("Couldn't write bindings!");
     let ops_content = format!(
         r#"
-    // (c) Copyright 2019-2020 OLX
+    // (c) Copyright 2019-2023 OLX
     use std::ffi::*;
     use std::ptr::null_mut;
     use std::convert::TryInto;

@@ -1,17 +1,17 @@
-# (c) Copyright 2019-2020 OLX
+# (c) Copyright 2019-2023 OLX
 [package]
 name = "libvips-bindings"
 description = "Safe bindings for libvips"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Augusto César Dias <augusto.c.dias@gmail.com>"]
 repository = "https://github.com/augustocdias/libvips-rust-bindings"
 edition = "2018"
 
 [build-dependencies]
-bindgen = "0.53"
+bindgen = "0.63.0"
 Inflector = "0.11"
 cc = "1.0"
-which = "3.1"
+which = "4.3.0"
 
 [dependencies]
 num-traits = "0.2"
