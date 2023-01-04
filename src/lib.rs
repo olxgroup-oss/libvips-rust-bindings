@@ -111,7 +111,6 @@ impl VipsApp {
         unsafe {
             let c_str_error = utils::new_c_string(error)?;
             bindings::vips_error_exit(c_str_error.as_ptr());
-            Ok(())
         }
     }
 
