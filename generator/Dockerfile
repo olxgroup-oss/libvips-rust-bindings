@@ -12,6 +12,7 @@ RUN apk add --update --no-cache --repository=https://dl-cdn.alpinelinux.org/alpi
             glib-dev \
             expat-dev \
             tiff-dev \
+            cgif-dev \
             libjpeg-turbo-dev \
             libexif-dev \
             giflib-dev \
@@ -37,7 +38,7 @@ WORKDIR /vips
 
 RUN ./configure --enable-debug=no --without-python
 
-RUN make
+RUN make -j10
 
 RUN make install
 
@@ -49,4 +50,4 @@ RUN rm -rf vips
 
 RUN rm -f vips-${VIPS_VERSION}.tar.gz
 
-RUN rustup component add rustfmt --toolchain 1.66.0-x86_64-unknown-linux-musl
+RUN rustup component add rustfmt
