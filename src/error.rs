@@ -1,4 +1,3 @@
-
 #[derive(Debug)]
 pub enum Error {
     InitializationError(&'static str),
@@ -173,6 +172,9 @@ pub enum Error {
     WebpsaveError,
     WebpsaveBufferError,
     WebpsaveTargetError,
+    GifsaveError,
+    GifsaveBufferError,
+    GifsaveTargetError,
     TiffsaveError,
     TiffsaveBufferError,
     TiffsaveTargetError,
@@ -961,6 +963,18 @@ impl std::fmt::Display for Error {
             Error::WebpsaveTargetError => write!(
                 f,
                 "vips error: WebpsaveTargetError. Check error buffer for more details"
+            ),
+            Error::GifsaveError => write!(
+                f,
+                "vips error: GifsaveError. Check error buffer for more details"
+            ),
+            Error::GifsaveBufferError => write!(
+                f,
+                "vips error: GifsaveBufferError. Check error buffer for more details"
+            ),
+            Error::GifsaveTargetError => write!(
+                f,
+                "vips error: GifsaveTargetError. Check error buffer for more details"
             ),
             Error::TiffsaveError => write!(
                 f,

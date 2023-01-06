@@ -15399,6 +15399,416 @@ pub fn webpsave_target_with_opts(
     }
 }
 
+/// VipsForeignSaveGifFile (gifsave), save image to gif file (.gif), priority=0, rgba
+/// inp: `&VipsImage` -> Image to save
+/// filename: `&str` -> Filename to save to
+
+pub fn gifsave(inp: &VipsImage, filename: &str) -> Result<()> {
+    unsafe {
+        let inp_in: *mut bindings::VipsImage = inp.ctx;
+        let filename_in: CString = utils::new_c_string(filename)?;
+
+        let vips_op_response = bindings::vips_gifsave(inp_in, filename_in.as_ptr(), NULL);
+        utils::result(vips_op_response, (), Error::GifsaveError)
+    }
+}
+
+/// Options for gifsave operation
+#[derive(Clone, Debug)]
+pub struct GifsaveOptions {
+    /// dither: `f64` -> Amount of dithering
+    /// min: 0, max: 1, default: 1
+    pub dither: f64,
+    /// effort: `i32` -> Quantisation CPU effort
+    /// min: 1, max: 10, default: 7
+    pub effort: i32,
+    /// bitdepth: `i32` -> Write as a 1, 2, 4, 8 or 16 bit image
+    /// min: 0, max: 16, default: 8
+    pub bitdepth: i32,
+    /// interframe_maxerror: `f64` -> maximum inter-frame error for transparency
+    /// min: 0, max: 1, default: 0
+    pub interframe_maxerror: f64,
+    /// reoptimize: `bool` -> reoptimise colour palettes
+    /// default: false
+    pub reoptimise: bool,
+    /// interpalette_maxerror: `f64` -> maximum inter-palette error for palette reusage
+    /// min: 0, max: 1, default: 0
+    pub interpalette_maxerror: f64,
+    /// strip: `bool` -> Strip all metadata from image
+    /// default: false
+    pub strip: bool,
+    /// background: `Vec<f64>` -> Background value
+    pub background: Vec<f64>,
+    /// page_height: `i32` -> Set page height for multipage save
+    /// min: 0, max: 10000000, default: 0
+    pub page_height: i32,
+}
+
+impl std::default::Default for GifsaveOptions {
+    fn default() -> Self {
+        GifsaveOptions {
+            dither: f64::from(1),
+            effort: i32::from(7),
+            bitdepth: i32::from(8),
+            interframe_maxerror: f64::from(0),
+            reoptimise: false,
+            interpalette_maxerror: f64::from(0),
+            strip: false,
+            background: Vec::new(),
+            page_height: i32::from(0),
+        }
+    }
+}
+
+/// VipsForeignSaveGifFile (gifsave), save image to gif file (.gif), priority=0, rgba
+/// inp: `&VipsImage` -> Image to save
+/// filename: `&str` -> Filename to save to
+/// gifsave_options: `&GifsaveOptions` -> optional arguments
+
+pub fn gifsave_with_opts(
+    inp: &VipsImage,
+    filename: &str,
+    gifsave_options: &GifsaveOptions,
+) -> Result<()> {
+    unsafe {
+        let inp_in: *mut bindings::VipsImage = inp.ctx;
+        let filename_in: CString = utils::new_c_string(filename)?;
+
+        let dither_in: f64 = gifsave_options.dither;
+        let dither_in_name = utils::new_c_string("dither")?;
+
+        let effort_in: i32 = gifsave_options.effort;
+        let effort_in_name = utils::new_c_string("effort")?;
+
+        let bitdepth_in: i32 = gifsave_options.bitdepth;
+        let bitdepth_in_name = utils::new_c_string("bitdepth")?;
+
+        let interframe_maxerror_in: f64 = gifsave_options.interframe_maxerror;
+        let interframe_maxerror_in_name = utils::new_c_string("interframe_maxerror")?;
+
+        let reoptimise_in: i32 = if gifsave_options.reoptimise { 1 } else { 0 };
+        let reoptimise_in_name = utils::new_c_string("reoptimise")?;
+
+        let interpalette_maxerror_in: f64 = gifsave_options.interpalette_maxerror;
+        let interpalette_maxerror_in_name = utils::new_c_string("interpalette_maxerror")?;
+
+        let strip_in: i32 = if gifsave_options.strip { 1 } else { 0 };
+        let strip_in_name = utils::new_c_string("strip")?;
+
+        let background_wrapper =
+            utils::VipsArrayDoubleWrapper::from(&gifsave_options.background[..]);
+        let background_in = background_wrapper.ctx;
+        let background_in_name = utils::new_c_string("background")?;
+
+        let page_height_in: i32 = gifsave_options.page_height;
+        let page_height_in_name = utils::new_c_string("page-height")?;
+
+        let vips_op_response = bindings::vips_gifsave(
+            inp_in,
+            filename_in.as_ptr(),
+            dither_in_name.as_ptr(),
+            dither_in,
+            effort_in_name.as_ptr(),
+            effort_in,
+            bitdepth_in_name.as_ptr(),
+            bitdepth_in,
+            interframe_maxerror_in_name.as_ptr(),
+            interframe_maxerror_in,
+            reoptimise_in_name.as_ptr(),
+            reoptimise_in,
+            interpalette_maxerror_in_name.as_ptr(),
+            interpalette_maxerror_in,
+            strip_in_name.as_ptr(),
+            strip_in,
+            background_in_name.as_ptr(),
+            background_in,
+            page_height_in_name.as_ptr(),
+            page_height_in,
+            NULL,
+        );
+        utils::result(vips_op_response, (), Error::GifsaveError)
+    }
+}
+
+/// VipsForeignSaveGifBuffer (gifsave_buffer), save image to gif buffer (.gif), priority=0, rgba
+/// inp: `&VipsImage` -> Image to save
+/// returns `Vec<u8>` - Buffer to save to
+pub fn gifsave_buffer(inp: &VipsImage) -> Result<Vec<u8>> {
+    unsafe {
+        let inp_in: *mut bindings::VipsImage = inp.ctx;
+        let mut buffer_buf_size: u64 = 0;
+        let mut buffer_out: *mut c_void = null_mut();
+
+        let vips_op_response =
+            bindings::vips_gifsave_buffer(inp_in, &mut buffer_out, &mut buffer_buf_size, NULL);
+        utils::result(
+            vips_op_response,
+            utils::new_byte_array(buffer_out, buffer_buf_size),
+            Error::GifsaveBufferError,
+        )
+    }
+}
+
+/// Options for gifsave_buffer operation
+#[derive(Clone, Debug)]
+pub struct GifsaveBufferOptions {
+    /// dither: `f64` -> Amount of dithering
+    /// min: 0, max: 1, default: 1
+    pub dither: f64,
+    /// effort: `i32` -> Quantisation CPU effort
+    /// min: 1, max: 10, default: 7
+    pub effort: i32,
+    /// bitdepth: `i32` -> Write as a 1, 2, 4, 8 or 16 bit image
+    /// min: 0, max: 16, default: 8
+    pub bitdepth: i32,
+    /// interframe_maxerror: `f64` -> maximum inter-frame error for transparency
+    /// min: 0, max: 1, default: 0
+    pub interframe_maxerror: f64,
+    /// reoptimize: `bool` -> reoptimise colour palettes
+    /// default: false
+    pub reoptimise: bool,
+    /// interpalette_maxerror: `f64` -> maximum inter-palette error for palette reusage
+    /// min: 0, max: 1, default: 0
+    pub interpalette_maxerror: f64,
+    /// strip: `bool` -> Strip all metadata from image
+    /// default: false
+    pub strip: bool,
+    /// background: `Vec<f64>` -> Background value
+    pub background: Vec<f64>,
+    /// page_height: `i32` -> Set page height for multipage save
+    /// min: 0, max: 10000000, default: 0
+    pub page_height: i32,
+}
+
+impl std::default::Default for GifsaveBufferOptions {
+    fn default() -> Self {
+        GifsaveBufferOptions {
+            dither: f64::from(1),
+            effort: i32::from(7),
+            bitdepth: i32::from(8),
+            interframe_maxerror: f64::from(0),
+            reoptimise: false,
+            interpalette_maxerror: f64::from(0),
+            strip: false,
+            background: Vec::new(),
+            page_height: i32::from(0),
+        }
+    }
+}
+
+/// VipsForeignSaveGifBuffer (gifsave_buffer), save image to gif buffer (.gif), priority=0, rgba
+/// inp: `&VipsImage` -> Image to save
+/// gifsave_buffer_options: `&GifsaveBufferOptions` -> optional arguments
+/// returns `Vec<u8>` - Buffer to save to
+pub fn gifsave_buffer_with_opts(
+    inp: &VipsImage,
+    gifsave_buffer_options: &GifsaveBufferOptions,
+) -> Result<Vec<u8>> {
+    unsafe {
+        let inp_in: *mut bindings::VipsImage = inp.ctx;
+        let mut buffer_buf_size: u64 = 0;
+        let mut buffer_out: *mut c_void = null_mut();
+
+        let dither_in: f64 = gifsave_buffer_options.dither;
+        let dither_in_name = utils::new_c_string("dither")?;
+
+        let effort_in: i32 = gifsave_buffer_options.effort;
+        let effort_in_name = utils::new_c_string("effort")?;
+
+        let bitdepth_in: i32 = gifsave_buffer_options.bitdepth;
+        let bitdepth_in_name = utils::new_c_string("bitdepth")?;
+
+        let interframe_maxerror_in: f64 = gifsave_buffer_options.interframe_maxerror;
+        let interframe_maxerror_in_name = utils::new_c_string("interframe_maxerror")?;
+
+        let reoptimise_in: i32 = if gifsave_buffer_options.reoptimise {
+            1
+        } else {
+            0
+        };
+        let reoptimise_in_name = utils::new_c_string("reoptimise")?;
+
+        let interpalette_maxerror_in: f64 = gifsave_buffer_options.interpalette_maxerror;
+        let interpalette_maxerror_in_name = utils::new_c_string("interpalette_maxerror")?;
+
+        let strip_in: i32 = if gifsave_buffer_options.strip { 1 } else { 0 };
+        let strip_in_name = utils::new_c_string("strip")?;
+
+        let background_wrapper =
+            utils::VipsArrayDoubleWrapper::from(&gifsave_buffer_options.background[..]);
+        let background_in = background_wrapper.ctx;
+        let background_in_name = utils::new_c_string("background")?;
+
+        let page_height_in: i32 = gifsave_buffer_options.page_height;
+        let page_height_in_name = utils::new_c_string("page-height")?;
+
+        let vips_op_response = bindings::vips_gifsave_buffer(
+            inp_in,
+            &mut buffer_out,
+            &mut buffer_buf_size,
+            dither_in_name.as_ptr(),
+            dither_in,
+            effort_in_name.as_ptr(),
+            effort_in,
+            bitdepth_in_name.as_ptr(),
+            bitdepth_in,
+            interframe_maxerror_in_name.as_ptr(),
+            interframe_maxerror_in,
+            reoptimise_in_name.as_ptr(),
+            reoptimise_in,
+            interpalette_maxerror_in_name.as_ptr(),
+            interpalette_maxerror_in,
+            strip_in_name.as_ptr(),
+            strip_in,
+            background_in_name.as_ptr(),
+            background_in,
+            page_height_in_name.as_ptr(),
+            page_height_in,
+            NULL,
+        );
+        utils::result(
+            vips_op_response,
+            utils::new_byte_array(buffer_out, buffer_buf_size),
+            Error::GifsaveBufferError,
+        )
+    }
+}
+
+/// VipsForeignSaveGifTarget (gifsave_target), save image to target as GIF (.gif), priority=0, indexed
+/// inp: `&VipsImage` -> Image to save
+/// target: `&VipsTarget` -> Target to save to
+
+pub fn gifsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
+    unsafe {
+        let inp_in: *mut bindings::VipsImage = inp.ctx;
+        let target_in: *mut bindings::VipsTarget = target.ctx;
+
+        let vips_op_response = bindings::vips_gifsave_target(inp_in, target_in, NULL);
+        utils::result(vips_op_response, (), Error::GifsaveTargetError)
+    }
+}
+
+/// Options for gifsave_target operation
+#[derive(Clone, Debug)]
+pub struct GifsaveTargetOptions {
+    /// dither: `f64` -> Amount of dithering
+    /// min: 0, max: 1, default: 1
+    pub dither: f64,
+    /// effort: `i32` -> Quantisation CPU effort
+    /// min: 1, max: 10, default: 7
+    pub effort: i32,
+    /// bitdepth: `i32` -> Write as a 1, 2, 4, 8 or 16 bit image
+    /// min: 0, max: 16, default: 8
+    pub bitdepth: i32,
+    /// interframe_maxerror: `f64` -> maximum inter-frame error for transparency
+    /// min: 0, max: 1, default: 0
+    pub interframe_maxerror: f64,
+    /// reoptimize: `bool` -> reoptimise colour palettes
+    /// default: false
+    pub reoptimise: bool,
+    /// interpalette_maxerror: `f64` -> maximum inter-palette error for palette reusage
+    /// min: 0, max: 1, default: 0
+    pub interpalette_maxerror: f64,
+    /// strip: `bool` -> Strip all metadata from image
+    /// default: false
+    pub strip: bool,
+    /// background: `Vec<f64>` -> Background value
+    pub background: Vec<f64>,
+    /// page_height: `i32` -> Set page height for multipage save
+    /// min: 0, max: 10000000, default: 0
+    pub page_height: i32,
+}
+
+impl std::default::Default for GifsaveTargetOptions {
+    fn default() -> Self {
+        GifsaveTargetOptions {
+            dither: f64::from(1),
+            effort: i32::from(7),
+            bitdepth: i32::from(8),
+            interframe_maxerror: f64::from(0),
+            reoptimise: false,
+            interpalette_maxerror: f64::from(0),
+            strip: false,
+            background: Vec::new(),
+            page_height: i32::from(0),
+        }
+    }
+}
+
+/// VipsForeignSaveGifTarget (gifsave_target), save image to target as GIF (.gif), priority=0, indexed
+/// inp: `&VipsImage` -> Image to save
+/// target: `&VipsTarget` -> Target to save to
+/// gifsave_target_options: `&GifsaveTargetOptions` -> optional arguments
+
+pub fn gifsave_target_with_opts(
+    inp: &VipsImage,
+    target: &VipsTarget,
+    gifsave_target_options: &GifsaveTargetOptions,
+) -> Result<()> {
+    unsafe {
+        let inp_in: *mut bindings::VipsImage = inp.ctx;
+        let target_in: *mut bindings::VipsTarget = target.ctx;
+
+        let dither_in: f64 = gifsave_target_options.dither;
+        let dither_in_name = utils::new_c_string("dither")?;
+
+        let effort_in: i32 = gifsave_target_options.effort;
+        let effort_in_name = utils::new_c_string("effort")?;
+
+        let bitdepth_in: i32 = gifsave_target_options.bitdepth;
+        let bitdepth_in_name = utils::new_c_string("bitdepth")?;
+
+        let interframe_maxerror_in: f64 = gifsave_target_options.interframe_maxerror;
+        let interframe_maxerror_in_name = utils::new_c_string("interframe_maxerror")?;
+
+        let reoptimise_in: i32 = if gifsave_target_options.reoptimise {
+            1
+        } else {
+            0
+        };
+        let reoptimise_in_name = utils::new_c_string("reoptimise")?;
+
+        let interpalette_maxerror_in: f64 = gifsave_target_options.interpalette_maxerror;
+        let interpalette_maxerror_in_name = utils::new_c_string("interpalette_maxerror")?;
+
+        let strip_in: i32 = if gifsave_target_options.strip { 1 } else { 0 };
+        let strip_in_name = utils::new_c_string("strip")?;
+
+        let background_wrapper =
+            utils::VipsArrayDoubleWrapper::from(&gifsave_target_options.background[..]);
+        let background_in = background_wrapper.ctx;
+        let background_in_name = utils::new_c_string("background")?;
+
+        let page_height_in: i32 = gifsave_target_options.page_height;
+        let page_height_in_name = utils::new_c_string("page-height")?;
+
+        let vips_op_response = bindings::vips_gifsave_target(
+            inp_in,
+            target_in,
+            dither_in_name.as_ptr(),
+            dither_in,
+            effort_in_name.as_ptr(),
+            effort_in,
+            bitdepth_in_name.as_ptr(),
+            bitdepth_in,
+            interframe_maxerror_in_name.as_ptr(),
+            interframe_maxerror_in,
+            reoptimise_in_name.as_ptr(),
+            reoptimise_in,
+            interpalette_maxerror_in_name.as_ptr(),
+            interpalette_maxerror_in,
+            strip_in_name.as_ptr(),
+            strip_in,
+            background_in_name.as_ptr(),
+            background_in,
+            page_height_in_name.as_ptr(),
+            page_height_in,
+            NULL,
+        );
+        utils::result(vips_op_response, (), Error::GifsaveTargetError)
+    }
+}
+
 /// VipsForeignSaveTiffFile (tiffsave), save image to tiff file (.tif, .tiff), priority=0, any
 /// inp: `&VipsImage` -> Image to save
 /// filename: `&str` -> Filename to save to
