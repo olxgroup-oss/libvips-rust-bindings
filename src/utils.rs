@@ -17,6 +17,26 @@ pub(crate) struct VipsArrayImageWrapper {
     pub ctx: *mut VipsArrayImage,
 }
 
+impl VipsArrayIntWrapper {
+    pub fn as_slice(&self) -> &[i32] {
+        unsafe {
+            let mut n: i32 = 0;
+            let ptr = bindings::vips_array_int_get(self.ctx, &mut n);
+            std::slice::from_raw_parts(ptr, n as usize)
+        }
+    }
+}
+
+impl VipsArrayDoubleWrapper {
+    pub fn as_slice(&self) -> &[f64] {
+        unsafe {
+            let mut n: i32 = 0;
+            let ptr = bindings::vips_array_double_get(self.ctx, &mut n);
+            std::slice::from_raw_parts(ptr, n as usize)
+        }
+    }
+}
+
 impl Drop for VipsArrayIntWrapper {
     fn drop(&mut self) {
         unsafe {

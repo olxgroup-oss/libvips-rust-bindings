@@ -6,14 +6,14 @@
 /// a: `&[f64]` -> Multiply by this. Must have equal len as b
 /// b: `&[f64]` -> Add this. Must have equal len as a
 /// returns `VipsImage` - Output image
-pub fn linear(inp: &VipsImage, a: &mut[f64], b: &mut[f64]) -> Result<VipsImage> {
+pub fn linear(inp: &VipsImage, a: &[f64], b: &[f64]) -> Result<VipsImage> {
     unsafe {
         if a.len() != b.len() {
-            return Err(Error::LinearError)
+            return Err(Error::LinearError);
         }
         let inp_in: *mut bindings::VipsImage = inp.ctx;
-        let a_in: *mut f64 = a.as_mut_ptr();
-        let b_in: *mut f64 = b.as_mut_ptr();
+        let a_in: *const f64 = a.as_ptr();
+        let b_in: *const f64 = b.as_ptr();
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
         let vips_op_response =
@@ -47,17 +47,17 @@ impl std::default::Default for LinearOptions {
 /// returns `VipsImage` - Output image
 pub fn linear_with_opts(
     inp: &VipsImage,
-    a: &mut [f64],
-    b: &mut [f64],
+    a: &[f64],
+    b: &[f64],
     linear_options: &LinearOptions,
 ) -> Result<VipsImage> {
     unsafe {
         if a.len() != b.len() {
-            return Err(Error::LinearError)
+            return Err(Error::LinearError);
         }
         let inp_in: *mut bindings::VipsImage = inp.ctx;
-        let a_in: *mut f64 = a.as_mut_ptr();
-        let b_in: *mut f64 = b.as_mut_ptr();
+        let a_in: *const f64 = a.as_ptr();
+        let b_in: *const f64 = b.as_ptr();
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
         let uchar_in: i32 = if linear_options.uchar { 1 } else { 0 };
@@ -94,14 +94,8 @@ pub fn getpoint(inp: &VipsImage, x: i32, y: i32) -> Result<Vec<f64>> {
         let mut out_array_size: i32 = 0;
         let mut out_array: *mut f64 = null_mut();
 
-        let vips_op_response = bindings::vips_getpoint(
-            inp_in,
-            &mut out_array,
-            &mut out_array_size,
-            x,
-            y,
-            NULL,
-        );
+        let vips_op_response =
+            bindings::vips_getpoint(inp_in, &mut out_array, &mut out_array_size, x, y, NULL);
         utils::result(
             vips_op_response,
             utils::new_double_array(out_array, out_array_size.try_into().unwrap()),
@@ -128,5 +122,48 @@ pub fn case(index: &VipsImage, cases: &mut [VipsImage], n: i32) -> Result<VipsIm
             VipsImage { ctx: out_out },
             Error::CaseError,
         )
+    }
+}
+
+pub fn max_with_xy(inp: &VipsImage, size: i32) -> Result<Vec<(f64, i32, i32)>> {
+    unsafe {
+        let inp_in: *mut bindings::VipsImage = inp.ctx;
+        let mut out_out: f64 = f64::from(0);
+
+        let size_in: i32 = size;
+        let size_in_name = utils::new_c_string("size")?;
+
+        let mut out_array_in: *mut bindings::VipsArrayDouble = std::ptr::null_mut();
+        let out_array_in_name = utils::new_c_string("out-array")?;
+
+        let mut x_array_in: *mut bindings::VipsArrayInt = std::ptr::null_mut();
+        let x_array_in_name = utils::new_c_string("x-array")?;
+
+        let mut y_array_in: *mut bindings::VipsArrayInt = std::ptr::null_mut();
+        let y_array_in_name = utils::new_c_string("y-array")?;
+
+        let vips_op_response = bindings::vips_max(
+            inp_in,
+            &mut out_out,
+            size_in_name.as_ptr(),
+            size_in,
+            out_array_in_name.as_ptr(),
+            &mut out_array_in,
+            x_array_in_name.as_ptr(),
+            &mut x_array_in,
+            y_array_in_name.as_ptr(),
+            &mut y_array_in,
+            NULL,
+        );
+        utils::result(vips_op_response, (), Error::MaxError)?;
+        let out_array = utils::VipsArrayDoubleWrapper { ctx: out_array_in };
+        let x_array = utils::VipsArrayIntWrapper { ctx: x_array_in };
+        let y_array = utils::VipsArrayIntWrapper { ctx: y_array_in };
+        Ok(std::iter::zip(
+            out_array.as_slice(),
+            std::iter::zip(x_array.as_slice(), y_array.as_slice()),
+        )
+        .map(|(v, (x, y))| (*v, *x, *y))
+        .collect())
     }
 }
