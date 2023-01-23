@@ -2,9 +2,9 @@
 [package]
 name = "libvips"
 description = "Safe bindings for libvips"
-version = "1.5.0"
+version = "1.5.1"
 authors = ["Augusto César Dias <augusto.c.dias@gmail.com>"]
-repository = "https://github.com/augustocdias/libvips-rust-bindings"
+repository = "https://github.com/olxgroup-oss/libvips-rust-bindings"
 readme = "README.md"
 license = "MIT"
 edition = "2018"
