@@ -9481,6 +9481,470 @@ pub fn radload_source_with_opts(
     }
 }
 
+/// VipsForeignLoadPdfFile (pdfload), load PDF from file (.pdf), priority=0, untrusted, is_a, get_flags, get_flags_filename, header, load
+/// filename: `&str` -> Filename to load from
+/// returns `VipsImage` - Output image
+pub fn pdfload(filename: &str) -> Result<VipsImage> {
+    unsafe {
+        let filename_in: CString = utils::new_c_string(filename)?;
+        let mut out_out: *mut bindings::VipsImage = null_mut();
+
+        let vips_op_response = bindings::vips_pdfload(filename_in.as_ptr(), &mut out_out, NULL);
+        utils::result(
+            vips_op_response,
+            VipsImage { ctx: out_out },
+            Error::PdfloadError,
+        )
+    }
+}
+
+/// Options for pdfload operation
+#[derive(Clone, Debug)]
+pub struct PdfloadOptions {
+    /// page: `i32` -> Load this page from the file
+    /// min: 0, max: 100000, default: 0
+    pub page: i32,
+    /// n: `i32` -> Load this many pages
+    /// min: -1, max: 100000, default: 1
+    pub n: i32,
+    /// dpi: `f64` -> Render at this DPI
+    /// min: 0.001, max: 100000, default: 72
+    pub dpi: f64,
+    /// scale: `f64` -> Scale output by this factor
+    /// min: 0.001, max: 100000, default: 1
+    pub scale: f64,
+    /// background: `Vec<f64>` -> Background value
+    pub background: Vec<f64>,
+    /// password: `String` -> Decrypt with this password
+    pub password: String,
+    /// flags: `ForeignFlags` -> Flags for this file
+    ///  `None` -> VIPS_FOREIGN_NONE = 0 [DEFAULT]
+    ///  `Partial` -> VIPS_FOREIGN_PARTIAL = 1
+    ///  `Bigendian` -> VIPS_FOREIGN_BIGENDIAN = 2
+    ///  `Sequential` -> VIPS_FOREIGN_SEQUENTIAL = 4
+    ///  `All` -> VIPS_FOREIGN_ALL = 7
+    pub flags: ForeignFlags,
+    /// memory: `bool` -> Force open via memory
+    /// default: false
+    pub memory: bool,
+    /// access: `Access` -> Required access pattern for this file
+    ///  `Random` -> VIPS_ACCESS_RANDOM = 0 [DEFAULT]
+    ///  `Sequential` -> VIPS_ACCESS_SEQUENTIAL = 1
+    ///  `SequentialUnbuffered` -> VIPS_ACCESS_SEQUENTIAL_UNBUFFERED = 2
+    ///  `Last` -> VIPS_ACCESS_LAST = 3
+    pub access: Access,
+    /// fail_on: `FailOn` -> Error level to fail on
+    ///  `None` -> VIPS_FAIL_ON_NONE = 0 [DEFAULT]
+    ///  `Truncated` -> VIPS_FAIL_ON_TRUNCATED = 1
+    ///  `Error` -> VIPS_FAIL_ON_ERROR = 2
+    ///  `Warning` -> VIPS_FAIL_ON_WARNING = 3
+    ///  `Last` -> VIPS_FAIL_ON_LAST = 4
+    pub fail_on: FailOn,
+}
+
+impl std::default::Default for PdfloadOptions {
+    fn default() -> Self {
+        PdfloadOptions {
+            page: i32::from(0),
+            n: i32::from(1),
+            dpi: f64::from(72),
+            scale: f64::from(1),
+            background: Vec::new(),
+            password: String::new(),
+            flags: ForeignFlags::None,
+            memory: false,
+            access: Access::Random,
+            fail_on: FailOn::None,
+        }
+    }
+}
+
+/// VipsForeignLoadPdfFile (pdfload), load PDF from file (.pdf), priority=0, untrusted, is_a, get_flags, get_flags_filename, header, load
+/// filename: `&str` -> Filename to load from
+/// pdfload_options: `&PdfloadOptions` -> optional arguments
+/// returns `VipsImage` - Output image
+pub fn pdfload_with_opts(filename: &str, pdfload_options: &PdfloadOptions) -> Result<VipsImage> {
+    unsafe {
+        let filename_in: CString = utils::new_c_string(filename)?;
+        let mut out_out: *mut bindings::VipsImage = null_mut();
+
+        let page_in: i32 = pdfload_options.page;
+        let page_in_name = utils::new_c_string("page")?;
+
+        let n_in: i32 = pdfload_options.n;
+        let n_in_name = utils::new_c_string("n")?;
+
+        let dpi_in: f64 = pdfload_options.dpi;
+        let dpi_in_name = utils::new_c_string("dpi")?;
+
+        let scale_in: f64 = pdfload_options.scale;
+        let scale_in_name = utils::new_c_string("scale")?;
+
+        let background_wrapper =
+            utils::VipsArrayDoubleWrapper::from(&pdfload_options.background[..]);
+        let background_in = background_wrapper.ctx;
+        let background_in_name = utils::new_c_string("background")?;
+
+        let password_in: CString = utils::new_c_string(&pdfload_options.password)?;
+        let password_in_name = utils::new_c_string("password")?;
+
+        let flags_in: i32 = pdfload_options.flags as i32;
+        let flags_in_name = utils::new_c_string("flags")?;
+
+        let memory_in: i32 = if pdfload_options.memory { 1 } else { 0 };
+        let memory_in_name = utils::new_c_string("memory")?;
+
+        let access_in: i32 = pdfload_options.access as i32;
+        let access_in_name = utils::new_c_string("access")?;
+
+        let fail_on_in: i32 = pdfload_options.fail_on as i32;
+        let fail_on_in_name = utils::new_c_string("fail-on")?;
+
+        let vips_op_response = bindings::vips_pdfload(
+            filename_in.as_ptr(),
+            &mut out_out,
+            page_in_name.as_ptr(),
+            page_in,
+            n_in_name.as_ptr(),
+            n_in,
+            dpi_in_name.as_ptr(),
+            dpi_in,
+            scale_in_name.as_ptr(),
+            scale_in,
+            background_in_name.as_ptr(),
+            background_in,
+            password_in_name.as_ptr(),
+            password_in.as_ptr(),
+            flags_in_name.as_ptr(),
+            flags_in,
+            memory_in_name.as_ptr(),
+            memory_in,
+            access_in_name.as_ptr(),
+            access_in,
+            fail_on_in_name.as_ptr(),
+            fail_on_in,
+            NULL,
+        );
+        utils::result(
+            vips_op_response,
+            VipsImage { ctx: out_out },
+            Error::PdfloadError,
+        )
+    }
+}
+
+/// VipsForeignLoadPdfBuffer (pdfload_buffer), load PDF from buffer, priority=0, untrusted, is_a_buffer, get_flags, get_flags_filename, header, load
+/// buffer: `&[u8]` -> Buffer to load from
+/// returns `VipsImage` - Output image
+pub fn pdfload_buffer(buffer: &[u8]) -> Result<VipsImage> {
+    unsafe {
+        let buffer_in: *mut c_void = buffer.as_ptr() as *mut c_void;
+        let mut out_out: *mut bindings::VipsImage = null_mut();
+
+        let vips_op_response =
+            bindings::vips_pdfload_buffer(buffer_in, buffer.len() as u64, &mut out_out, NULL);
+        utils::result(
+            vips_op_response,
+            VipsImage { ctx: out_out },
+            Error::PdfloadBufferError,
+        )
+    }
+}
+
+/// Options for pdfload_buffer operation
+#[derive(Clone, Debug)]
+pub struct PdfloadBufferOptions {
+    /// page: `i32` -> Load this page from the file
+    /// min: 0, max: 100000, default: 0
+    pub page: i32,
+    /// n: `i32` -> Load this many pages
+    /// min: -1, max: 100000, default: 1
+    pub n: i32,
+    /// dpi: `f64` -> Render at this DPI
+    /// min: 0.001, max: 100000, default: 72
+    pub dpi: f64,
+    /// scale: `f64` -> Scale output by this factor
+    /// min: 0.001, max: 100000, default: 1
+    pub scale: f64,
+    /// background: `Vec<f64>` -> Background value
+    pub background: Vec<f64>,
+    /// password: `String` -> Decrypt with this password
+    pub password: String,
+    /// flags: `ForeignFlags` -> Flags for this file
+    ///  `None` -> VIPS_FOREIGN_NONE = 0 [DEFAULT]
+    ///  `Partial` -> VIPS_FOREIGN_PARTIAL = 1
+    ///  `Bigendian` -> VIPS_FOREIGN_BIGENDIAN = 2
+    ///  `Sequential` -> VIPS_FOREIGN_SEQUENTIAL = 4
+    ///  `All` -> VIPS_FOREIGN_ALL = 7
+    pub flags: ForeignFlags,
+    /// memory: `bool` -> Force open via memory
+    /// default: false
+    pub memory: bool,
+    /// access: `Access` -> Required access pattern for this file
+    ///  `Random` -> VIPS_ACCESS_RANDOM = 0 [DEFAULT]
+    ///  `Sequential` -> VIPS_ACCESS_SEQUENTIAL = 1
+    ///  `SequentialUnbuffered` -> VIPS_ACCESS_SEQUENTIAL_UNBUFFERED = 2
+    ///  `Last` -> VIPS_ACCESS_LAST = 3
+    pub access: Access,
+    /// fail_on: `FailOn` -> Error level to fail on
+    ///  `None` -> VIPS_FAIL_ON_NONE = 0 [DEFAULT]
+    ///  `Truncated` -> VIPS_FAIL_ON_TRUNCATED = 1
+    ///  `Error` -> VIPS_FAIL_ON_ERROR = 2
+    ///  `Warning` -> VIPS_FAIL_ON_WARNING = 3
+    ///  `Last` -> VIPS_FAIL_ON_LAST = 4
+    pub fail_on: FailOn,
+}
+
+impl std::default::Default for PdfloadBufferOptions {
+    fn default() -> Self {
+        PdfloadBufferOptions {
+            page: i32::from(0),
+            n: i32::from(1),
+            dpi: f64::from(72),
+            scale: f64::from(1),
+            background: Vec::new(),
+            password: String::new(),
+            flags: ForeignFlags::None,
+            memory: false,
+            access: Access::Random,
+            fail_on: FailOn::None,
+        }
+    }
+}
+
+/// VipsForeignLoadPdfBuffer (pdfload_buffer), load PDF from buffer, priority=0, untrusted, is_a_buffer, get_flags, get_flags_filename, header, load
+/// buffer: `&[u8]` -> Buffer to load from
+/// pdfload_buffer_options: `&PdfloadBufferOptions` -> optional arguments
+/// returns `VipsImage` - Output image
+pub fn pdfload_buffer_with_opts(
+    buffer: &[u8],
+    pdfload_buffer_options: &PdfloadBufferOptions,
+) -> Result<VipsImage> {
+    unsafe {
+        let buffer_in: *mut c_void = buffer.as_ptr() as *mut c_void;
+        let mut out_out: *mut bindings::VipsImage = null_mut();
+
+        let page_in: i32 = pdfload_buffer_options.page;
+        let page_in_name = utils::new_c_string("page")?;
+
+        let n_in: i32 = pdfload_buffer_options.n;
+        let n_in_name = utils::new_c_string("n")?;
+
+        let dpi_in: f64 = pdfload_buffer_options.dpi;
+        let dpi_in_name = utils::new_c_string("dpi")?;
+
+        let scale_in: f64 = pdfload_buffer_options.scale;
+        let scale_in_name = utils::new_c_string("scale")?;
+
+        let background_wrapper =
+            utils::VipsArrayDoubleWrapper::from(&pdfload_buffer_options.background[..]);
+        let background_in = background_wrapper.ctx;
+        let background_in_name = utils::new_c_string("background")?;
+
+        let password_in: CString = utils::new_c_string(&pdfload_buffer_options.password)?;
+        let password_in_name = utils::new_c_string("password")?;
+
+        let flags_in: i32 = pdfload_buffer_options.flags as i32;
+        let flags_in_name = utils::new_c_string("flags")?;
+
+        let memory_in: i32 = if pdfload_buffer_options.memory { 1 } else { 0 };
+        let memory_in_name = utils::new_c_string("memory")?;
+
+        let access_in: i32 = pdfload_buffer_options.access as i32;
+        let access_in_name = utils::new_c_string("access")?;
+
+        let fail_on_in: i32 = pdfload_buffer_options.fail_on as i32;
+        let fail_on_in_name = utils::new_c_string("fail-on")?;
+
+        let vips_op_response = bindings::vips_pdfload_buffer(
+            buffer_in,
+            buffer.len() as u64,
+            &mut out_out,
+            page_in_name.as_ptr(),
+            page_in,
+            n_in_name.as_ptr(),
+            n_in,
+            dpi_in_name.as_ptr(),
+            dpi_in,
+            scale_in_name.as_ptr(),
+            scale_in,
+            background_in_name.as_ptr(),
+            background_in,
+            password_in_name.as_ptr(),
+            password_in.as_ptr(),
+            flags_in_name.as_ptr(),
+            flags_in,
+            memory_in_name.as_ptr(),
+            memory_in,
+            access_in_name.as_ptr(),
+            access_in,
+            fail_on_in_name.as_ptr(),
+            fail_on_in,
+            NULL,
+        );
+        utils::result(
+            vips_op_response,
+            VipsImage { ctx: out_out },
+            Error::PdfloadBufferError,
+        )
+    }
+}
+
+/// VipsForeignLoadPdfSource (pdfload_source), load PDF from source, priority=0, untrusted, is_a_source, get_flags, get_flags_filename, header, load
+/// source: `&VipsSource` -> Source to load from
+/// returns `VipsImage` - Output image
+pub fn pdfload_source(source: &VipsSource) -> Result<VipsImage> {
+    unsafe {
+        let source_in: *mut bindings::VipsSource = source.ctx;
+        let mut out_out: *mut bindings::VipsImage = null_mut();
+
+        let vips_op_response = bindings::vips_pdfload_source(source_in, &mut out_out, NULL);
+        utils::result(
+            vips_op_response,
+            VipsImage { ctx: out_out },
+            Error::PdfloadSourceError,
+        )
+    }
+}
+
+/// Options for pdfload_source operation
+#[derive(Clone, Debug)]
+pub struct PdfloadSourceOptions {
+    /// page: `i32` -> Load this page from the file
+    /// min: 0, max: 100000, default: 0
+    pub page: i32,
+    /// n: `i32` -> Load this many pages
+    /// min: -1, max: 100000, default: 1
+    pub n: i32,
+    /// dpi: `f64` -> Render at this DPI
+    /// min: 0.001, max: 100000, default: 72
+    pub dpi: f64,
+    /// scale: `f64` -> Scale output by this factor
+    /// min: 0.001, max: 100000, default: 1
+    pub scale: f64,
+    /// background: `Vec<f64>` -> Background value
+    pub background: Vec<f64>,
+    /// password: `String` -> Decrypt with this password
+    pub password: String,
+    /// flags: `ForeignFlags` -> Flags for this file
+    ///  `None` -> VIPS_FOREIGN_NONE = 0 [DEFAULT]
+    ///  `Partial` -> VIPS_FOREIGN_PARTIAL = 1
+    ///  `Bigendian` -> VIPS_FOREIGN_BIGENDIAN = 2
+    ///  `Sequential` -> VIPS_FOREIGN_SEQUENTIAL = 4
+    ///  `All` -> VIPS_FOREIGN_ALL = 7
+    pub flags: ForeignFlags,
+    /// memory: `bool` -> Force open via memory
+    /// default: false
+    pub memory: bool,
+    /// access: `Access` -> Required access pattern for this file
+    ///  `Random` -> VIPS_ACCESS_RANDOM = 0 [DEFAULT]
+    ///  `Sequential` -> VIPS_ACCESS_SEQUENTIAL = 1
+    ///  `SequentialUnbuffered` -> VIPS_ACCESS_SEQUENTIAL_UNBUFFERED = 2
+    ///  `Last` -> VIPS_ACCESS_LAST = 3
+    pub access: Access,
+    /// fail_on: `FailOn` -> Error level to fail on
+    ///  `None` -> VIPS_FAIL_ON_NONE = 0 [DEFAULT]
+    ///  `Truncated` -> VIPS_FAIL_ON_TRUNCATED = 1
+    ///  `Error` -> VIPS_FAIL_ON_ERROR = 2
+    ///  `Warning` -> VIPS_FAIL_ON_WARNING = 3
+    ///  `Last` -> VIPS_FAIL_ON_LAST = 4
+    pub fail_on: FailOn,
+}
+
+impl std::default::Default for PdfloadSourceOptions {
+    fn default() -> Self {
+        PdfloadSourceOptions {
+            page: i32::from(0),
+            n: i32::from(1),
+            dpi: f64::from(72),
+            scale: f64::from(1),
+            background: Vec::new(),
+            password: String::new(),
+            flags: ForeignFlags::None,
+            memory: false,
+            access: Access::Random,
+            fail_on: FailOn::None,
+        }
+    }
+}
+
+/// VipsForeignLoadPdfSource (pdfload_source), load PDF from source, priority=0, untrusted, is_a_source, get_flags, get_flags_filename, header, load
+/// source: `&VipsSource` -> Source to load from
+/// pdfload_source_options: `&PdfloadSourceOptions` -> optional arguments
+/// returns `VipsImage` - Output image
+pub fn pdfload_source_with_opts(
+    source: &VipsSource,
+    pdfload_source_options: &PdfloadSourceOptions,
+) -> Result<VipsImage> {
+    unsafe {
+        let source_in: *mut bindings::VipsSource = source.ctx;
+        let mut out_out: *mut bindings::VipsImage = null_mut();
+
+        let page_in: i32 = pdfload_source_options.page;
+        let page_in_name = utils::new_c_string("page")?;
+
+        let n_in: i32 = pdfload_source_options.n;
+        let n_in_name = utils::new_c_string("n")?;
+
+        let dpi_in: f64 = pdfload_source_options.dpi;
+        let dpi_in_name = utils::new_c_string("dpi")?;
+
+        let scale_in: f64 = pdfload_source_options.scale;
+        let scale_in_name = utils::new_c_string("scale")?;
+
+        let background_wrapper =
+            utils::VipsArrayDoubleWrapper::from(&pdfload_source_options.background[..]);
+        let background_in = background_wrapper.ctx;
+        let background_in_name = utils::new_c_string("background")?;
+
+        let password_in: CString = utils::new_c_string(&pdfload_source_options.password)?;
+        let password_in_name = utils::new_c_string("password")?;
+
+        let flags_in: i32 = pdfload_source_options.flags as i32;
+        let flags_in_name = utils::new_c_string("flags")?;
+
+        let memory_in: i32 = if pdfload_source_options.memory { 1 } else { 0 };
+        let memory_in_name = utils::new_c_string("memory")?;
+
+        let access_in: i32 = pdfload_source_options.access as i32;
+        let access_in_name = utils::new_c_string("access")?;
+
+        let fail_on_in: i32 = pdfload_source_options.fail_on as i32;
+        let fail_on_in_name = utils::new_c_string("fail-on")?;
+
+        let vips_op_response = bindings::vips_pdfload_source(
+            source_in,
+            &mut out_out,
+            page_in_name.as_ptr(),
+            page_in,
+            n_in_name.as_ptr(),
+            n_in,
+            dpi_in_name.as_ptr(),
+            dpi_in,
+            scale_in_name.as_ptr(),
+            scale_in,
+            background_in_name.as_ptr(),
+            background_in,
+            password_in_name.as_ptr(),
+            password_in.as_ptr(),
+            flags_in_name.as_ptr(),
+            flags_in,
+            memory_in_name.as_ptr(),
+            memory_in,
+            access_in_name.as_ptr(),
+            access_in,
+            fail_on_in_name.as_ptr(),
+            fail_on_in,
+            NULL,
+        );
+        utils::result(
+            vips_op_response,
+            VipsImage { ctx: out_out },
+            Error::PdfloadSourceError,
+        )
+    }
+}
+
 /// VipsForeignLoadSvgFile (svgload), load SVG with rsvg (.svg, .svgz, .svg.gz), priority=-5, untrusted, is_a, get_flags, get_flags_filename, header, load
 /// filename: `&str` -> Filename to load from
 /// returns `VipsImage` - Output image
