@@ -161,6 +161,9 @@ pub enum Error {
     RadsaveError,
     RadsaveBufferError,
     RadsaveTargetError,
+    GifsaveError,
+    GifsaveBufferError,
+    GifsaveTargetError,
     DzsaveError,
     DzsaveTargetError,
     PngsaveError,
@@ -913,6 +916,18 @@ impl std::fmt::Display for Error {
             Error::RadsaveTargetError => write!(
                 f,
                 "vips error: RadsaveTargetError. Check error buffer for more details"
+            ),
+            Error::GifsaveError => write!(
+                f,
+                "vips error: GifsaveError. Check error buffer for more details"
+            ),
+            Error::GifsaveBufferError => write!(
+                f,
+                "vips error: GifsaveBufferError. Check error buffer for more details"
+            ),
+            Error::GifsaveTargetError => write!(
+                f,
+                "vips error: GifsaveTargetError. Check error buffer for more details"
             ),
             Error::DzsaveError => write!(
                 f,

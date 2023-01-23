@@ -6,27 +6,27 @@ ENV VIPS_VERSION=8.13.3
 RUN apk add --update --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/v3.17/main \
             build-base \
             pkgconfig \
-            openssl-dev \
             clang \
             clang-libclang \
-            glib-dev \
-            expat-dev \
-            tiff-dev \
             cgif-dev \
-            libjpeg-turbo-dev \
-            libexif-dev \
+            expat-dev \
+            fftw-dev \
             giflib-dev \
-            librsvg-dev \
+            glib-dev \
+            gobject-introspection-dev \
             lcms2-dev \
-            libpng-dev \
-            orc-dev \
-            libwebp-dev \
+            libexif-dev \
+            libgsf-dev \
             libheif-dev \
             libimagequant-dev \
-            gobject-introspection-dev \
-            fftw-dev \
+            libjpeg-turbo-dev \
+            libpng-dev \
+            librsvg-dev \
+            libwebp-dev \
+            openssl-dev \
+            orc-dev \
             pango-dev \
-            libgsf-dev 
+            tiff-dev
 
 RUN wget https://github.com/libvips/libvips/releases/download/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.gz
 
