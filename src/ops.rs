@@ -331,6 +331,22 @@ pub enum ForeignHeifCompression {
 }
 
 #[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
+pub enum ForeignHeifEncoder {
+    ///  `Auto` -> VIPS_FOREIGN_HEIF_ENCODER_AUTO = 0
+    Auto = 0,
+    ///  `Aom` -> VIPS_FOREIGN_HEIF_ENCODER_AOM = 1
+    Aom = 1,
+    ///  `Rav1E` -> VIPS_FOREIGN_HEIF_ENCODER_RAV1E = 2
+    Rav1E = 2,
+    ///  `Svt` -> VIPS_FOREIGN_HEIF_ENCODER_SVT = 3
+    Svt = 3,
+    ///  `X265` -> VIPS_FOREIGN_HEIF_ENCODER_X265 = 4
+    X265 = 4,
+    ///  `Last` -> VIPS_FOREIGN_HEIF_ENCODER_LAST = 5
+    Last = 5,
+}
+
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
 pub enum ForeignPngFilter {
     ///  `None` -> VIPS_FOREIGN_PNG_FILTER_NONE = 8
     None = 8,
@@ -356,8 +372,10 @@ pub enum ForeignPpmFormat {
     Ppm = 2,
     ///  `Pfm` -> VIPS_FOREIGN_PPM_FORMAT_PFM = 3
     Pfm = 3,
-    ///  `Last` -> VIPS_FOREIGN_PPM_FORMAT_LAST = 4
-    Last = 4,
+    ///  `Pnm` -> VIPS_FOREIGN_PPM_FORMAT_PNM = 4
+    Pnm = 4,
+    ///  `Last` -> VIPS_FOREIGN_PPM_FORMAT_LAST = 5
+    Last = 5,
 }
 
 #[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
@@ -721,6 +739,20 @@ pub enum Size {
     ///  `Force` -> VIPS_SIZE_FORCE = 3
     Force = 3,
     ///  `Last` -> VIPS_SIZE_LAST = 4
+    Last = 4,
+}
+
+#[derive(Copy, Clone, Debug, FromPrimitive, ToPrimitive)]
+pub enum TextWrap {
+    ///  `Word` -> VIPS_TEXT_WRAP_WORD = 0
+    Word = 0,
+    ///  `Char` -> VIPS_TEXT_WRAP_CHAR = 1
+    Char = 1,
+    ///  `WordChar` -> VIPS_TEXT_WRAP_WORD_CHAR = 2
+    WordChar = 2,
+    ///  `None` -> VIPS_TEXT_WRAP_NONE = 3
+    None = 3,
+    ///  `Last` -> VIPS_TEXT_WRAP_LAST = 4
     Last = 4,
 }
 
@@ -3410,6 +3442,12 @@ pub fn smartcrop(input: &VipsImage, width: i32, height: i32) -> Result<VipsImage
 /// Options for smartcrop operation
 #[derive(Clone, Debug)]
 pub struct SmartcropOptions {
+    /// attention_x: `i32` -> Horizontal position of attention centre
+    /// min: 0, max: 10000000, default: 0
+    pub attention_x: i32,
+    /// attention_y: `i32` -> Vertical position of attention centre
+    /// min: 0, max: 10000000, default: 0
+    pub attention_y: i32,
     /// interesting: `Interesting` -> How to measure interestingness
     ///  `None` -> VIPS_INTERESTING_NONE = 0
     ///  `Centre` -> VIPS_INTERESTING_CENTRE = 1
@@ -3425,6 +3463,8 @@ pub struct SmartcropOptions {
 impl std::default::Default for SmartcropOptions {
     fn default() -> Self {
         SmartcropOptions {
+            attention_x: i32::from(0),
+            attention_y: i32::from(0),
             interesting: Interesting::Attention,
         }
     }
@@ -3450,6 +3490,12 @@ pub fn smartcrop_with_opts(
         let height_in: i32 = height;
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
+        let attention_x_in: i32 = smartcrop_options.attention_x;
+        let attention_x_in_name = utils::new_c_string("attention-x")?;
+
+        let attention_y_in: i32 = smartcrop_options.attention_y;
+        let attention_y_in_name = utils::new_c_string("attention-y")?;
+
         let interesting_in: i32 = smartcrop_options.interesting as i32;
         let interesting_in_name = utils::new_c_string("interesting")?;
 
@@ -3458,6 +3504,10 @@ pub fn smartcrop_with_opts(
             &mut out_out,
             width_in,
             height_in,
+            attention_x_in_name.as_ptr(),
+            attention_x_in,
+            attention_y_in_name.as_ptr(),
+            attention_y_in,
             interesting_in_name.as_ptr(),
             interesting_in,
             NULL,
@@ -5667,15 +5717,12 @@ pub struct TextOptions {
     ///  `High` -> VIPS_ALIGN_HIGH = 2
     ///  `Last` -> VIPS_ALIGN_LAST = 3
     pub align: Align,
-    /// rgba: `bool` -> Enable RGBA output
-    /// default: false
-    pub rgba: bool,
-    /// dpi: `i32` -> DPI to render at
-    /// min: 1, max: 1000000, default: 72
-    pub dpi: i32,
     /// justify: `bool` -> Justify lines
     /// default: false
     pub justify: bool,
+    /// dpi: `i32` -> DPI to render at
+    /// min: 1, max: 1000000, default: 72
+    pub dpi: i32,
     /// autofit_dpi: `i32` -> DPI selected by autofit
     /// min: 1, max: 1000000, default: 72
     pub autofit_dpi: i32,
@@ -5684,6 +5731,16 @@ pub struct TextOptions {
     pub spacing: i32,
     /// fontfile: `String` -> Load this font file
     pub fontfile: String,
+    /// rgba: `bool` -> Enable RGBA output
+    /// default: false
+    pub rgba: bool,
+    /// wrap: `TextWrap` -> Wrap lines on word or character boundaries
+    ///  `Word` -> VIPS_TEXT_WRAP_WORD = 0 [DEFAULT]
+    ///  `Char` -> VIPS_TEXT_WRAP_CHAR = 1
+    ///  `WordChar` -> VIPS_TEXT_WRAP_WORD_CHAR = 2
+    ///  `None` -> VIPS_TEXT_WRAP_NONE = 3
+    ///  `Last` -> VIPS_TEXT_WRAP_LAST = 4
+    pub wrap: TextWrap,
 }
 
 impl std::default::Default for TextOptions {
@@ -5693,12 +5750,13 @@ impl std::default::Default for TextOptions {
             width: i32::from(0),
             height: i32::from(0),
             align: Align::Low,
-            rgba: false,
-            dpi: i32::from(72),
             justify: false,
+            dpi: i32::from(72),
             autofit_dpi: i32::from(72),
             spacing: i32::from(0),
             fontfile: String::new(),
+            rgba: false,
+            wrap: TextWrap::Word,
         }
     }
 }
@@ -5724,14 +5782,11 @@ pub fn text_with_opts(text: &str, text_options: &TextOptions) -> Result<VipsImag
         let align_in: i32 = text_options.align as i32;
         let align_in_name = utils::new_c_string("align")?;
 
-        let rgba_in: i32 = if text_options.rgba { 1 } else { 0 };
-        let rgba_in_name = utils::new_c_string("rgba")?;
+        let justify_in: i32 = if text_options.justify { 1 } else { 0 };
+        let justify_in_name = utils::new_c_string("justify")?;
 
         let dpi_in: i32 = text_options.dpi;
         let dpi_in_name = utils::new_c_string("dpi")?;
-
-        let justify_in: i32 = if text_options.justify { 1 } else { 0 };
-        let justify_in_name = utils::new_c_string("justify")?;
 
         let autofit_dpi_in: i32 = text_options.autofit_dpi;
         let autofit_dpi_in_name = utils::new_c_string("autofit-dpi")?;
@@ -5741,6 +5796,12 @@ pub fn text_with_opts(text: &str, text_options: &TextOptions) -> Result<VipsImag
 
         let fontfile_in: CString = utils::new_c_string(&text_options.fontfile)?;
         let fontfile_in_name = utils::new_c_string("fontfile")?;
+
+        let rgba_in: i32 = if text_options.rgba { 1 } else { 0 };
+        let rgba_in_name = utils::new_c_string("rgba")?;
+
+        let wrap_in: i32 = text_options.wrap as i32;
+        let wrap_in_name = utils::new_c_string("wrap")?;
 
         let vips_op_response = bindings::vips_text(
             &mut out_out,
@@ -5753,18 +5814,20 @@ pub fn text_with_opts(text: &str, text_options: &TextOptions) -> Result<VipsImag
             height_in,
             align_in_name.as_ptr(),
             align_in,
-            rgba_in_name.as_ptr(),
-            rgba_in,
-            dpi_in_name.as_ptr(),
-            dpi_in,
             justify_in_name.as_ptr(),
             justify_in,
+            dpi_in_name.as_ptr(),
+            dpi_in,
             autofit_dpi_in_name.as_ptr(),
             autofit_dpi_in,
             spacing_in_name.as_ptr(),
             spacing_in,
             fontfile_in_name.as_ptr(),
             fontfile_in.as_ptr(),
+            rgba_in_name.as_ptr(),
+            rgba_in,
+            wrap_in_name.as_ptr(),
+            wrap_in,
             NULL,
         );
         utils::result(
@@ -8980,7 +9043,7 @@ pub fn analyzeload_with_opts(
     }
 }
 
-/// VipsForeignLoadPpmFile (ppmload), load ppm from file (.pbm, .pgm, .ppm, .pfm), priority=200, untrusted, is_a, get_flags, header, load
+/// VipsForeignLoadPpmFile (ppmload), load ppm from file (.pbm, .pgm, .ppm, .pfm, .pnm), priority=200, untrusted, is_a, get_flags, header, load
 /// filename: `&str` -> Filename to load from
 /// returns `VipsImage` - Output image
 pub fn ppmload(filename: &str) -> Result<VipsImage> {
@@ -9036,7 +9099,7 @@ impl std::default::Default for PpmloadOptions {
     }
 }
 
-/// VipsForeignLoadPpmFile (ppmload), load ppm from file (.pbm, .pgm, .ppm, .pfm), priority=200, untrusted, is_a, get_flags, header, load
+/// VipsForeignLoadPpmFile (ppmload), load ppm from file (.pbm, .pgm, .ppm, .pfm, .pnm), priority=200, untrusted, is_a, get_flags, header, load
 /// filename: `&str` -> Filename to load from
 /// ppmload_options: `&PpmloadOptions` -> optional arguments
 /// returns `VipsImage` - Output image
@@ -9078,7 +9141,7 @@ pub fn ppmload_with_opts(filename: &str, ppmload_options: &PpmloadOptions) -> Re
     }
 }
 
-/// VipsForeignLoadPpmSource (ppmload_source), load ppm base class (.pbm, .pgm, .ppm, .pfm), priority=200, untrusted, is_a_source, get_flags, header, load
+/// VipsForeignLoadPpmSource (ppmload_source), load ppm base class (.pbm, .pgm, .ppm, .pfm, .pnm), priority=200, untrusted, is_a_source, get_flags, header, load
 /// source: `&VipsSource` -> Source to load from
 /// returns `VipsImage` - Output image
 pub fn ppmload_source(source: &VipsSource) -> Result<VipsImage> {
@@ -9134,7 +9197,7 @@ impl std::default::Default for PpmloadSourceOptions {
     }
 }
 
-/// VipsForeignLoadPpmSource (ppmload_source), load ppm base class (.pbm, .pgm, .ppm, .pfm), priority=200, untrusted, is_a_source, get_flags, header, load
+/// VipsForeignLoadPpmSource (ppmload_source), load ppm base class (.pbm, .pgm, .ppm, .pfm, .pnm), priority=200, untrusted, is_a_source, get_flags, header, load
 /// source: `&VipsSource` -> Source to load from
 /// ppmload_source_options: `&PpmloadSourceOptions` -> optional arguments
 /// returns `VipsImage` - Output image
@@ -9760,10 +9823,10 @@ pub fn gifload(filename: &str) -> Result<VipsImage> {
 /// Options for gifload operation
 #[derive(Clone, Debug)]
 pub struct GifloadOptions {
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
-    /// page: `i32` -> Load this page from the file
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
     /// flags: `ForeignFlags` -> Flags for this file
@@ -9877,10 +9940,10 @@ pub fn gifload_buffer(buffer: &[u8]) -> Result<VipsImage> {
 /// Options for gifload_buffer operation
 #[derive(Clone, Debug)]
 pub struct GifloadBufferOptions {
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
-    /// page: `i32` -> Load this page from the file
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
     /// flags: `ForeignFlags` -> Flags for this file
@@ -9997,10 +10060,10 @@ pub fn gifload_source(source: &VipsSource) -> Result<VipsImage> {
 /// Options for gifload_source operation
 #[derive(Clone, Debug)]
 pub struct GifloadSourceOptions {
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
-    /// page: `i32` -> Load this page from the file
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
     /// flags: `ForeignFlags` -> Flags for this file
@@ -10716,13 +10779,13 @@ pub fn webpload(filename: &str) -> Result<VipsImage> {
 /// Options for webpload operation
 #[derive(Clone, Debug)]
 pub struct WebploadOptions {
-    /// page: `i32` -> Load this page from the file
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
-    /// scale: `f64` -> Scale factor on load
+    /// scale: `f64` -> Factor to scale by
     /// min: 0, max: 1024, default: 1
     pub scale: f64,
     /// flags: `ForeignFlags` -> Flags for this file
@@ -10842,13 +10905,13 @@ pub fn webpload_buffer(buffer: &[u8]) -> Result<VipsImage> {
 /// Options for webpload_buffer operation
 #[derive(Clone, Debug)]
 pub struct WebploadBufferOptions {
-    /// page: `i32` -> Load this page from the file
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
-    /// scale: `f64` -> Scale factor on load
+    /// scale: `f64` -> Factor to scale by
     /// min: 0, max: 1024, default: 1
     pub scale: f64,
     /// flags: `ForeignFlags` -> Flags for this file
@@ -10971,13 +11034,13 @@ pub fn webpload_source(source: &VipsSource) -> Result<VipsImage> {
 /// Options for webpload_source operation
 #[derive(Clone, Debug)]
 pub struct WebploadSourceOptions {
-    /// page: `i32` -> Load this page from the file
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
-    /// scale: `f64` -> Scale factor on load
+    /// scale: `f64` -> Factor to scale by
     /// min: 0, max: 1024, default: 1
     pub scale: f64,
     /// flags: `ForeignFlags` -> Flags for this file
@@ -11099,13 +11162,13 @@ pub fn tiffload(filename: &str) -> Result<VipsImage> {
 /// Options for tiffload operation
 #[derive(Clone, Debug)]
 pub struct TiffloadOptions {
-    /// page: `i32` -> Load this page from the image
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
-    /// subifd: `i32` -> Select subifd index
+    /// subifd: `i32` -> Subifd index
     /// min: -1, max: 100000, default: -1
     pub subifd: i32,
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
     /// autorotate: `bool` -> Rotate image using orientation tag
@@ -11234,13 +11297,13 @@ pub fn tiffload_buffer(buffer: &[u8]) -> Result<VipsImage> {
 /// Options for tiffload_buffer operation
 #[derive(Clone, Debug)]
 pub struct TiffloadBufferOptions {
-    /// page: `i32` -> Load this page from the image
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
-    /// subifd: `i32` -> Select subifd index
+    /// subifd: `i32` -> Subifd index
     /// min: -1, max: 100000, default: -1
     pub subifd: i32,
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
     /// autorotate: `bool` -> Rotate image using orientation tag
@@ -11376,13 +11439,13 @@ pub fn tiffload_source(source: &VipsSource) -> Result<VipsImage> {
 /// Options for tiffload_source operation
 #[derive(Clone, Debug)]
 pub struct TiffloadSourceOptions {
-    /// page: `i32` -> Load this page from the image
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
-    /// subifd: `i32` -> Select subifd index
+    /// subifd: `i32` -> Subifd index
     /// min: -1, max: 100000, default: -1
     pub subifd: i32,
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
     /// autorotate: `bool` -> Rotate image using orientation tag
@@ -11517,10 +11580,10 @@ pub fn heifload(filename: &str) -> Result<VipsImage> {
 /// Options for heifload operation
 #[derive(Clone, Debug)]
 pub struct HeifloadOptions {
-    /// page: `i32` -> Load this page from the file
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
     /// thumbnail: `bool` -> Fetch thumbnail image
@@ -11652,10 +11715,10 @@ pub fn heifload_buffer(buffer: &[u8]) -> Result<VipsImage> {
 /// Options for heifload_buffer operation
 #[derive(Clone, Debug)]
 pub struct HeifloadBufferOptions {
-    /// page: `i32` -> Load this page from the file
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
     /// thumbnail: `bool` -> Fetch thumbnail image
@@ -11798,10 +11861,10 @@ pub fn heifload_source(source: &VipsSource) -> Result<VipsImage> {
 /// Options for heifload_source operation
 #[derive(Clone, Debug)]
 pub struct HeifloadSourceOptions {
-    /// page: `i32` -> Load this page from the file
+    /// page: `i32` -> First page to load
     /// min: 0, max: 100000, default: 0
     pub page: i32,
-    /// n: `i32` -> Load this many pages
+    /// n: `i32` -> Number of pages to load, -1 for all
     /// min: -1, max: 100000, default: 1
     pub n: i32,
     /// thumbnail: `bool` -> Fetch thumbnail image
@@ -12632,7 +12695,7 @@ pub fn vipssave_target_with_opts(
     }
 }
 
-/// VipsForeignSavePpmFile (ppmsave), save image to ppm file (.pbm, .pgm, .ppm, .pfm), priority=0, rgb
+/// VipsForeignSavePpmFile (ppmsave), save image to ppm file (.pbm, .pgm, .ppm, .pfm, .pnm), priority=0, rgb
 /// inp: `&VipsImage` -> Image to save
 /// filename: `&str` -> Filename to save to
 
@@ -12654,7 +12717,8 @@ pub struct PpmsaveOptions {
     ///  `Pgm` -> VIPS_FOREIGN_PPM_FORMAT_PGM = 1
     ///  `Ppm` -> VIPS_FOREIGN_PPM_FORMAT_PPM = 2 [DEFAULT]
     ///  `Pfm` -> VIPS_FOREIGN_PPM_FORMAT_PFM = 3
-    ///  `Last` -> VIPS_FOREIGN_PPM_FORMAT_LAST = 4
+    ///  `Pnm` -> VIPS_FOREIGN_PPM_FORMAT_PNM = 4
+    ///  `Last` -> VIPS_FOREIGN_PPM_FORMAT_LAST = 5
     pub format: ForeignPpmFormat,
     /// ascii: `bool` -> Save as ascii
     /// default: false
@@ -12685,7 +12749,7 @@ impl std::default::Default for PpmsaveOptions {
     }
 }
 
-/// VipsForeignSavePpmFile (ppmsave), save image to ppm file (.pbm, .pgm, .ppm, .pfm), priority=0, rgb
+/// VipsForeignSavePpmFile (ppmsave), save image to ppm file (.pbm, .pgm, .ppm, .pfm, .pnm), priority=0, rgb
 /// inp: `&VipsImage` -> Image to save
 /// filename: `&str` -> Filename to save to
 /// ppmsave_options: `&PpmsaveOptions` -> optional arguments
@@ -12762,7 +12826,8 @@ pub struct PpmsaveTargetOptions {
     ///  `Pgm` -> VIPS_FOREIGN_PPM_FORMAT_PGM = 1
     ///  `Ppm` -> VIPS_FOREIGN_PPM_FORMAT_PPM = 2 [DEFAULT]
     ///  `Pfm` -> VIPS_FOREIGN_PPM_FORMAT_PFM = 3
-    ///  `Last` -> VIPS_FOREIGN_PPM_FORMAT_LAST = 4
+    ///  `Pnm` -> VIPS_FOREIGN_PPM_FORMAT_PNM = 4
+    ///  `Last` -> VIPS_FOREIGN_PPM_FORMAT_LAST = 5
     pub format: ForeignPpmFormat,
     /// ascii: `bool` -> Save as ascii
     /// default: false
@@ -13117,12 +13182,15 @@ pub struct GifsaveOptions {
     /// interframe_maxerror: `f64` -> Maximum inter-frame error for transparency
     /// min: 0, max: 32, default: 0
     pub interframe_maxerror: f64,
-    /// reoptimise: `bool` -> Reoptimise colour palettes
+    /// reuse: `bool` -> Reuse palette from input
     /// default: false
-    pub reoptimise: bool,
+    pub reuse: bool,
     /// interpalette_maxerror: `f64` -> Maximum inter-palette error for palette reusage
     /// min: 0, max: 256, default: 3
     pub interpalette_maxerror: f64,
+    /// interlace: `bool` -> Generate an interlaced (progressive) GIF
+    /// default: false
+    pub interlace: bool,
     /// strip: `bool` -> Strip all metadata from image
     /// default: false
     pub strip: bool,
@@ -13140,8 +13208,9 @@ impl std::default::Default for GifsaveOptions {
             effort: i32::from(7),
             bitdepth: i32::from(8),
             interframe_maxerror: f64::from(0),
-            reoptimise: false,
+            reuse: false,
             interpalette_maxerror: f64::from(3),
+            interlace: false,
             strip: false,
             background: Vec::new(),
             page_height: i32::from(0),
@@ -13175,11 +13244,14 @@ pub fn gifsave_with_opts(
         let interframe_maxerror_in: f64 = gifsave_options.interframe_maxerror;
         let interframe_maxerror_in_name = utils::new_c_string("interframe-maxerror")?;
 
-        let reoptimise_in: i32 = if gifsave_options.reoptimise { 1 } else { 0 };
-        let reoptimise_in_name = utils::new_c_string("reoptimise")?;
+        let reuse_in: i32 = if gifsave_options.reuse { 1 } else { 0 };
+        let reuse_in_name = utils::new_c_string("reuse")?;
 
         let interpalette_maxerror_in: f64 = gifsave_options.interpalette_maxerror;
         let interpalette_maxerror_in_name = utils::new_c_string("interpalette-maxerror")?;
+
+        let interlace_in: i32 = if gifsave_options.interlace { 1 } else { 0 };
+        let interlace_in_name = utils::new_c_string("interlace")?;
 
         let strip_in: i32 = if gifsave_options.strip { 1 } else { 0 };
         let strip_in_name = utils::new_c_string("strip")?;
@@ -13203,10 +13275,12 @@ pub fn gifsave_with_opts(
             bitdepth_in,
             interframe_maxerror_in_name.as_ptr(),
             interframe_maxerror_in,
-            reoptimise_in_name.as_ptr(),
-            reoptimise_in,
+            reuse_in_name.as_ptr(),
+            reuse_in,
             interpalette_maxerror_in_name.as_ptr(),
             interpalette_maxerror_in,
+            interlace_in_name.as_ptr(),
+            interlace_in,
             strip_in_name.as_ptr(),
             strip_in,
             background_in_name.as_ptr(),
@@ -13253,12 +13327,15 @@ pub struct GifsaveBufferOptions {
     /// interframe_maxerror: `f64` -> Maximum inter-frame error for transparency
     /// min: 0, max: 32, default: 0
     pub interframe_maxerror: f64,
-    /// reoptimise: `bool` -> Reoptimise colour palettes
+    /// reuse: `bool` -> Reuse palette from input
     /// default: false
-    pub reoptimise: bool,
+    pub reuse: bool,
     /// interpalette_maxerror: `f64` -> Maximum inter-palette error for palette reusage
     /// min: 0, max: 256, default: 3
     pub interpalette_maxerror: f64,
+    /// interlace: `bool` -> Generate an interlaced (progressive) GIF
+    /// default: false
+    pub interlace: bool,
     /// strip: `bool` -> Strip all metadata from image
     /// default: false
     pub strip: bool,
@@ -13276,8 +13353,9 @@ impl std::default::Default for GifsaveBufferOptions {
             effort: i32::from(7),
             bitdepth: i32::from(8),
             interframe_maxerror: f64::from(0),
-            reoptimise: false,
+            reuse: false,
             interpalette_maxerror: f64::from(3),
+            interlace: false,
             strip: false,
             background: Vec::new(),
             page_height: i32::from(0),
@@ -13310,15 +13388,18 @@ pub fn gifsave_buffer_with_opts(
         let interframe_maxerror_in: f64 = gifsave_buffer_options.interframe_maxerror;
         let interframe_maxerror_in_name = utils::new_c_string("interframe-maxerror")?;
 
-        let reoptimise_in: i32 = if gifsave_buffer_options.reoptimise {
+        let reuse_in: i32 = if gifsave_buffer_options.reuse { 1 } else { 0 };
+        let reuse_in_name = utils::new_c_string("reuse")?;
+
+        let interpalette_maxerror_in: f64 = gifsave_buffer_options.interpalette_maxerror;
+        let interpalette_maxerror_in_name = utils::new_c_string("interpalette-maxerror")?;
+
+        let interlace_in: i32 = if gifsave_buffer_options.interlace {
             1
         } else {
             0
         };
-        let reoptimise_in_name = utils::new_c_string("reoptimise")?;
-
-        let interpalette_maxerror_in: f64 = gifsave_buffer_options.interpalette_maxerror;
-        let interpalette_maxerror_in_name = utils::new_c_string("interpalette-maxerror")?;
+        let interlace_in_name = utils::new_c_string("interlace")?;
 
         let strip_in: i32 = if gifsave_buffer_options.strip { 1 } else { 0 };
         let strip_in_name = utils::new_c_string("strip")?;
@@ -13343,10 +13424,12 @@ pub fn gifsave_buffer_with_opts(
             bitdepth_in,
             interframe_maxerror_in_name.as_ptr(),
             interframe_maxerror_in,
-            reoptimise_in_name.as_ptr(),
-            reoptimise_in,
+            reuse_in_name.as_ptr(),
+            reuse_in,
             interpalette_maxerror_in_name.as_ptr(),
             interpalette_maxerror_in,
+            interlace_in_name.as_ptr(),
+            interlace_in,
             strip_in_name.as_ptr(),
             strip_in,
             background_in_name.as_ptr(),
@@ -13392,12 +13475,15 @@ pub struct GifsaveTargetOptions {
     /// interframe_maxerror: `f64` -> Maximum inter-frame error for transparency
     /// min: 0, max: 32, default: 0
     pub interframe_maxerror: f64,
-    /// reoptimise: `bool` -> Reoptimise colour palettes
+    /// reuse: `bool` -> Reuse palette from input
     /// default: false
-    pub reoptimise: bool,
+    pub reuse: bool,
     /// interpalette_maxerror: `f64` -> Maximum inter-palette error for palette reusage
     /// min: 0, max: 256, default: 3
     pub interpalette_maxerror: f64,
+    /// interlace: `bool` -> Generate an interlaced (progressive) GIF
+    /// default: false
+    pub interlace: bool,
     /// strip: `bool` -> Strip all metadata from image
     /// default: false
     pub strip: bool,
@@ -13415,8 +13501,9 @@ impl std::default::Default for GifsaveTargetOptions {
             effort: i32::from(7),
             bitdepth: i32::from(8),
             interframe_maxerror: f64::from(0),
-            reoptimise: false,
+            reuse: false,
             interpalette_maxerror: f64::from(3),
+            interlace: false,
             strip: false,
             background: Vec::new(),
             page_height: i32::from(0),
@@ -13450,15 +13537,18 @@ pub fn gifsave_target_with_opts(
         let interframe_maxerror_in: f64 = gifsave_target_options.interframe_maxerror;
         let interframe_maxerror_in_name = utils::new_c_string("interframe-maxerror")?;
 
-        let reoptimise_in: i32 = if gifsave_target_options.reoptimise {
+        let reuse_in: i32 = if gifsave_target_options.reuse { 1 } else { 0 };
+        let reuse_in_name = utils::new_c_string("reuse")?;
+
+        let interpalette_maxerror_in: f64 = gifsave_target_options.interpalette_maxerror;
+        let interpalette_maxerror_in_name = utils::new_c_string("interpalette-maxerror")?;
+
+        let interlace_in: i32 = if gifsave_target_options.interlace {
             1
         } else {
             0
         };
-        let reoptimise_in_name = utils::new_c_string("reoptimise")?;
-
-        let interpalette_maxerror_in: f64 = gifsave_target_options.interpalette_maxerror;
-        let interpalette_maxerror_in_name = utils::new_c_string("interpalette-maxerror")?;
+        let interlace_in_name = utils::new_c_string("interlace")?;
 
         let strip_in: i32 = if gifsave_target_options.strip { 1 } else { 0 };
         let strip_in_name = utils::new_c_string("strip")?;
@@ -13482,10 +13572,12 @@ pub fn gifsave_target_with_opts(
             bitdepth_in,
             interframe_maxerror_in_name.as_ptr(),
             interframe_maxerror_in,
-            reoptimise_in_name.as_ptr(),
-            reoptimise_in,
+            reuse_in_name.as_ptr(),
+            reuse_in,
             interpalette_maxerror_in_name.as_ptr(),
             interpalette_maxerror_in,
+            interlace_in_name.as_ptr(),
+            interlace_in,
             strip_in_name.as_ptr(),
             strip_in,
             background_in_name.as_ptr(),
@@ -15194,7 +15286,7 @@ pub fn jpegsave_mime_with_opts(
     }
 }
 
-/// VipsForeignSaveWebpFile (webpsave), save image to webp file (.webp), priority=0, rgba-only
+/// VipsForeignSaveWebpFile (webpsave), save as WebP (.webp), priority=0, rgba-only
 /// inp: `&VipsImage` -> Image to save
 /// filename: `&str` -> Filename to save to
 
@@ -15284,7 +15376,7 @@ impl std::default::Default for WebpsaveOptions {
     }
 }
 
-/// VipsForeignSaveWebpFile (webpsave), save image to webp file (.webp), priority=0, rgba-only
+/// VipsForeignSaveWebpFile (webpsave), save as WebP (.webp), priority=0, rgba-only
 /// inp: `&VipsImage` -> Image to save
 /// filename: `&str` -> Filename to save to
 /// webpsave_options: `&WebpsaveOptions` -> optional arguments
@@ -15388,7 +15480,7 @@ pub fn webpsave_with_opts(
     }
 }
 
-/// VipsForeignSaveWebpBuffer (webpsave_buffer), save image to webp buffer (.webp), priority=0, rgba-only
+/// VipsForeignSaveWebpBuffer (webpsave_buffer), save as WebP (.webp), priority=0, rgba-only
 /// inp: `&VipsImage` -> Image to save
 /// returns `Vec<u8>` - Buffer to save to
 pub fn webpsave_buffer(inp: &VipsImage) -> Result<Vec<u8>> {
@@ -15483,7 +15575,7 @@ impl std::default::Default for WebpsaveBufferOptions {
     }
 }
 
-/// VipsForeignSaveWebpBuffer (webpsave_buffer), save image to webp buffer (.webp), priority=0, rgba-only
+/// VipsForeignSaveWebpBuffer (webpsave_buffer), save as WebP (.webp), priority=0, rgba-only
 /// inp: `&VipsImage` -> Image to save
 /// webpsave_buffer_options: `&WebpsaveBufferOptions` -> optional arguments
 /// returns `Vec<u8>` - Buffer to save to
@@ -15603,7 +15695,7 @@ pub fn webpsave_buffer_with_opts(
     }
 }
 
-/// VipsForeignSaveWebpTarget (webpsave_target), save image to webp target (.webp), priority=0, rgba-only
+/// VipsForeignSaveWebpTarget (webpsave_target), save as WebP (.webp), priority=0, rgba-only
 /// inp: `&VipsImage` -> Image to save
 /// target: `&VipsTarget` -> Target to save to
 
@@ -15693,7 +15785,7 @@ impl std::default::Default for WebpsaveTargetOptions {
     }
 }
 
-/// VipsForeignSaveWebpTarget (webpsave_target), save image to webp target (.webp), priority=0, rgba-only
+/// VipsForeignSaveWebpTarget (webpsave_target), save as WebP (.webp), priority=0, rgba-only
 /// inp: `&VipsImage` -> Image to save
 /// target: `&VipsTarget` -> Target to save to
 /// webpsave_target_options: `&WebpsaveTargetOptions` -> optional arguments
@@ -15806,6 +15898,198 @@ pub fn webpsave_target_with_opts(
             NULL,
         );
         utils::result(vips_op_response, (), Error::WebpsaveTargetError)
+    }
+}
+
+/// VipsForeignSaveWebpMime (webpsave_mime), save image to webp mime (.webp), priority=0, rgba-only
+/// inp: `&VipsImage` -> Image to save
+
+pub fn webpsave_mime(inp: &VipsImage) -> Result<()> {
+    unsafe {
+        let inp_in: *mut bindings::VipsImage = inp.ctx;
+
+        let vips_op_response = bindings::vips_webpsave_mime(inp_in, NULL);
+        utils::result(vips_op_response, (), Error::WebpsaveMimeError)
+    }
+}
+
+/// Options for webpsave_mime operation
+#[derive(Clone, Debug)]
+pub struct WebpsaveMimeOptions {
+    /// q: `i32` -> Q factor
+    /// min: 0, max: 100, default: 75
+    pub q: i32,
+    /// lossless: `bool` -> Enable lossless compression
+    /// default: false
+    pub lossless: bool,
+    /// preset: `ForeignWebpPreset` -> Preset for lossy compression
+    ///  `Default` -> VIPS_FOREIGN_WEBP_PRESET_DEFAULT = 0 [DEFAULT]
+    ///  `Picture` -> VIPS_FOREIGN_WEBP_PRESET_PICTURE = 1
+    ///  `Photo` -> VIPS_FOREIGN_WEBP_PRESET_PHOTO = 2
+    ///  `Drawing` -> VIPS_FOREIGN_WEBP_PRESET_DRAWING = 3
+    ///  `Icon` -> VIPS_FOREIGN_WEBP_PRESET_ICON = 4
+    ///  `Text` -> VIPS_FOREIGN_WEBP_PRESET_TEXT = 5
+    ///  `Last` -> VIPS_FOREIGN_WEBP_PRESET_LAST = 6
+    pub preset: ForeignWebpPreset,
+    /// smart_subsample: `bool` -> Enable high quality chroma subsampling
+    /// default: false
+    pub smart_subsample: bool,
+    /// near_lossless: `bool` -> Enable preprocessing in lossless mode (uses Q)
+    /// default: false
+    pub near_lossless: bool,
+    /// alpha_q: `i32` -> Change alpha plane fidelity for lossy compression
+    /// min: 0, max: 100, default: 100
+    pub alpha_q: i32,
+    /// min_size: `bool` -> Optimise for minimum size
+    /// default: false
+    pub min_size: bool,
+    /// kmin: `i32` -> Minimum number of frames between key frames
+    /// min: 0, max: 2147483647, default: 2147483646
+    pub kmin: i32,
+    /// kmax: `i32` -> Maximum number of frames between key frames
+    /// min: 0, max: 2147483647, default: 2147483647
+    pub kmax: i32,
+    /// effort: `i32` -> Level of CPU effort to reduce file size
+    /// min: 0, max: 6, default: 4
+    pub effort: i32,
+    /// profile: `String` -> ICC profile to embed
+    pub profile: String,
+    /// mixed: `bool` -> Allow mixed encoding (might reduce file size)
+    /// default: false
+    pub mixed: bool,
+    /// strip: `bool` -> Strip all metadata from image
+    /// default: false
+    pub strip: bool,
+    /// background: `Vec<f64>` -> Background value
+    pub background: Vec<f64>,
+    /// page_height: `i32` -> Set page height for multipage save
+    /// min: 0, max: 10000000, default: 0
+    pub page_height: i32,
+}
+
+impl std::default::Default for WebpsaveMimeOptions {
+    fn default() -> Self {
+        WebpsaveMimeOptions {
+            q: i32::from(75),
+            lossless: false,
+            preset: ForeignWebpPreset::Default,
+            smart_subsample: false,
+            near_lossless: false,
+            alpha_q: i32::from(100),
+            min_size: false,
+            kmin: i32::from(2147483646),
+            kmax: i32::from(2147483647),
+            effort: i32::from(4),
+            profile: String::from("sRGB"),
+            mixed: false,
+            strip: false,
+            background: Vec::new(),
+            page_height: i32::from(0),
+        }
+    }
+}
+
+/// VipsForeignSaveWebpMime (webpsave_mime), save image to webp mime (.webp), priority=0, rgba-only
+/// inp: `&VipsImage` -> Image to save
+/// webpsave_mime_options: `&WebpsaveMimeOptions` -> optional arguments
+
+pub fn webpsave_mime_with_opts(
+    inp: &VipsImage,
+    webpsave_mime_options: &WebpsaveMimeOptions,
+) -> Result<()> {
+    unsafe {
+        let inp_in: *mut bindings::VipsImage = inp.ctx;
+
+        let q_in: i32 = webpsave_mime_options.q;
+        let q_in_name = utils::new_c_string("Q")?;
+
+        let lossless_in: i32 = if webpsave_mime_options.lossless { 1 } else { 0 };
+        let lossless_in_name = utils::new_c_string("lossless")?;
+
+        let preset_in: i32 = webpsave_mime_options.preset as i32;
+        let preset_in_name = utils::new_c_string("preset")?;
+
+        let smart_subsample_in: i32 = if webpsave_mime_options.smart_subsample {
+            1
+        } else {
+            0
+        };
+        let smart_subsample_in_name = utils::new_c_string("smart-subsample")?;
+
+        let near_lossless_in: i32 = if webpsave_mime_options.near_lossless {
+            1
+        } else {
+            0
+        };
+        let near_lossless_in_name = utils::new_c_string("near-lossless")?;
+
+        let alpha_q_in: i32 = webpsave_mime_options.alpha_q;
+        let alpha_q_in_name = utils::new_c_string("alpha-q")?;
+
+        let min_size_in: i32 = if webpsave_mime_options.min_size { 1 } else { 0 };
+        let min_size_in_name = utils::new_c_string("min-size")?;
+
+        let kmin_in: i32 = webpsave_mime_options.kmin;
+        let kmin_in_name = utils::new_c_string("kmin")?;
+
+        let kmax_in: i32 = webpsave_mime_options.kmax;
+        let kmax_in_name = utils::new_c_string("kmax")?;
+
+        let effort_in: i32 = webpsave_mime_options.effort;
+        let effort_in_name = utils::new_c_string("effort")?;
+
+        let profile_in: CString = utils::new_c_string(&webpsave_mime_options.profile)?;
+        let profile_in_name = utils::new_c_string("profile")?;
+
+        let mixed_in: i32 = if webpsave_mime_options.mixed { 1 } else { 0 };
+        let mixed_in_name = utils::new_c_string("mixed")?;
+
+        let strip_in: i32 = if webpsave_mime_options.strip { 1 } else { 0 };
+        let strip_in_name = utils::new_c_string("strip")?;
+
+        let background_wrapper =
+            utils::VipsArrayDoubleWrapper::from(&webpsave_mime_options.background[..]);
+        let background_in = background_wrapper.ctx;
+        let background_in_name = utils::new_c_string("background")?;
+
+        let page_height_in: i32 = webpsave_mime_options.page_height;
+        let page_height_in_name = utils::new_c_string("page-height")?;
+
+        let vips_op_response = bindings::vips_webpsave_mime(
+            inp_in,
+            q_in_name.as_ptr(),
+            q_in,
+            lossless_in_name.as_ptr(),
+            lossless_in,
+            preset_in_name.as_ptr(),
+            preset_in,
+            smart_subsample_in_name.as_ptr(),
+            smart_subsample_in,
+            near_lossless_in_name.as_ptr(),
+            near_lossless_in,
+            alpha_q_in_name.as_ptr(),
+            alpha_q_in,
+            min_size_in_name.as_ptr(),
+            min_size_in,
+            kmin_in_name.as_ptr(),
+            kmin_in,
+            kmax_in_name.as_ptr(),
+            kmax_in,
+            effort_in_name.as_ptr(),
+            effort_in,
+            profile_in_name.as_ptr(),
+            profile_in.as_ptr(),
+            mixed_in_name.as_ptr(),
+            mixed_in,
+            strip_in_name.as_ptr(),
+            strip_in,
+            background_in_name.as_ptr(),
+            background_in,
+            page_height_in_name.as_ptr(),
+            page_height_in,
+            NULL,
+        );
+        utils::result(vips_op_response, (), Error::WebpsaveMimeError)
     }
 }
 
@@ -16772,6 +17056,14 @@ pub struct HeifsaveOptions {
     ///  `Off` -> VIPS_FOREIGN_SUBSAMPLE_OFF = 2
     ///  `Last` -> VIPS_FOREIGN_SUBSAMPLE_LAST = 3
     pub subsample_mode: ForeignSubsample,
+    /// encoder: `ForeignHeifEncoder` -> Select encoder to use
+    ///  `Auto` -> VIPS_FOREIGN_HEIF_ENCODER_AUTO = 0 [DEFAULT]
+    ///  `Aom` -> VIPS_FOREIGN_HEIF_ENCODER_AOM = 1
+    ///  `Rav1E` -> VIPS_FOREIGN_HEIF_ENCODER_RAV1E = 2
+    ///  `Svt` -> VIPS_FOREIGN_HEIF_ENCODER_SVT = 3
+    ///  `X265` -> VIPS_FOREIGN_HEIF_ENCODER_X265 = 4
+    ///  `Last` -> VIPS_FOREIGN_HEIF_ENCODER_LAST = 5
+    pub encoder: ForeignHeifEncoder,
     /// strip: `bool` -> Strip all metadata from image
     /// default: false
     pub strip: bool,
@@ -16791,6 +17083,7 @@ impl std::default::Default for HeifsaveOptions {
             compression: ForeignHeifCompression::Hevc,
             effort: i32::from(4),
             subsample_mode: ForeignSubsample::Auto,
+            encoder: ForeignHeifEncoder::Auto,
             strip: false,
             background: Vec::new(),
             page_height: i32::from(0),
@@ -16830,6 +17123,9 @@ pub fn heifsave_with_opts(
         let subsample_mode_in: i32 = heifsave_options.subsample_mode as i32;
         let subsample_mode_in_name = utils::new_c_string("subsample-mode")?;
 
+        let encoder_in: i32 = heifsave_options.encoder as i32;
+        let encoder_in_name = utils::new_c_string("encoder")?;
+
         let strip_in: i32 = if heifsave_options.strip { 1 } else { 0 };
         let strip_in_name = utils::new_c_string("strip")?;
 
@@ -16856,6 +17152,8 @@ pub fn heifsave_with_opts(
             effort_in,
             subsample_mode_in_name.as_ptr(),
             subsample_mode_in,
+            encoder_in_name.as_ptr(),
+            encoder_in,
             strip_in_name.as_ptr(),
             strip_in,
             background_in_name.as_ptr(),
@@ -16915,6 +17213,14 @@ pub struct HeifsaveBufferOptions {
     ///  `Off` -> VIPS_FOREIGN_SUBSAMPLE_OFF = 2
     ///  `Last` -> VIPS_FOREIGN_SUBSAMPLE_LAST = 3
     pub subsample_mode: ForeignSubsample,
+    /// encoder: `ForeignHeifEncoder` -> Select encoder to use
+    ///  `Auto` -> VIPS_FOREIGN_HEIF_ENCODER_AUTO = 0 [DEFAULT]
+    ///  `Aom` -> VIPS_FOREIGN_HEIF_ENCODER_AOM = 1
+    ///  `Rav1E` -> VIPS_FOREIGN_HEIF_ENCODER_RAV1E = 2
+    ///  `Svt` -> VIPS_FOREIGN_HEIF_ENCODER_SVT = 3
+    ///  `X265` -> VIPS_FOREIGN_HEIF_ENCODER_X265 = 4
+    ///  `Last` -> VIPS_FOREIGN_HEIF_ENCODER_LAST = 5
+    pub encoder: ForeignHeifEncoder,
     /// strip: `bool` -> Strip all metadata from image
     /// default: false
     pub strip: bool,
@@ -16934,6 +17240,7 @@ impl std::default::Default for HeifsaveBufferOptions {
             compression: ForeignHeifCompression::Hevc,
             effort: i32::from(4),
             subsample_mode: ForeignSubsample::Auto,
+            encoder: ForeignHeifEncoder::Auto,
             strip: false,
             background: Vec::new(),
             page_height: i32::from(0),
@@ -16976,6 +17283,9 @@ pub fn heifsave_buffer_with_opts(
         let subsample_mode_in: i32 = heifsave_buffer_options.subsample_mode as i32;
         let subsample_mode_in_name = utils::new_c_string("subsample-mode")?;
 
+        let encoder_in: i32 = heifsave_buffer_options.encoder as i32;
+        let encoder_in_name = utils::new_c_string("encoder")?;
+
         let strip_in: i32 = if heifsave_buffer_options.strip { 1 } else { 0 };
         let strip_in_name = utils::new_c_string("strip")?;
 
@@ -17003,6 +17313,8 @@ pub fn heifsave_buffer_with_opts(
             effort_in,
             subsample_mode_in_name.as_ptr(),
             subsample_mode_in,
+            encoder_in_name.as_ptr(),
+            encoder_in,
             strip_in_name.as_ptr(),
             strip_in,
             background_in_name.as_ptr(),
@@ -17061,6 +17373,14 @@ pub struct HeifsaveTargetOptions {
     ///  `Off` -> VIPS_FOREIGN_SUBSAMPLE_OFF = 2
     ///  `Last` -> VIPS_FOREIGN_SUBSAMPLE_LAST = 3
     pub subsample_mode: ForeignSubsample,
+    /// encoder: `ForeignHeifEncoder` -> Select encoder to use
+    ///  `Auto` -> VIPS_FOREIGN_HEIF_ENCODER_AUTO = 0 [DEFAULT]
+    ///  `Aom` -> VIPS_FOREIGN_HEIF_ENCODER_AOM = 1
+    ///  `Rav1E` -> VIPS_FOREIGN_HEIF_ENCODER_RAV1E = 2
+    ///  `Svt` -> VIPS_FOREIGN_HEIF_ENCODER_SVT = 3
+    ///  `X265` -> VIPS_FOREIGN_HEIF_ENCODER_X265 = 4
+    ///  `Last` -> VIPS_FOREIGN_HEIF_ENCODER_LAST = 5
+    pub encoder: ForeignHeifEncoder,
     /// strip: `bool` -> Strip all metadata from image
     /// default: false
     pub strip: bool,
@@ -17080,6 +17400,7 @@ impl std::default::Default for HeifsaveTargetOptions {
             compression: ForeignHeifCompression::Hevc,
             effort: i32::from(4),
             subsample_mode: ForeignSubsample::Auto,
+            encoder: ForeignHeifEncoder::Auto,
             strip: false,
             background: Vec::new(),
             page_height: i32::from(0),
@@ -17123,6 +17444,9 @@ pub fn heifsave_target_with_opts(
         let subsample_mode_in: i32 = heifsave_target_options.subsample_mode as i32;
         let subsample_mode_in_name = utils::new_c_string("subsample-mode")?;
 
+        let encoder_in: i32 = heifsave_target_options.encoder as i32;
+        let encoder_in_name = utils::new_c_string("encoder")?;
+
         let strip_in: i32 = if heifsave_target_options.strip { 1 } else { 0 };
         let strip_in_name = utils::new_c_string("strip")?;
 
@@ -17149,6 +17473,8 @@ pub fn heifsave_target_with_opts(
             effort_in,
             subsample_mode_in_name.as_ptr(),
             subsample_mode_in,
+            encoder_in_name.as_ptr(),
+            encoder_in,
             strip_in_name.as_ptr(),
             strip_in,
             background_in_name.as_ptr(),
