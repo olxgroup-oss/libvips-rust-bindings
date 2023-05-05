@@ -60,7 +60,7 @@ fn main() {
     // loads an image from file
     let image = VipsImage::new_from_file("test.png").unwrap();
 
-    // will resized the image and return a new instance.
+    // will resize the image and return a new instance.
     // libvips works most of the time with immutable objects, so it will return a new object
     // the VipsImage struct implements Drop, which will free the memory
     let resized = ops::resize(&image, 0.5).unwrap();
