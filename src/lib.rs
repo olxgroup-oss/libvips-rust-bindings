@@ -182,7 +182,7 @@ impl VipsApp {
     }
 
     /// get the number of worker threads that vips is operating
-    pub fn concurency_get(&self) -> i32 {
+    pub fn concurrency_get(&self) -> i32 {
         unsafe {
             bindings::vips_concurrency_get()
         }
