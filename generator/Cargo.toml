@@ -15,4 +15,4 @@ which = "4.4.0"
 
 [dependencies]
 num-traits = "0.2"
-num-derive = "0.3"
+num-derive = "0.4"
