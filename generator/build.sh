@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker build -t libvips-builder .
+docker build  --progress plain -t libvips-builder .
