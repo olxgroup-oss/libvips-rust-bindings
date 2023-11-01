@@ -22,6 +22,10 @@ $ ./build.sh     # Builds the libvips-builder docker image
 $ ./generate.sh  # Actually generates the bindings
 ```
 
+## A note to the maintainers
+
+The publication of the create is done manually and requires that the _Cargo.lock_ version be updated in the repo after this has been done. This can be changed once github actions have been added to the repo in order to publish after merge.
+
 ## How to use it
 
 The main entity from this crate is the `VipsApp` struct. It doesn't store any information, but as long as it is not dropped, vips should be working as expected.
