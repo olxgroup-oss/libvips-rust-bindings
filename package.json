@@ -61,7 +61,7 @@
     "@semantic-release/release-notes-generator": "10.0.3",
     "semantic-release": "22.0.6",
     "@commitlint/config-conventional": "18.1.0",
-    "@semantic-release/exec": "6.0.3",
+    "@semantic-release/exec": "6.0.3"
   },
   "engines": {
     "node": "^20.0.0"
