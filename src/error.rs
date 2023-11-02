@@ -176,6 +176,7 @@ pub enum Error {
     WebpsaveError,
     WebpsaveBufferError,
     WebpsaveTargetError,
+    WebpsaveMimeError,
     TiffsaveError,
     TiffsaveBufferError,
     TiffsaveTargetError,
@@ -976,6 +977,10 @@ impl std::fmt::Display for Error {
             Error::WebpsaveTargetError => write!(
                 f,
                 "vips error: WebpsaveTargetError. Check error buffer for more details"
+            ),
+            Error::WebpsaveMimeError => write!(
+                f,
+                "vips error: WebpsaveMimeError. Check error buffer for more details"
             ),
             Error::TiffsaveError => write!(
                 f,

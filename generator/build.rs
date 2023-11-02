@@ -40,29 +40,30 @@ impl Operation {
     }
 
     fn doc_returns(&self) -> String {
-        if self.output.len() == 1 {
-            format!(
+        match self.output.len() {
+            0 => String::new(),
+            1 => format!(
                 "/// returns `{}` - {}",
                 self.output[0].param_type.struct_type(),
                 self.output[0].description
-            )
-        } else if self.output.len() > 1 {
-            let res = self
-                .output
-                .iter()
-                .map(|o| format!("/// {} - {}", o.param_type.struct_type(), o.description))
-                .collect::<Vec<_>>()
-                .join("\n");
-            format!("/// Tuple (\n{}\n///)", res)
-        } else {
-            String::new()
+            ),
+            _ => {
+                let res = self
+                    .output
+                    .iter()
+                    .map(|o| format!("/// {} - {}", o.param_type.struct_type(), o.description))
+                    .collect::<Vec<_>>()
+                    .join("\n");
+
+                format!("/// Tuple (\n{}\n///)", res)
+            }
         }
     }
 
     fn doc(&self, with_optional: bool) -> String {
         let base = self.doc_base();
         let returns = self.doc_returns();
-        if self.optional.len() > 0 && with_optional {
+        if !self.optional.is_empty() && with_optional {
             format!("{}\n{}\n{}", base, self.doc_optional(), returns)
         } else {
             format!("{}\n{}", base, returns)
@@ -258,7 +259,7 @@ impl Operation {
                 .collect::<Vec<_>>()
                 .join(", ")
         };
-        let return_type = if self.output.len() == 0 {
+        let return_type = if self.output.is_empty() {
             String::from("()")
         } else if self.output.len() == 1 {
             self.output[0].param_type.struct_type()
@@ -296,7 +297,7 @@ impl Operation {
             self.declaration(false),
             self.method_body(false)
         );
-        if self.optional.len() > 0 {
+        if !self.optional.is_empty() {
             main.push_str(
                 format!(
                     r#"
@@ -323,6 +324,7 @@ struct Parameter {
     order: u8,
     name: String,
     vips_name: String,
+    #[allow(dead_code)]
     nick: String,
     description: String,
     param_type: ParamType,
@@ -373,7 +375,7 @@ impl Parameter {
         );
         let dc = self.param_type.doc();
         if !dc.is_empty() {
-            main_doc.push_str("\n");
+            main_doc.push('\n');
             main_doc.push_str(&dc);
         }
         main_doc
@@ -388,7 +390,7 @@ impl Parameter {
         );
         let dc = self.param_type.doc();
         if !dc.is_empty() {
-            main_doc.push_str("\n");
+            main_doc.push('\n');
             main_doc.push_str(&dc);
         }
         main_doc
@@ -652,12 +654,12 @@ impl ParamType {
             ParamType::Enum {
                 entries, default, ..
             } => entries
-                .into_iter()
+                .iter()
                 .map(|e| {
                     if *default == e.value {
                         format!("{} [DEFAULT]", e.doc())
                     } else {
-                        format!("{}", e.doc())
+                        e.doc().to_string()
                     }
                 })
                 .collect::<Vec<_>>()
@@ -709,9 +711,9 @@ impl ParamType {
     fn enum_name(name: &str) -> String {
         let split: Vec<&str> = name.split("Vips").collect();
         if split.len() > 1 {
-            format!("{}", split[1])
+            split[1].to_string()
         } else {
-            format!("{}", split[0])
+            split[0].to_string()
         }
     }
 
@@ -775,9 +777,9 @@ impl ParamType {
 
     fn default(&self) -> String {
         match self {
-            ParamType::Int { default, .. } => format!("i32::from({})", default.to_string()),
+            ParamType::Int { default, .. } => format!("i32::from({})", default),
             ParamType::UInt { default, .. } => default.to_string(),
-            ParamType::Double { default, .. } => format!("f64::from({})", default.to_string()),
+            ParamType::Double { default, .. } => format!("f64::from({})", default),
             ParamType::Str => String::from("String::new()"),
             ParamType::Bool { default, .. } => default.to_string(),
             ParamType::ArrayInt => String::from("Vec::new()"),
@@ -817,7 +819,7 @@ impl ParamType {
                     {}
                 }}
                 "#,
-                    Self::enum_name(&name),
+                    Self::enum_name(name),
                     enum_entries
                 )
             }
@@ -893,7 +895,7 @@ fn parse_param(param_list: Vec<&str>, order: u8, prev: Option<String>) -> (bool,
     } else {
         (String::from(param_list[0]), false)
     };
-    if vec!["in", "ref"].contains(&param_name.as_str()) {
+    if ["in", "ref"].contains(&param_name.as_str()) {
         param_name = format!("{}p", param_name);
     }
     let nick = param_list[1];
@@ -943,22 +945,32 @@ fn parse_param(param_list: Vec<&str>, order: u8, prev: Option<String>) -> (bool,
     } else if param_list[3].starts_with("array of images") {
         ParamType::ArrayImage
     } else if param_list[3].starts_with("enum") || param_list[3].starts_with("flags") {
-        let enum_name = param_list[3].split("-").collect::<Vec<&str>>()[1];
-        let mut enum_values = Vec::new();
-        for i in 4..param_list.len() - 1 {
-            let enum_strs: Vec<&str> = param_list[i].split(':').collect();
-            let value = enum_strs[0].parse().expect("Cannot parse number");
-            let nick = enum_strs[1].to_string();
-            let name = enum_strs[2].to_string();
-            enum_values.push(Enumeration { name, nick, value });
-        }
-        let default = param_list[param_list.len() - 1]
-            .parse()
-            .expect("Cannot parse number");
+        let enum_name = param_list[3].split('-').collect::<Vec<_>>()[1];
+
+        let enum_values = param_list
+            .iter()
+            .take(param_list.len() - 1)
+            .skip(4)
+            .map(|param| {
+                let enum_strs = param.split(':').collect::<Vec<_>>();
+
+                let value = enum_strs[0].parse().expect("Cannot parse number");
+                let nick = enum_strs[1].to_string();
+                let name = enum_strs[2].to_string();
+
+                Enumeration { name, nick, value }
+            })
+            .collect::<Vec<_>>();
+
+        let default = param_list
+            .last()
+            .and_then(|param| param.parse::<i32>().ok())
+            .expect("can't get default");
+
         ParamType::Enum {
             name: enum_name.to_string(),
             entries: enum_values,
-            default: default,
+            default,
         }
     } else {
         panic!("Unsupported type: {}", param_list[3])
@@ -966,12 +978,12 @@ fn parse_param(param_list: Vec<&str>, order: u8, prev: Option<String>) -> (bool,
     (
         is_output,
         Parameter {
-            order: order,
+            order,
             name: param_name.to_snake_case(),
             vips_name: param_name.to_string(),
             nick: nick.to_class_case(),
             description: description.to_string(),
-            param_type: param_type,
+            param_type,
         },
     )
 }
@@ -979,20 +991,20 @@ fn parse_param(param_list: Vec<&str>, order: u8, prev: Option<String>) -> (bool,
 fn parse_output(output: String) -> Vec<Operation> {
     output
         .split("OPERATION:")
-        .filter(|op| *op != "")
+        .filter(|op| !op.is_empty())
         .map(|op_str: &str| {
             let mut required: Vec<Parameter> = Vec::new();
             let mut optional: Vec<Parameter> = Vec::new();
             let mut output: Vec<Parameter> = Vec::new();
 
-            let mut op_iter = op_str.lines().filter(|op| *op != "");
+            let mut op_iter = op_str.lines().filter(|op| !op.is_empty());
 
             let op_vals: Vec<&str> = op_iter
                 .by_ref()
                 .take_while(|line| *line != "REQUIRED:")
                 .collect();
 
-            let name_split = op_vals[0].split(":").collect::<Vec<_>>();
+            let name_split = op_vals[0].split(':').collect::<Vec<_>>();
             let description = op_vals[1].to_string();
 
             let mut required_vals = op_iter
@@ -1057,7 +1069,7 @@ fn parse_output(output: String) -> Vec<Operation> {
                         .take_while(|line| *line != "PARAM:")
                         .for_each(drop);
                 } else {
-                    let prev = if required.len() > 0 && order == 1 {
+                    let prev = if !required.is_empty() && order == 1 {
                         match required[0].param_type {
                             ParamType::ArrayImage => Some(required[0].name.clone()),
                             _ => None,
@@ -1078,7 +1090,7 @@ fn parse_output(output: String) -> Vec<Operation> {
                     } else {
                         required.push(param);
                     }
-                    order = order + 1;
+                    order += 1;
                 }
             }
             let mut optionals = op_iter.skip(1).peekable();
@@ -1173,7 +1185,7 @@ fn rustfmt_generated_strin(source: &str) -> io::Result<String> {
 }
 
 fn main() {
-    let operation_blacklist = vec![
+    let operation_blacklist = [
         "VipsForeignSaveDzBuffer",
         "crop",
         "VipsLinear",
@@ -1189,7 +1201,7 @@ fn main() {
     println!("cargo:rustc-link-lib=gobject-2.0");
     println!("cargo:rerun-if-changed=vips.h");
     let mut cmd = Command::new("pkg-config");
-    cmd.args(&["--cflags", "vips"]);
+    cmd.args(["--cflags", "vips"]);
     let flags = run(cmd);
     let out_path = PathBuf::from(env::var("BINDINGS_DIR").unwrap());
 
@@ -1202,7 +1214,6 @@ fn main() {
         usize could be a better alternative for size_t. For the sake of backward compatibility I've
         explicitly set it to false thus we'll have the same bindings output. Later we can look into
         converting this crate to use `usize` for `size_t`.
-
         More details are available here: https://github.com/rust-lang/rust-bindgen/issues/1901
          */
         .size_t_is_usize(false)
@@ -1218,14 +1229,14 @@ fn main() {
         .impl_partialeq(true)
         .derive_debug(true)
         .derive_eq(true)
-        .rustfmt_bindings(true);
+        .formatter(bindgen::Formatter::Rustfmt);
     for flag in flags.into_iter() {
         generator = generator.clang_arg(flag);
     }
     let bindings = generator.generate().expect("Unable to generate bindings");
 
     let mut cmd_introspect = Command::new("pkg-config");
-    cmd_introspect.args(&["--cflags", "--libs", "vips"]);
+    cmd_introspect.args(["--cflags", "--libs", "vips"]);
     let instrospect_flags = run(cmd_introspect);
 
     let mut cc_builder = cc::Build::new();
@@ -1287,8 +1298,7 @@ fn main() {
 
     let mut enums: Vec<String> = operations
         .iter()
-        .map(|o| o.enumeration().into_iter())
-        .flatten()
+        .flat_map(|o| o.enumeration().into_iter())
         .collect();
     enums.sort();
     enums.dedup(); // not working
