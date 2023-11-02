@@ -19,7 +19,6 @@ jobs:
         with:
           node-version: 20
       - run: yarn install
-      - run: yarn build
       - uses: ./
         id: lint_pr_title
         env:
