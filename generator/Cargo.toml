@@ -8,7 +8,7 @@ repository = "https://github.com/augustocdias/libvips-rust-bindings"
 edition = "2021"
 
 [build-dependencies]
-bindgen = "0.68"
+bindgen = "0.69"
 Inflector = "0.11"
 cc = "1.0"
 which = "4.4"
