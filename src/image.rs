@@ -319,6 +319,10 @@ impl VipsImage {
         }
     }
 
+    pub fn get_orientation(&self) -> i32 {
+        unsafe { bindings::vips_image_get_orientation(self.ctx) }
+    }
+
     pub fn get_interpretation(&self) -> Result<Interpretation> {
         unsafe {
             let res = bindings::vips_image_get_interpretation(self.ctx);
