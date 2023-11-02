@@ -3,7 +3,7 @@ FROM rust:1.73.0-alpine3.18
 
 ENV VIPS_VERSION=8.14.5
 
-RUN apk add --update --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/v3.17/main \
+RUN apk add --update --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/v3.18/main \
             build-base \
             pkgconfig \
             clang \
