@@ -3,7 +3,7 @@
 name = "libvips"
 description = "Safe bindings for libvips"
 version = "1.6.0"
-authors = ["Augusto César Dias <augusto.c.dias@gmail.com>"]
+authors = ["Andrew Basson <andrew.basson@olx.com>","Bogdan Vidrean <bogdan.vidrean@olx.com>"]
 repository = "https://github.com/olxgroup-oss/libvips-rust-bindings"
 readme = "README.md"
 license = "MIT"
