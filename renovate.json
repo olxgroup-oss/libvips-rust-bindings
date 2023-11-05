@@ -34,17 +34,21 @@
       "matchFileNames": ["generator/Cargo.toml"],
       "automerge": false,
       "prCreation": "not-pending",
-      "commitMessagePrefix": "fix:"
+      "commitMessagePrefix": "fix:",
+      "commitMessageTopic": "{{depName}}",
+      "commitScope": "(package)"
     },
     {
       "matchManagers": ["github-actions"],
       "commitMessagePrefix": "build:",
+      "commitMessageTopic": "{{depName}}",
       "automerge": true,
       "automergeType": "branch"
     },
     {
       "matchManagers": ["dockerfile"],
       "commitMessagePrefix": "build:",
+      "commitMessageTopic": "{{depName}}",
       "automerge": false
     }
   ],
