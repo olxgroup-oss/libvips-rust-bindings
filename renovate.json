@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     ":semanticCommits",
     ":semanticPrefixFixDepsChoreOthers",
     ":label(renovate)"
@@ -10,7 +10,9 @@
     "@bassco"
   ],
   "vulnerabilityAlerts": {
-    "labels": ["security"],
+    "labels": [
+      "security"
+    ],
     "automerge": true
   },
   "dependencyDashboard": true,
@@ -20,7 +22,7 @@
   "lockFileMaintenance": {
     "enabled": true,
     "recreateWhen": "always",
-    "rebaseStalePrs": true,
+    "rebaseWhen": "behind-base-branch",
     "branchTopic": "lock-file-maintenance",
     "commitMessageAction": "lock file maintenance",
     "commitMessageTopic": "dependency {{ lowercase depName}}",
@@ -33,7 +35,7 @@
       "Change": "All locks refreshed"
     }
   },
-  "packageRules": [   
+  "packageRules": [
     {
       "description": "Automatically merge minor and patch-level updates without creating a PR",
       "matchUpdateTypes": [
@@ -54,22 +56,28 @@
     },
     {
       "description": "Take special care of the generator cargo configuration with a PR",
-      "matchFileNames": ["generator/Cargo.toml"],
+      "matchFileNames": [
+        "generator/Cargo.toml"
+      ],
       "semanticCommitType": "fix",
-      "semanticCommitScope":"generator",
+      "semanticCommitScope": "generator",
       "automerge": false,
       "prCreation": "not-pending"
     },
     {
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "automerge": true,
       "automergeType": "branch",
       "semanticCommitType": "ci",
-      "semanticCommitScope":"workflow"
+      "semanticCommitScope": "workflow"
     },
     {
-      "matchManagers": ["dockerfile"],
-      "semanticCommitScope":"docker",
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "semanticCommitScope": "docker",
       "automerge": false
     }
   ],
