@@ -2,13 +2,12 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base",
-    ":semanticCommitTypeAll(ci)",
-    ":semanticCommitScope(package)"
+    ":semanticPrefixFixDepsChoreOthers",
+    ":label(renovate)"
   ],
   "assignees": [
     "@bassco"
   ],
-  "labels": ["dependencies"],
   "vulnerabilityAlerts": {
     "labels": ["security"],
     "automerge": true
@@ -56,23 +55,15 @@
       "description": "Take special care of the generator cargo configuration with a PR",
       "matchFileNames": ["generator/Cargo.toml"],
       "automerge": false,
-      "prCreation": "not-pending",
-      "commitMessagePrefix": "fix",
-      "commitMessage": "{{{commitMessagePrefix}}}: {{{commitMessageAction}}} {{{commitMessageTopic}}} {{{commitMessageExtra}}} {{{commitMessageSuffix}}}"
+      "prCreation": "not-pending"
     },
     {
       "matchManagers": ["github-actions"],
-      "commitMessagePrefix": "build",
-      "commitMessageTopic": "workflows",
-      "commitMessage": "{{{commitMessagePrefix}}}: {{{commitMessageAction}}} {{{commitMessageTopic}}} {{{commitMessageExtra}}} {{{commitMessageSuffix}}}",
       "automerge": true,
       "automergeType": "branch"
     },
     {
       "matchManagers": ["dockerfile"],
-      "commitMessagePrefix": "build",
-      "commitMessageTopic": "docker",
-      "commitMessage": "{{{commitMessagePrefix}}}: {{{commitMessageAction}}} {{{commitMessageTopic}}} {{{commitMessageExtra}}} {{{commitMessageSuffix}}}",
       "automerge": false
     }
   ],
