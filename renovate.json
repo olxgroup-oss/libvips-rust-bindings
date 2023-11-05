@@ -8,13 +8,31 @@
   "assignees": [
     "@bassco"
   ],
+  "labels": ["dependencies"],
   "vulnerabilityAlerts": {
     "labels": ["security"],
     "automerge": true
   },
   "dependencyDashboard": true,
   "configMigration": true,
-  "packageRules": [
+  "timezone": "Europe/Berlin",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "recreateWhen": "always",
+    "rebaseStalePrs": true,
+    "branchTopic": "lock-file-maintenance",
+    "commitMessageAction": "Lock file maintenance",
+    "commitMessageTopic": null,
+    "commitMessageExtra": null,
+    "schedule": [
+      "before 4am on monday"
+    ],
+    "groupName": null,
+    "prBodyDefinitions": {
+      "Change": "All locks refreshed"
+    }
+  },
+  "packageRules": [   
     {
       "description": "Automatically merge minor and patch-level updates without creating a PR",
       "matchUpdateTypes": [
@@ -39,19 +57,19 @@
       "automerge": false,
       "prCreation": "not-pending",
       "commitMessagePrefix": "fix:",
-      "commitMessageTopic": "{{depName}}"
+      "commitMessageTopic": "{{{depName}}}"
     },
     {
       "matchManagers": ["github-actions"],
       "commitMessagePrefix": "build:",
-      "commitMessageTopic": "{{depName}}",
+      "commitMessageTopic": "{{{depName}}}",
       "automerge": true,
       "automergeType": "branch"
     },
     {
       "matchManagers": ["dockerfile"],
       "commitMessagePrefix": "build:",
-      "commitMessageTopic": "{{depName}}",
+      "commitMessageTopic": "{{{depName}}}",
       "automerge": false
     }
   ],
