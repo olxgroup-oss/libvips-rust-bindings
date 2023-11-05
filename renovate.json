@@ -2,7 +2,8 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base",
-    ":semanticCommitTypeAll(ci)"
+    ":semanticCommitTypeAll(ci)",
+    ":semanticCommitScope(package)"
   ],
   "assignees": [
     "bassco"
@@ -33,20 +34,17 @@
       "matchFileNames": ["generator/Cargo.toml"],
       "automerge": false,
       "prCreation": "not-pending",
-      "commitMessagePrefix": "fix",
-      "commitMessageTopic": "{{depName}}"
+      "commitMessagePrefix": "fix:"
     },
     {
       "matchManagers": ["github-actions"],
-      "commitMessagePrefix": "build",
-      "commitMessageTopic": "{{depName}}",
+      "commitMessagePrefix": "build:",
       "automerge": true,
       "automergeType": "branch"
     },
     {
       "matchManagers": ["dockerfile"],
-      "commitMessagePrefix": "build",
-      "commitMessageTopic": "{{depName}}",
+      "commitMessagePrefix": "build:",
       "automerge": false
     }
   ],
