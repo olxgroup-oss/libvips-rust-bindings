@@ -57,19 +57,19 @@
       "automerge": false,
       "prCreation": "not-pending",
       "commitMessagePrefix": "fix:",
-      "commitMessageTopic": "generator"
+      "commitMessageTopic": "{{{depName}}}"
     },
     {
       "matchManagers": ["github-actions"],
       "commitMessagePrefix": "build:",
-      "commitMessageTopic": "actions",
+      "commitMessageTopic": "{{{depName}}}",
       "automerge": true,
       "automergeType": "branch"
     },
     {
       "matchManagers": ["dockerfile"],
       "commitMessagePrefix": "build:",
-      "commitMessageTopic": "docker",
+      "commitMessageTopic": "{{{depName}}}",
       "automerge": false
     }
   ],
