@@ -22,7 +22,7 @@
     "rebaseStalePrs": true,
     "branchTopic": "lock-file-maintenance",
     "commitMessageAction": "Lock file maintenance",
-    "commitMessageTopic": null,
+    "commitMessageTopic": "dependency {{depName}}",
     "commitMessageExtra": null,
     "schedule": [
       "before 4am on monday"
@@ -57,19 +57,19 @@
       "automerge": false,
       "prCreation": "not-pending",
       "commitMessagePrefix": "fix:",
-      "commitMessageTopic": "{{{depName}}}"
+      "commitMessageTopic": "dependencies"
     },
     {
       "matchManagers": ["github-actions"],
       "commitMessagePrefix": "build:",
-      "commitMessageTopic": "{{{depName}}}",
+      "commitMessageTopic": "workflows",
       "automerge": true,
       "automergeType": "branch"
     },
     {
       "matchManagers": ["dockerfile"],
       "commitMessagePrefix": "build:",
-      "commitMessageTopic": "{{{depName}}}",
+      "commitMessageTopic": "docker",
       "automerge": false
     }
   ],
