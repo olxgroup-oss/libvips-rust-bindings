@@ -55,7 +55,8 @@
     {
       "description": "Take special care of the generator cargo configuration with a PR",
       "matchFileNames": ["generator/Cargo.toml"],
-      "commitMessagePrefix": "fix(generator)",
+      "semanticCommitType": "fix",
+      "semanticCommitScope":"generator",
       "automerge": false,
       "prCreation": "not-pending"
     },
@@ -63,10 +64,12 @@
       "matchManagers": ["github-actions"],
       "automerge": true,
       "automergeType": "branch",
-      "semanticCommitType": "ci"
+      "semanticCommitType": "ci",
+      "semanticCommitScope":"workflow"
     },
     {
       "matchManagers": ["dockerfile"],
+      "semanticCommitScope":"docker",
       "automerge": false
     }
   ],
