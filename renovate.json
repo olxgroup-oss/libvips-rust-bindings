@@ -6,8 +6,12 @@
     ":semanticCommitScope(package)"
   ],
   "assignees": [
-    "bassco"
+    "@bassco"
   ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "automerge": true
+  },
   "dependencyDashboard": true,
   "configMigration": true,
   "packageRules": [
@@ -35,8 +39,7 @@
       "automerge": false,
       "prCreation": "not-pending",
       "commitMessagePrefix": "fix:",
-      "commitMessageTopic": "{{depName}}",
-      "commitScope": "(package)"
+      "commitMessageTopic": "{{depName}}"
     },
     {
       "matchManagers": ["github-actions"],
