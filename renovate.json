@@ -15,6 +15,7 @@
   },
   "dependencyDashboard": true,
   "configMigration": true,
+  "commitMessageLowerCase": "auto",
   "timezone": "Europe/Berlin",
   "lockFileMaintenance": {
     "enabled": true,
@@ -56,20 +57,22 @@
       "matchFileNames": ["generator/Cargo.toml"],
       "automerge": false,
       "prCreation": "not-pending",
-      "commitMessagePrefix": "fix:",
-      "commitMessageTopic": "dependencies"
+      "commitMessagePrefix": "fix",
+      "commitMessage": "{{{commitMessagePrefix}}}: {{{commitMessageAction}}} {{{commitMessageTopic}}} {{{commitMessageExtra}}} {{{commitMessageSuffix}}}"
     },
     {
       "matchManagers": ["github-actions"],
-      "commitMessagePrefix": "build:",
+      "commitMessagePrefix": "build",
       "commitMessageTopic": "workflows",
+      "commitMessage": "{{{commitMessagePrefix}}}: {{{commitMessageAction}}} {{{commitMessageTopic}}} {{{commitMessageExtra}}} {{{commitMessageSuffix}}}",
       "automerge": true,
       "automergeType": "branch"
     },
     {
       "matchManagers": ["dockerfile"],
-      "commitMessagePrefix": "build:",
+      "commitMessagePrefix": "build",
       "commitMessageTopic": "docker",
+      "commitMessage": "{{{commitMessagePrefix}}}: {{{commitMessageAction}}} {{{commitMessageTopic}}} {{{commitMessageExtra}}} {{{commitMessageSuffix}}}",
       "automerge": false
     }
   ],
