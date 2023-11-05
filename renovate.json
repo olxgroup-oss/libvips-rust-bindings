@@ -21,7 +21,7 @@
     "recreateWhen": "always",
     "rebaseStalePrs": true,
     "branchTopic": "lock-file-maintenance",
-    "commitMessageAction": "Lock file maintenance",
+    "commitMessageAction": "lock file maintenance",
     "commitMessageTopic": "dependency {{depName}}",
     "commitMessagePrefix": "fix(cargo):",
     "schedule": [
@@ -55,6 +55,7 @@
       "description": "Take special care of the generator cargo configuration with a PR",
       "matchFileNames": ["generator/Cargo.toml"],
       "commitMessagePrefix": "fix(generator):",
+      "commitMessageAction": "update",
       "automerge": false,
       "prCreation": "not-pending"
     },
@@ -62,7 +63,8 @@
       "matchManagers": ["github-actions"],
       "automerge": true,
       "automergeType": "branch",
-      "commitMessagePrefix": "ci(workflow):"
+      "commitMessagePrefix": "ci(workflow):",
+      "commitMessageAction": "update"
     },
     {
       "matchManagers": ["dockerfile"],
