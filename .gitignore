@@ -9,3 +9,4 @@ package-lock.json
 node_modules/
 yarn.lock
 yarn-error.log
+Cargo.lock

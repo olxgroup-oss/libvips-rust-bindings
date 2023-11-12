@@ -22,10 +22,6 @@ $ ./build.sh     # Builds the libvips-builder docker image
 $ ./generate.sh  # Actually generates the bindings
 ```
 
-## A note to the maintainers
-
-The publication of the create is done manually and requires that the _Cargo.lock_ version be updated in the repo after this has been done. This can be changed once github actions have been added to the repo in order to publish after merge.
-
 ## How to use it
 
 The main entity from this crate is the `VipsApp` struct. It doesn't store any information, but as long as it is not dropped, vips should be working as expected.
@@ -34,9 +30,9 @@ Vips needs to be initialized and shut down, this struct does this job, though yo
 
 Not all functions were implemented, so if you need some that are not yet there, feel free to open a PR or an issue (it is pretty straight forward to add the ones that needs to be manual).
 
-Many vips operations have optional arguments. The ones that have have been implemented with too variants by this crate. Basically there'll be a regular call with only the required parameters and an additional with the suffix `with_opts` which will take a struct holding the defaults. 
+Many vips operations have optional arguments. The ones that have have been implemented with too variants by this crate. Basically there'll be a regular call with only the required parameters and an additional with the suffix `with_opts` which will take a struct holding the defaults.
 
-The structs's names for those defaults are named after the operation name in `class case` plus the suffix `Options`. All the struct implements the `Default` trait, so you can construct them like this for example: 
+The structs's names for those defaults are named after the operation name in `class case` plus the suffix `Options`. All the struct implements the `Default` trait, so you can construct them like this for example:
 
 ```rust
 let options = ops::Composite2Options {
@@ -46,9 +42,9 @@ let options = ops::Composite2Options {
 }
 ```
 
-In the moment the error messages are not being appended to the errors themselves. They're in the libvips error buffer. The error buffer operations are implented inside the `VipsApps` struct. 
+In the moment the error messages are not being appended to the errors themselves. They're in the libvips error buffer. The error buffer operations are implented inside the `VipsApps` struct.
 
-Most (if not all) vips operations don't mutate the `VipsImage` object, so they'll return a new object for this. The implementation of `VipsImage` in this crate takes care of freeing the internal pointer after it is dropped. <span style="color:red">Be aware that the VipsImage object is not thread safe in the moment.</span> I'll investigate what is happening and provide a solution for it in the future. 
+Most (if not all) vips operations don't mutate the `VipsImage` object, so they'll return a new object for this. The implementation of `VipsImage` in this crate takes care of freeing the internal pointer after it is dropped. <span style="color:red">Be aware that the VipsImage object is not thread safe in the moment.</span> I'll investigate what is happening and provide a solution for it in the future.
 
 ### Example
 
