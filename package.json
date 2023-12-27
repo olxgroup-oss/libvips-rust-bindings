@@ -55,7 +55,7 @@
   "tagFormat": "v${version}",
   "devDependencies": {
     "@commitlint/config-conventional": "18.4.3",
-    "@semantic-release-cargo/semantic-release-cargo": "2.2.49",
+    "@semantic-release-cargo/semantic-release-cargo": "2.2.52",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "11.1.0",
     "@semantic-release/exec": "6.0.3",
