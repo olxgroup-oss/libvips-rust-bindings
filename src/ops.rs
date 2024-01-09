@@ -10741,7 +10741,7 @@ pub fn pngload_source_with_opts(
     }
 }
 
-/// VipsForeignLoadJpegFile (jpegload), load jpeg from file (.jpg, .jpeg, .jpe), priority=50, is_a, get_flags, get_flags_filename, header, load
+/// VipsForeignLoadJpegFile (jpegload), load jpeg from file (.jpg, .jpeg, .jpe, .jfif), priority=50, is_a, get_flags, get_flags_filename, header, load
 /// filename: `&str` -> Filename to load from
 /// returns `VipsImage` - Output image
 pub fn jpegload(filename: &str) -> Result<VipsImage> {
@@ -10813,7 +10813,7 @@ impl std::default::Default for JpegloadOptions {
     }
 }
 
-/// VipsForeignLoadJpegFile (jpegload), load jpeg from file (.jpg, .jpeg, .jpe), priority=50, is_a, get_flags, get_flags_filename, header, load
+/// VipsForeignLoadJpegFile (jpegload), load jpeg from file (.jpg, .jpeg, .jpe, .jfif), priority=50, is_a, get_flags, get_flags_filename, header, load
 /// filename: `&str` -> Filename to load from
 /// jpegload_options: `&JpegloadOptions` -> optional arguments
 /// returns `VipsImage` - Output image
@@ -14717,7 +14717,7 @@ pub fn pngsave_target_with_opts(
     }
 }
 
-/// VipsForeignSaveJpegFile (jpegsave), save image to jpeg file (.jpg, .jpeg, .jpe), priority=0, rgb-cmyk
+/// VipsForeignSaveJpegFile (jpegsave), save image to jpeg file (.jpg, .jpeg, .jpe, .jfif), priority=0, rgb-cmyk
 /// inp: `&VipsImage` -> Image to save
 /// filename: `&str` -> Filename to save to
 
@@ -14802,7 +14802,7 @@ impl std::default::Default for JpegsaveOptions {
     }
 }
 
-/// VipsForeignSaveJpegFile (jpegsave), save image to jpeg file (.jpg, .jpeg, .jpe), priority=0, rgb-cmyk
+/// VipsForeignSaveJpegFile (jpegsave), save image to jpeg file (.jpg, .jpeg, .jpe, .jfif), priority=0, rgb-cmyk
 /// inp: `&VipsImage` -> Image to save
 /// filename: `&str` -> Filename to save to
 /// jpegsave_options: `&JpegsaveOptions` -> optional arguments
@@ -14904,7 +14904,7 @@ pub fn jpegsave_with_opts(
     }
 }
 
-/// VipsForeignSaveJpegBuffer (jpegsave_buffer), save image to jpeg buffer (.jpg, .jpeg, .jpe), priority=0, rgb-cmyk
+/// VipsForeignSaveJpegBuffer (jpegsave_buffer), save image to jpeg buffer (.jpg, .jpeg, .jpe, .jfif), priority=0, rgb-cmyk
 /// inp: `&VipsImage` -> Image to save
 /// returns `Vec<u8>` - Buffer to save to
 pub fn jpegsave_buffer(inp: &VipsImage) -> Result<Vec<u8>> {
@@ -14994,7 +14994,7 @@ impl std::default::Default for JpegsaveBufferOptions {
     }
 }
 
-/// VipsForeignSaveJpegBuffer (jpegsave_buffer), save image to jpeg buffer (.jpg, .jpeg, .jpe), priority=0, rgb-cmyk
+/// VipsForeignSaveJpegBuffer (jpegsave_buffer), save image to jpeg buffer (.jpg, .jpeg, .jpe, .jfif), priority=0, rgb-cmyk
 /// inp: `&VipsImage` -> Image to save
 /// jpegsave_buffer_options: `&JpegsaveBufferOptions` -> optional arguments
 /// returns `Vec<u8>` - Buffer to save to
@@ -15108,7 +15108,7 @@ pub fn jpegsave_buffer_with_opts(
     }
 }
 
-/// VipsForeignSaveJpegTarget (jpegsave_target), save image to jpeg target (.jpg, .jpeg, .jpe), priority=0, rgb-cmyk
+/// VipsForeignSaveJpegTarget (jpegsave_target), save image to jpeg target (.jpg, .jpeg, .jpe, .jfif), priority=0, rgb-cmyk
 /// inp: `&VipsImage` -> Image to save
 /// target: `&VipsTarget` -> Target to save to
 
@@ -15193,7 +15193,7 @@ impl std::default::Default for JpegsaveTargetOptions {
     }
 }
 
-/// VipsForeignSaveJpegTarget (jpegsave_target), save image to jpeg target (.jpg, .jpeg, .jpe), priority=0, rgb-cmyk
+/// VipsForeignSaveJpegTarget (jpegsave_target), save image to jpeg target (.jpg, .jpeg, .jpe, .jfif), priority=0, rgb-cmyk
 /// inp: `&VipsImage` -> Image to save
 /// target: `&VipsTarget` -> Target to save to
 /// jpegsave_target_options: `&JpegsaveTargetOptions` -> optional arguments
@@ -15303,7 +15303,7 @@ pub fn jpegsave_target_with_opts(
     }
 }
 
-/// VipsForeignSaveJpegMime (jpegsave_mime), save image to jpeg mime (.jpg, .jpeg, .jpe), priority=0, rgb-cmyk
+/// VipsForeignSaveJpegMime (jpegsave_mime), save image to jpeg mime (.jpg, .jpeg, .jpe, .jfif), priority=0, rgb-cmyk
 /// inp: `&VipsImage` -> Image to save
 
 pub fn jpegsave_mime(inp: &VipsImage) -> Result<()> {
@@ -15386,7 +15386,7 @@ impl std::default::Default for JpegsaveMimeOptions {
     }
 }
 
-/// VipsForeignSaveJpegMime (jpegsave_mime), save image to jpeg mime (.jpg, .jpeg, .jpe), priority=0, rgb-cmyk
+/// VipsForeignSaveJpegMime (jpegsave_mime), save image to jpeg mime (.jpg, .jpeg, .jpe, .jfif), priority=0, rgb-cmyk
 /// inp: `&VipsImage` -> Image to save
 /// jpegsave_mime_options: `&JpegsaveMimeOptions` -> optional arguments
 
