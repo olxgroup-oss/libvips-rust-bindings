@@ -11,7 +11,7 @@ edition = "2021"
 bindgen = "0.69"
 Inflector = "0.11"
 cc = "1.0"
-which = "4.4"
+which = "6.0"
 
 [dependencies]
 num-traits = "0.2"
