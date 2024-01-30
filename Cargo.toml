@@ -2,7 +2,7 @@
 [package]
 name = "libvips"
 description = "Safe bindings for libvips"
-version = "1.6.1"
+version = "1.0.0"
 authors = ["Andrew Basson <andrew.basson@olx.com>","Bogdan Vidrean <bogdan.vidrean@olx.com>"]
 repository = "https://github.com/olxgroup-oss/libvips-rust-bindings"
 readme = "README.md"
