@@ -2,17 +2,20 @@
 [package]
 name = "libvips-bindings"
 description = "File used for the generation of bindings for libvips from C"
-version = "0.0.2"  # not used
-authors = ["Andrew Basson <andrew.basson@olx.com>","Bogdan Vidrean <bogdan.vidrean@olx.com>"]
+version = "0.0.2" # not used
+authors = [
+  "Andrew Basson <andrew.basson@olx.com>",
+  "Bogdan Vidrean <bogdan.vidrean@olx.com>",
+]
 repository = "https://github.com/olxgroup-oss/libvips-rust-bindings"
 edition = "2021"
 
 [build-dependencies]
-bindgen = "0.69"
-Inflector = "0.11"
-cc = "1.0"
-which = "4.4"
+bindgen = "0.69.2"
+Inflector = "0.11.4"
+cc = "1.0.83"
+which = "6.0.0"
 
 [dependencies]
-num-traits = "0.2"
-num-derive = "0.4"
+num-traits = "0.2.17"
+num-derive = "0.4.1"
