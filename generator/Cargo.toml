@@ -1,4 +1,4 @@
-# (c) Copyright 2019-2023 OLX
+# (c) Copyright 2019-2024 OLX
 [package]
 name = "libvips-bindings"
 description = "File used for the generation of bindings for libvips from C"

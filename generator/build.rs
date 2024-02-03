@@ -1,4 +1,4 @@
-// (c) Copyright 2019-2023 OLX
+// (c) Copyright 2019-2024 OLX
 use inflector::Inflector;
 use std::env;
 use std::fs::File;
@@ -1308,7 +1308,7 @@ fn main() {
         .expect("Couldn't write bindings!");
     let ops_content = format!(
         r#"
-    // (c) Copyright 2019-2023 OLX
+    // (c) Copyright 2019-2024 OLX
     use std::ffi::*;
     use std::ptr::null_mut;
     use std::convert::TryInto;
