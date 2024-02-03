@@ -3,6 +3,12 @@
   "branches": ["master"],
   "plugins": [
     "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "./bump-readme.sh ${nextRelease.version}"
+      }
+    ]
     "@semantic-release/release-notes-generator",
     ["@semantic-release/changelog", {"changelogTitle": "# Changelog"}],
     "@semantic-release-cargo/semantic-release-cargo",
@@ -24,6 +30,7 @@
       "@semantic-release/git",
       {
         "assets": [
+          "README.md",
           "CHANGELOG.md",
           "Cargo.toml",
           "Cargo.lock"
