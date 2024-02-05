@@ -11,7 +11,7 @@ repository = "https://github.com/olxgroup-oss/libvips-rust-bindings"
 edition = "2021"
 
 [build-dependencies]
-bindgen = "0.69.2"
+bindgen = "0.69.4"
 Inflector = "0.11.4"
 cc = "1.0.83"
 which = "6.0.0"
