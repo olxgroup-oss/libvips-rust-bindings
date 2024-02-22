@@ -1,4 +1,5 @@
 # libvips-rust-bindings
+
 Rust bindings for libvips. Generated from `version 8.14.5`.
 
 This is a safe wrapper for [libvips](https://libvips.github.io/libvips/) C library. It is made on top of the C API and based on the introspection API results.
@@ -17,9 +18,9 @@ Both the bindings and the generated operations were pushed to crates.io with mos
 
 Everything in ops.rs and error.rs (and of course bindings.rs) is generated programmatically. You need to make changes for these files to the builder for these. Then, run the following shell scripts from the `generator` directory.
 
-```
-$ ./build.sh     # Builds the libvips-builder docker image
-$ ./generate.sh  # Actually generates the bindings
+```console
+./build.sh     # Builds the libvips-builder docker image
+./generate.sh  # Actually generates the bindings
 ```
 
 ## A note to the maintainers
@@ -34,9 +35,9 @@ Vips needs to be initialized and shut down, this struct does this job, though yo
 
 Not all functions were implemented, so if you need some that are not yet there, feel free to open a PR or an issue (it is pretty straight forward to add the ones that needs to be manual).
 
-Many vips operations have optional arguments. The ones that have have been implemented with too variants by this crate. Basically there'll be a regular call with only the required parameters and an additional with the suffix `with_opts` which will take a struct holding the defaults. 
+Many vips operations have optional arguments. The ones that have have been implemented with too variants by this crate. Basically there'll be a regular call with only the required parameters and an additional with the suffix `with_opts` which will take a struct holding the defaults.
 
-The structs's names for those defaults are named after the operation name in `class case` plus the suffix `Options`. All the struct implements the `Default` trait, so you can construct them like this for example: 
+The structs's names for those defaults are named after the operation name in `class case` plus the suffix `Options`. All the struct implements the `Default` trait, so you can construct them like this for example:
 
 ```rust
 let options = ops::Composite2Options {
@@ -46,13 +47,16 @@ let options = ops::Composite2Options {
 }
 ```
 
-In the moment the error messages are not being appended to the errors themselves. They're in the libvips error buffer. The error buffer operations are implented inside the `VipsApps` struct. 
+In the moment the error messages are not being appended to the errors themselves. They're in the libvips error buffer. The error buffer operations are implented inside the `VipsApps` struct.
 
-Most (if not all) vips operations don't mutate the `VipsImage` object, so they'll return a new object for this. The implementation of `VipsImage` in this crate takes care of freeing the internal pointer after it is dropped. <span style="color:red">Be aware that the VipsImage object is not thread safe in the moment.</span> I'll investigate what is happening and provide a solution for it in the future. 
+Most (if not all) vips operations don't mutate the `VipsImage` object, so they'll return a new object for this. The implementation of `VipsImage` in this crate takes care of freeing the internal pointer after it is dropped. <span style="color:red">Be aware that the VipsImage object is not thread safe in the moment.</span> I'll investigate what is happening and provide a solution for it in the future.
 
 ### Example
 
+In the following code snippet we move load a JPEG file from the file system and then transforming it by reducing the scale by 50% and saving it as a .
+
 ```rust
+// examples/jpeg_to_png.rs
 use libvips::{ops, VipsImage, VipsApp};
 
 fn main() {
@@ -86,4 +90,14 @@ fn main() {
         Ok(_) => println!("Great Success!")
     }
 }
+```
+
+The above example can be run from the console using cargo.
+
+```console
+$ cargo run --examples jpeg_to_png.rs
+   Compiling libvips v1.6.1 (<REDACTED>/libvips-rust-bindings)
+    Finished dev [unoptimized + debuginfo] target(s) in 3.29s
+     Running `target/debug/examples/jpeg_to_png`
+./output.png was created in the repository root!
 ```

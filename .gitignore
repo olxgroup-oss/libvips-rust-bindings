@@ -9,3 +9,7 @@ package-lock.json
 node_modules/
 yarn.lock
 yarn-error.log
+
+# outputs that may be created by running the examples
+*.jpg
+*.png
