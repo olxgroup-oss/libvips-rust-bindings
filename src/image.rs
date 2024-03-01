@@ -339,6 +339,22 @@ impl VipsImage {
         }
     }
 
+    pub fn get_string(&self, name: &str) -> Result<&str> {
+        unsafe {
+            let name_c_str = utils::new_c_string(name)?;
+            let mut out: *const c_char = std::ptr::null_mut();
+            let result = bindings::vips_image_get_string(self.ctx, name_c_str.as_ptr(), &mut out);
+            if result == -1 {
+                return Err(Error::OperationError("Error on vips get_string"))
+            }
+
+            let res = CStr::from_ptr(out);
+            res
+                .to_str()
+                .map_err(|_| Error::InitializationError("Error initializing string"))
+        }
+    }
+
     pub fn image_set_delete_on_close(&mut self, flag: bool) {
         unsafe {
             bindings::vips_image_set_delete_on_close(self.ctx, if flag { 1 } else { 0 });
