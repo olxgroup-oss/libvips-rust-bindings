@@ -147,6 +147,9 @@ pub enum Error {
     HeifloadError,
     HeifloadBufferError,
     HeifloadSourceError,
+    JxlloadError,
+    JxlloadBufferError,
+    JxlloadSourceError,
     CsvsaveError,
     CsvsaveTargetError,
     MatrixsaveError,
@@ -181,6 +184,9 @@ pub enum Error {
     HeifsaveError,
     HeifsaveBufferError,
     HeifsaveTargetError,
+    JxlsaveError,
+    JxlsaveBufferError,
+    JxlsaveTargetError,
     ThumbnailError,
     ThumbnailBufferError,
     ThumbnailImageError,
@@ -862,6 +868,18 @@ impl std::fmt::Display for Error {
                 f,
                 "vips error: HeifloadSourceError. Check error buffer for more details"
             ),
+            Error::JxlloadError => write!(
+                f,
+                "vips error: JxlloadError. Check error buffer for more details"
+            ),
+            Error::JxlloadBufferError => write!(
+                f,
+                "vips error: JxlloadBufferError. Check error buffer for more details"
+            ),
+            Error::JxlloadSourceError => write!(
+                f,
+                "vips error: JxlloadSourceError. Check error buffer for more details"
+            ),
             Error::CsvsaveError => write!(
                 f,
                 "vips error: CsvsaveError. Check error buffer for more details"
@@ -997,6 +1015,18 @@ impl std::fmt::Display for Error {
             Error::HeifsaveTargetError => write!(
                 f,
                 "vips error: HeifsaveTargetError. Check error buffer for more details"
+            ),
+            Error::JxlsaveError => write!(
+                f,
+                "vips error: JxlsaveError. Check error buffer for more details"
+            ),
+            Error::JxlsaveBufferError => write!(
+                f,
+                "vips error: JxlsaveBufferError. Check error buffer for more details"
+            ),
+            Error::JxlsaveTargetError => write!(
+                f,
+                "vips error: JxlsaveTargetError. Check error buffer for more details"
             ),
             Error::ThumbnailError => write!(
                 f,
