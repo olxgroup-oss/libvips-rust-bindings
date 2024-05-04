@@ -17,5 +17,5 @@ cc = "1.0.83"
 which = "6.0.0"
 
 [dependencies]
-num-traits = "0.2.17"
+num-traits = "0.2.19"
 num-derive = "0.4.1"

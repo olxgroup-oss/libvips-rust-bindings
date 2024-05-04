@@ -17,5 +17,5 @@ pre-release-commit-message = "release version {{version}}"
 tag-message = "Version {{version}} of libvips."
 
 [dependencies]
-num-traits = "0.2"
+num-traits = "0.2.19"
 num-derive = "0.4"
