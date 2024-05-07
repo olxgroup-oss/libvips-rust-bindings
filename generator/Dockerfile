@@ -29,6 +29,7 @@ RUN apk add --quiet --update --no-cache --repository=https://dl-cdn.alpinelinux.
   orc-dev \
   pango-dev \
   tiff-dev \
+  libjxl-dev \
   && wget -q https://github.com/libvips/libvips/releases/download/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.xz \
   && mkdir vips \
   && tar xJf vips-${VIPS_VERSION}.tar.xz -C vips --strip-components 1 \
