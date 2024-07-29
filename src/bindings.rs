@@ -1214,7 +1214,12 @@ pub const VIPS_D3250_X0: f64 = 105.659;
 pub const VIPS_D3250_Y0: f64 = 100.0;
 pub const VIPS_D3250_Z0: f64 = 45.8501;
 pub type wchar_t = ::std::os::raw::c_uint;
-pub type size_t = ::std::os::raw::c_ulong;
+//
+// In a 64-bit environment for LP64 memory models, c_(u)long is 64 bits,
+// but in a 64-bit environment for LLP64 memory models, c_(u)long is 32 bits.
+// This difference causes a compilation error on windows.
+//
+pub type size_t = ::std::os::raw::c_ulonglong;
 extern "C" {
     pub fn __flt_rounds() -> ::std::os::raw::c_int;
 }
@@ -1224,8 +1229,8 @@ pub type gint16 = ::std::os::raw::c_short;
 pub type guint16 = ::std::os::raw::c_ushort;
 pub type gint32 = ::std::os::raw::c_int;
 pub type guint32 = ::std::os::raw::c_uint;
-pub type gint64 = ::std::os::raw::c_long;
-pub type guint64 = ::std::os::raw::c_ulong;
+pub type gint64 = ::std::os::raw::c_longlong;
+pub type guint64 = ::std::os::raw::c_ulonglong;
 pub type gssize = ::std::os::raw::c_long;
 pub type gsize = ::std::os::raw::c_ulong;
 pub type goffset = gint64;
