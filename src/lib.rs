@@ -23,17 +23,22 @@ pub type Result<T> = std::result::Result<T, error::Error>;
 
 pub struct VipsApp;
 
-/// That's the main type of this crate. Use it to initialize the system 
+/// That's the main type of this crate. Use it to initialize the system
 impl VipsApp {
     /// default constructor of a VIpsApp instance which will disable memory leak debugging
     pub fn default(name: &str) -> Result<VipsApp> {
-        init(name, false)?;
+        init(
+            name, false,
+        )?;
         Ok(VipsApp)
     }
 
     /// new instance of VipsApp takes the application name and a flag indicating if the library should debug memory leak (good for testing purposes)
     pub fn new(name: &str, detect_leak: bool) -> Result<VipsApp> {
-        init(name, detect_leak)?;
+        init(
+            name,
+            detect_leak,
+        )?;
         Ok(VipsApp)
     }
 
@@ -42,20 +47,20 @@ impl VipsApp {
             bindings::vips_progress_set(if flag { 1 } else { 0 });
         }
     }
-    
+
     pub fn get_disc_threshold(&self) -> u64 {
         unsafe { bindings::vips_get_disc_threshold() }
     }
-    
+
     pub fn version_string(&self) -> Result<&str> {
         unsafe {
             let version = CStr::from_ptr(bindings::vips_version_string());
             version
-            .to_str()
-            .map_err(|_| Error::InitializationError("Error initializing string"))
+                .to_str()
+                .map_err(|_| Error::InitializationError("Error initializing string"))
         }
     }
-    
+
     pub fn thread_shutdown(&self) {
         unsafe {
             bindings::vips_thread_shutdown();
@@ -75,7 +80,10 @@ impl VipsApp {
         unsafe {
             let c_str_error = utils::new_c_string(error)?;
             let c_str_domain = utils::new_c_string(domain)?;
-            bindings::vips_error(c_str_domain.as_ptr(), c_str_error.as_ptr());
+            bindings::vips_error(
+                c_str_domain.as_ptr(),
+                c_str_error.as_ptr(),
+            );
             Ok(())
         }
     }
@@ -84,7 +92,11 @@ impl VipsApp {
         unsafe {
             let c_str_error = utils::new_c_string(error)?;
             let c_str_domain = utils::new_c_string(domain)?;
-            bindings::vips_error_system(code, c_str_domain.as_ptr(), c_str_error.as_ptr());
+            bindings::vips_error_system(
+                code,
+                c_str_domain.as_ptr(),
+                c_str_error.as_ptr(),
+            );
             Ok(())
         }
     }
@@ -133,21 +145,15 @@ impl VipsApp {
     }
 
     pub fn cache_get_max(&self) -> i32 {
-        unsafe {
-            bindings::vips_cache_get_max()
-        }
+        unsafe { bindings::vips_cache_get_max() }
     }
 
     pub fn cache_get_max_mem(&self) -> u64 {
-        unsafe {
-            bindings::vips_cache_get_max_mem()
-        }
+        unsafe { bindings::vips_cache_get_max_mem() }
     }
 
     pub fn cache_get_size(&self) -> i32 {
-        unsafe {
-            bindings::vips_cache_get_size()
-        }
+        unsafe { bindings::vips_cache_get_size() }
     }
 
     pub fn cache_set_max_files(&self, max: i32) {
@@ -157,9 +163,7 @@ impl VipsApp {
     }
 
     pub fn cache_get_max_files(&self) -> i32 {
-        unsafe {
-            bindings::vips_cache_get_max_files()
-        }
+        unsafe { bindings::vips_cache_get_max_files() }
     }
 
     pub fn vips_cache_set_dump(&self, flag: bool) {
@@ -183,27 +187,19 @@ impl VipsApp {
 
     /// get the number of worker threads that vips is operating
     pub fn concurrency_get(&self) -> i32 {
-        unsafe {
-            bindings::vips_concurrency_get()
-        }
+        unsafe { bindings::vips_concurrency_get() }
     }
 
     pub fn tracked_get_mem(&self) -> u64 {
-        unsafe {
-            bindings::vips_tracked_get_mem()
-        }
+        unsafe { bindings::vips_tracked_get_mem() }
     }
 
     pub fn tracked_get_mem_highwater(&self) -> u64 {
-        unsafe {
-            bindings::vips_tracked_get_mem_highwater()
-        }
+        unsafe { bindings::vips_tracked_get_mem_highwater() }
     }
 
     pub fn tracked_get_allocs(&self) -> i32 {
-        unsafe {
-            bindings::vips_tracked_get_allocs()
-        }
+        unsafe { bindings::vips_tracked_get_allocs() }
     }
 
     pub fn pipe_read_limit_set(&self, limit: i64) {
@@ -237,8 +233,6 @@ fn init(name: &str, detect_leak: bool) -> Result<i32> {
         }
         result
     } else {
-        Err(Error::InitializationError(
-            "Failed to convert rust string to C string",
-        ))
+        Err(Error::InitializationError("Failed to convert rust string to C string"))
     }
 }
