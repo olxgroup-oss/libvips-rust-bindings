@@ -1106,3 +1106,81 @@ impl Into<Vec<u8>> for VipsBlob {
         }
     }
 }
+
+pub trait AsPtr {
+    type Ctx;
+    fn as_ptr(&self) -> *const Self::Ctx;
+    fn as_mut_ptr(&mut self) -> *mut Self::Ctx;
+}
+
+impl AsPtr for VipsImage {
+    type Ctx = bindings::VipsImage;
+
+    fn as_ptr(&self) -> *const Self::Ctx {
+        self.ctx as _
+    }
+
+    fn as_mut_ptr(&mut self) -> *mut Self::Ctx {
+        self.ctx as _
+    }
+}
+
+impl AsPtr for VipsInterpolate {
+    type Ctx = bindings::VipsInterpolate;
+
+    fn as_ptr(&self) -> *const Self::Ctx {
+        self.ctx as _
+    }
+
+    fn as_mut_ptr(&mut self) -> *mut Self::Ctx {
+        self.ctx as _
+    }
+}
+
+impl AsPtr for VipsBlob {
+    type Ctx = bindings::VipsBlob;
+
+    fn as_ptr(&self) -> *const Self::Ctx {
+        self.ctx as _
+    }
+
+    fn as_mut_ptr(&mut self) -> *mut Self::Ctx {
+        self.ctx as _
+    }
+}
+
+impl AsPtr for VipsConnection {
+    type Ctx = bindings::VipsConnection;
+
+    fn as_ptr(&self) -> *const Self::Ctx {
+        self.ctx as _
+    }
+
+    fn as_mut_ptr(&mut self) -> *mut Self::Ctx {
+        self.ctx as _
+    }
+}
+
+impl AsPtr for VipsSource {
+    type Ctx = bindings::VipsSource;
+
+    fn as_ptr(&self) -> *const Self::Ctx {
+        self.ctx as _
+    }
+
+    fn as_mut_ptr(&mut self) -> *mut Self::Ctx {
+        self.ctx as _
+    }
+}
+
+impl AsPtr for VipsTarget {
+    type Ctx = bindings::VipsTarget;
+
+    fn as_ptr(&self) -> *const Self::Ctx {
+        self.ctx as _
+    }
+
+    fn as_mut_ptr(&mut self) -> *mut Self::Ctx {
+        self.ctx as _
+    }
+}
