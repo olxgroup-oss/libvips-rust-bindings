@@ -1,2 +1,2 @@
-// (c) Copyright 2019-2024 OLX
+// (c) Copyright 2019-2025 OLX
 #include <vips/vips.h>
