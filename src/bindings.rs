@@ -1272,7 +1272,12 @@ pub const IM_TYPE_GVALUE: &[u8; 7] = b"gvalue\0";
 pub const IM_TYPE_INTERPOLATE: &[u8; 12] = b"interpolate\0";
 pub const IM_MAX_ARGS: u32 = 1000;
 pub type wchar_t = ::std::os::raw::c_uint;
-pub type size_t = ::std::os::raw::c_ulong;
+//
+// In a 64-bit environment for LP64 memory models, c_(u)long is 64 bits,
+// but in a 64-bit environment for LLP64 memory models, c_(u)long is 32 bits.
+// This difference causes a compilation error on windows.
+//
+pub type size_t = ::std::os::raw::c_ulonglong;
 extern "C" {
     pub fn __flt_rounds() -> ::std::os::raw::c_int;
 }
@@ -1282,8 +1287,8 @@ pub type gint16 = ::std::os::raw::c_short;
 pub type guint16 = ::std::os::raw::c_ushort;
 pub type gint32 = ::std::os::raw::c_int;
 pub type guint32 = ::std::os::raw::c_uint;
-pub type gint64 = ::std::os::raw::c_long;
-pub type guint64 = ::std::os::raw::c_ulong;
+pub type gint64 = ::std::os::raw::c_longlong;
+pub type guint64 = ::std::os::raw::c_ulonglong;
 pub type gssize = ::std::os::raw::c_long;
 pub type gsize = ::std::os::raw::c_ulong;
 pub type goffset = gint64;
