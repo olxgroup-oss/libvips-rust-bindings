@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.2](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v1.7.1...v1.7.2) (2025-06-10)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate num-traits to v0.2.19 ([#118](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/118)) ([54e3772](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/54e377267d7b72c8a0551a84b3115a7591b66cce))
+
 ## [1.7.1](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v1.7.0...v1.7.1) (2025-06-09)
 
 
