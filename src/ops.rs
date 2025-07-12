@@ -18574,9 +18574,9 @@ pub struct ThumbnailImageOptions {
     /// default: false
     pub linear: bool,
     /// import_profile: `String` -> Fallback import profile
-    pub import_profile: String,
+    pub import_profile: Option<String>,
     /// export_profile: `String` -> Fallback export profile
-    pub export_profile: String,
+    pub export_profile: Option<String>,
     /// intent: `Intent` -> Rendering intent
     ///  `Perceptual` -> VIPS_INTENT_PERCEPTUAL = 0
     ///  `Relative` -> VIPS_INTENT_RELATIVE = 1 [DEFAULT]
@@ -18601,8 +18601,8 @@ impl std::default::Default for ThumbnailImageOptions {
             no_rotate: false,
             crop: Interesting::None,
             linear: false,
-            import_profile: String::new(),
-            export_profile: String::new(),
+            import_profile: None,
+            export_profile: None,
             intent: Intent::Relative,
             fail_on: FailOn::None,
         }
@@ -18644,12 +18644,16 @@ pub fn thumbnail_image_with_opts(
         let linear_in: i32 = if thumbnail_image_options.linear { 1 } else { 0 };
         let linear_in_name = utils::new_c_string("linear")?;
 
-        let import_profile_in: CString =
-            utils::new_c_string(&thumbnail_image_options.import_profile)?;
+        let import_profile_in = thumbnail_image_options.import_profile.clone()
+            .map(|v| utils::new_c_string(&v).ok())
+            .unwrap_or(None)
+            .map(|v| v.as_ptr());
         let import_profile_in_name = utils::new_c_string("import-profile")?;
 
-        let export_profile_in: CString =
-            utils::new_c_string(&thumbnail_image_options.export_profile)?;
+        let export_profile_in = thumbnail_image_options.export_profile.clone()
+            .map(|v| utils::new_c_string(&v).ok())
+            .unwrap_or(None)
+            .map(|v| v.as_ptr());
         let export_profile_in_name = utils::new_c_string("export-profile")?;
 
         let intent_in: i32 = thumbnail_image_options.intent as i32;
@@ -18673,9 +18677,10 @@ pub fn thumbnail_image_with_opts(
             linear_in_name.as_ptr(),
             linear_in,
             import_profile_in_name.as_ptr(),
-            import_profile_in.as_ptr(),
+            import_profile_in.unwrap_or(std::ptr::null_mut()),
             export_profile_in_name.as_ptr(),
-            export_profile_in.as_ptr(),
+            export_profile_in.unwrap_or(std::ptr::null_mut()),
+            NULL,
             intent_in_name.as_ptr(),
             intent_in,
             fail_on_in_name.as_ptr(),
