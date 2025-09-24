@@ -9,6 +9,8 @@ pub enum Error {
     GetpointError,
     SystemError,
     AddError,
+    MinpairError,
+    MaxpairError,
     SubtractError,
     MultiplyError,
     DivideError,
@@ -18,7 +20,7 @@ pub enum Error {
     Math2Error,
     Complex2Error,
     ComplexformError,
-    SumError,
+    ClampError,
     InvertError,
     MathError,
     AbError,
@@ -30,6 +32,7 @@ pub enum Error {
     Math2ConstError,
     ComplexError,
     ComplexgetError,
+    SumError,
     AvgError,
     MinError,
     MaxError,
@@ -48,7 +51,6 @@ pub enum Error {
     TilecacheError,
     LinecacheError,
     SequentialError,
-    CacheError,
     EmbedError,
     GravityError,
     FlipError,
@@ -87,12 +89,14 @@ pub enum Error {
     GammaError,
     CompositeError,
     Composite2Error,
+    AddalphaError,
     BlackError,
     GaussnoiseError,
     XyzError,
     GaussmatError,
     LogmatError,
     TextError,
+    SdfError,
     EyeError,
     GreyError,
     ZoneError,
@@ -153,7 +157,8 @@ pub enum Error {
     MatrixsaveTargetError,
     MatrixprintError,
     RawsaveError,
-    RawsaveFdError,
+    RawsaveBufferError,
+    RawsaveTargetError,
     VipssaveError,
     VipssaveTargetError,
     PpmsaveError,
@@ -310,6 +315,14 @@ impl std::fmt::Display for Error {
                 f,
                 "vips error: AddError. Check error buffer for more details"
             ),
+            Error::MinpairError => write!(
+                f,
+                "vips error: MinpairError. Check error buffer for more details"
+            ),
+            Error::MaxpairError => write!(
+                f,
+                "vips error: MaxpairError. Check error buffer for more details"
+            ),
             Error::SubtractError => write!(
                 f,
                 "vips error: SubtractError. Check error buffer for more details"
@@ -346,9 +359,9 @@ impl std::fmt::Display for Error {
                 f,
                 "vips error: ComplexformError. Check error buffer for more details"
             ),
-            Error::SumError => write!(
+            Error::ClampError => write!(
                 f,
-                "vips error: SumError. Check error buffer for more details"
+                "vips error: ClampError. Check error buffer for more details"
             ),
             Error::InvertError => write!(
                 f,
@@ -393,6 +406,10 @@ impl std::fmt::Display for Error {
             Error::ComplexgetError => write!(
                 f,
                 "vips error: ComplexgetError. Check error buffer for more details"
+            ),
+            Error::SumError => write!(
+                f,
+                "vips error: SumError. Check error buffer for more details"
             ),
             Error::AvgError => write!(
                 f,
@@ -465,10 +482,6 @@ impl std::fmt::Display for Error {
             Error::SequentialError => write!(
                 f,
                 "vips error: SequentialError. Check error buffer for more details"
-            ),
-            Error::CacheError => write!(
-                f,
-                "vips error: CacheError. Check error buffer for more details"
             ),
             Error::EmbedError => write!(
                 f,
@@ -622,6 +635,10 @@ impl std::fmt::Display for Error {
                 f,
                 "vips error: Composite2Error. Check error buffer for more details"
             ),
+            Error::AddalphaError => write!(
+                f,
+                "vips error: AddalphaError. Check error buffer for more details"
+            ),
             Error::BlackError => write!(
                 f,
                 "vips error: BlackError. Check error buffer for more details"
@@ -645,6 +662,10 @@ impl std::fmt::Display for Error {
             Error::TextError => write!(
                 f,
                 "vips error: TextError. Check error buffer for more details"
+            ),
+            Error::SdfError => write!(
+                f,
+                "vips error: SdfError. Check error buffer for more details"
             ),
             Error::EyeError => write!(
                 f,
@@ -886,9 +907,13 @@ impl std::fmt::Display for Error {
                 f,
                 "vips error: RawsaveError. Check error buffer for more details"
             ),
-            Error::RawsaveFdError => write!(
+            Error::RawsaveBufferError => write!(
                 f,
-                "vips error: RawsaveFdError. Check error buffer for more details"
+                "vips error: RawsaveBufferError. Check error buffer for more details"
+            ),
+            Error::RawsaveTargetError => write!(
+                f,
+                "vips error: RawsaveTargetError. Check error buffer for more details"
             ),
             Error::VipssaveError => write!(
                 f,

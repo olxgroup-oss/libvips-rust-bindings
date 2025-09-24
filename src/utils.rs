@@ -1,4 +1,4 @@
-// (c) Copyright 2019-2024 OLX
+// (c) Copyright 2019-2025 OLX
 use crate::bindings;
 use crate::bindings::{VipsArrayDouble, VipsArrayImage, VipsArrayInt};
 use crate::error::Error;

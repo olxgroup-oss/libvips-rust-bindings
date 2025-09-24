@@ -1,4 +1,4 @@
-// (c) Copyright 2019-2024 OLX
+// (c) Copyright 2019-2025 OLX
 fn main() {
     if cfg!(target_os = "windows") {
         //
