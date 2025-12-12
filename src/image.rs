@@ -756,9 +756,9 @@ impl VipsTarget {
         }
     }
 
-    pub fn finish(self) {
+    pub fn end(self) {
         unsafe {
-            bindings::vips_target_finish(self.ctx);
+            bindings::vips_target_end(self.ctx);
         }
     }
 
