@@ -135,7 +135,7 @@ impl VipsImage {
         }
     }
 
-    pub fn new_from_memory(
+    pub unsafe fn new_from_memory(
         buffer: &[u8],
         width: i32,
         height: i32,
@@ -163,6 +163,37 @@ impl VipsImage {
             }
         }
     }
+
+    pub fn new_from_memory_copy(
+        buffer: &[u8],
+        width: i32,
+        height: i32,
+        bands: i32,
+        format: BandFormat,
+    ) -> Result<VipsImage> {
+        unsafe {
+            if let Some(format) = format.to_i32() {
+                let res = bindings::vips_image_new_from_memory_copy(
+                    buffer.as_ptr() as *const c_void,
+                    buffer.len() as u64,
+                    width,
+                    height,
+                    bands,
+                    format,
+                );
+                vips_image_result(
+                    res,
+                    Error::InitializationError("Could not initialise VipsImage from memory"),
+                )
+            } else {
+                Err(Error::InitializationError(
+                    "Invalid BandFormat. Please file a bug report, as this should never happen.",
+                ))
+            }
+        }
+    }
+
+
 
     pub fn image_new_matrix(width: i32, height: i32) -> Result<VipsImage> {
         unsafe {
