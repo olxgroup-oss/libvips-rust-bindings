@@ -204,6 +204,10 @@ pub enum Error {
     RotateError,
     ResizeError,
     ColourspaceError,
+    Oklab2OklchError,
+    Oklch2OklabError,
+    Oklab2XyzError,
+    Xyz2OklabError,
     Lab2XyzError,
     Xyz2LabError,
     Lab2LChError,
@@ -231,6 +235,7 @@ pub enum Error {
     IccImportError,
     IccExportError,
     IccTransformError,
+    Uhdr2ScRgbError,
     DE76Error,
     DE00Error,
     DEcmcError,
@@ -1098,6 +1103,22 @@ impl std::fmt::Display for Error {
                 f,
                 "vips error: ColourspaceError. Check error buffer for more details"
             ),
+            Error::Oklab2OklchError => write!(
+                f,
+                "vips error: Oklab2OklchError. Check error buffer for more details"
+            ),
+            Error::Oklch2OklabError => write!(
+                f,
+                "vips error: Oklch2OklabError. Check error buffer for more details"
+            ),
+            Error::Oklab2XyzError => write!(
+                f,
+                "vips error: Oklab2XyzError. Check error buffer for more details"
+            ),
+            Error::Xyz2OklabError => write!(
+                f,
+                "vips error: Xyz2OklabError. Check error buffer for more details"
+            ),
             Error::Lab2XyzError => write!(
                 f,
                 "vips error: Lab2XyzError. Check error buffer for more details"
@@ -1205,6 +1226,10 @@ impl std::fmt::Display for Error {
             Error::IccTransformError => write!(
                 f,
                 "vips error: IccTransformError. Check error buffer for more details"
+            ),
+            Error::Uhdr2ScRgbError => write!(
+                f,
+                "vips error: Uhdr2ScRgbError. Check error buffer for more details"
             ),
             Error::DE76Error => write!(
                 f,
