@@ -1,4 +1,4 @@
-// (c) Copyright 2019-2024 OLX
+// (c) Copyright 2019-2025 OLX
 // this is manually created because it doesn't follow the standard from the introspection output
 
 /// VipsLinear (linear), calculate (a * in + b)
