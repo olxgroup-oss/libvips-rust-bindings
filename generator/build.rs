@@ -218,7 +218,7 @@ impl Operation {
         unsafe {{
             {}
             let vips_op_response = bindings::vips_{}({}, NULL);
-            utils::result(vips_op_response, {}, Error::{}Error)
+            utils::result(vips_op_response, || {}, Error::{}Error)
         }}
         "#,
             self.get_variables(with_optional),

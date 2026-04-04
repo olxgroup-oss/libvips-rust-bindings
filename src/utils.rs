@@ -70,10 +70,17 @@ impl From<&[VipsImage]> for VipsArrayImageWrapper {
     }
 }
 
+/// Checks the return code of a libvips C function and produces a `Result`.
+///
+/// `output` is a closure that constructs the success value **only** when the
+/// C function succeeded (`res == 0`).  This is critical for functions like
+/// `*save_buffer` where the output pointer is left null on failure —
+/// eagerly constructing a `Vec` via `from_raw_parts(null, …)` would be
+/// undefined behavior.
 #[inline]
-pub fn result<T>(res: i32, output: T, error: Error) -> Result<T> {
+pub fn result<T>(res: i32, output: impl FnOnce() -> T, error: Error) -> Result<T> {
     if res == 0 {
-        Ok(output)
+        Ok(output())
     } else {
         Err(error)
     }

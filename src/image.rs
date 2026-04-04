@@ -237,7 +237,7 @@ impl VipsImage {
             let result = bindings::vips_image_wio_input(self.ctx);
             utils::result(
                 result,
-                (),
+                || (),
                 Error::OperationError("Error on vips image_wio_input"),
             )
         }
@@ -395,7 +395,7 @@ impl VipsImage {
             let res = bindings::vips_image_write(self.ctx, out);
             utils::result(
                 res,
-                VipsImage { ctx: out },
+                || VipsImage { ctx: out },
                 Error::IOError("Cannot write input to output"),
             )
         }
@@ -404,21 +404,21 @@ impl VipsImage {
     pub fn image_pio_input(&mut self) -> Result<()> {
         unsafe {
             let res = bindings::vips_image_pio_input(self.ctx);
-            utils::result(res, (), Error::IOError("Cannot read image"))
+            utils::result(res, || (), Error::IOError("Cannot read image"))
         }
     }
 
     pub fn image_pio_output(&mut self) -> Result<()> {
         unsafe {
             let res = bindings::vips_image_pio_output(self.ctx);
-            utils::result(res, (), Error::IOError("Cannot write image"))
+            utils::result(res, || (), Error::IOError("Cannot write image"))
         }
     }
 
     pub fn image_inplace(&self) -> Result<()> {
         unsafe {
             let res = bindings::vips_image_inplace(self.ctx);
-            utils::result(res, (), Error::IOError("Cannot cannot be modified inplace"))
+            utils::result(res, || (), Error::IOError("Cannot cannot be modified inplace"))
         }
     }
 
@@ -426,14 +426,14 @@ impl VipsImage {
         unsafe {
             let file_c_str = utils::new_c_string(filename)?;
             let res = bindings::vips_image_write_to_file(self.ctx, file_c_str.as_ptr(), NULL);
-            utils::result(res, (), Error::IOError("Cannot write to file"))
+            utils::result(res, || (), Error::IOError("Cannot write to file"))
         }
     }
 
     pub fn image_write_prepare(&self) -> Result<()> {
         unsafe {
             let res = bindings::vips_image_write_prepare(self.ctx);
-            utils::result(res, (), Error::IOError("Cannot prepare file to write"))
+            utils::result(res, || (), Error::IOError("Cannot prepare file to write"))
         }
     }
 
@@ -451,7 +451,7 @@ impl VipsImage {
             );
             utils::result(
                 res,
-                utils::new_byte_array(buffer_out, buffer_buf_size),
+                || utils::new_byte_array(buffer_out, buffer_buf_size),
                 Error::IOError("Cannot write content to buffer"),
             )
         }
@@ -477,7 +477,7 @@ impl VipsImage {
             if format_enum.is_some() {
                 utils::result(
                     res,
-                    (out_bands, format_enum.unwrap()),
+                    || (out_bands, format_enum.unwrap()),
                     Error::IOError("Could not predict image format"),
                 )
             } else {
@@ -492,7 +492,7 @@ impl VipsImage {
             let res = bindings::vips_image_decode(self.ctx, &mut out);
             utils::result(
                 res,
-                VipsImage { ctx: out },
+                || VipsImage { ctx: out },
                 Error::IOError("Cannot decode image"),
             )
         }
@@ -504,7 +504,7 @@ impl VipsImage {
             let res = bindings::vips_image_encode(self.ctx, &mut out, coding as i32);
             utils::result(
                 res,
-                VipsImage { ctx: out },
+                || VipsImage { ctx: out },
                 Error::IOError("Cannot encode image"),
             )
         }
@@ -612,7 +612,7 @@ impl VipsSource {
             let result = bindings::vips_source_unminimise(self.ctx);
             utils::result(
                 result,
-                (),
+                || (),
                 Error::OperationError("Error on vips unminimise"),
             )
         }
@@ -623,7 +623,7 @@ impl VipsSource {
             let result = bindings::vips_source_decode(self.ctx);
             utils::result(
                 result,
-                (),
+                || (),
                 Error::OperationError("Error on vips decode"),
             )
         }
