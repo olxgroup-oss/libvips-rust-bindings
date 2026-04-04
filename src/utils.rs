@@ -86,6 +86,16 @@ pub(crate) fn new_c_string(string: &str) -> Result<CString> {
 
 #[inline]
 pub(crate) unsafe fn new_byte_array(buf: *mut c_void, size: u64) -> Vec<u8> {
+    // Guard against null: when a *save_buffer C function fails it leaves buf as
+    // null but still returns a non-zero error code.  `utils::result` evaluates
+    // its `output` argument eagerly (standard Rust call-by-value semantics), so
+    // `new_byte_array` is called unconditionally before the error code is
+    // checked.  Without this guard that path calls
+    // `Vec::from_raw_parts(ptr::null_mut(), 0, 0)` which violates the
+    // `NonNull` precondition added in Rust 1.87 and panics at runtime.
+    if buf.is_null() {
+        return Vec::new();
+    }
     Vec::from_raw_parts(buf as *mut u8, size as usize, size as usize)
 }
 
