@@ -1,4 +1,4 @@
-// (c) Copyright 2019-2025 OLX
+// (c) Copyright 2019-2026 OLX
 use heck::{ToSnakeCase, ToUpperCamelCase};
 use std::env;
 use std::fs::File;
@@ -1308,7 +1308,7 @@ fn main() {
         .expect("Couldn't write bindings!");
     let ops_content = format!(
         r#"
-    // (c) Copyright 2019-2025 OLX
+    // (c) Copyright 2019-2026 OLX
     use std::ffi::*;
     use std::ptr::null_mut;
     use std::convert::TryInto;

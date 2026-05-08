@@ -1,4 +1,4 @@
-# (c) Copyright 2019-2025 OLX
+# (c) Copyright 2019-2026 OLX
 [package]
 name = "libvips-bindings"
 description = "File used for the generation of bindings for libvips from C"
@@ -13,8 +13,8 @@ edition = "2021"
 [build-dependencies]
 bindgen = "0.72.1"
 heck = "0.5.0"
-cc = "1.2.49"
-which = "8.0.0"
+cc = "1.2.61"
+which = "8.0.2"
 
 [dependencies]
 num-traits = "0.2.19"
