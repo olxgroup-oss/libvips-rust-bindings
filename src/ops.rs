@@ -1198,7 +1198,11 @@ pub fn abs(inp: &VipsImage) -> Result<VipsImage> {
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
         let vips_op_response = bindings::vips_abs(inp_in, &mut out_out, NULL);
-        utils::result(vips_op_response, || VipsImage { ctx: out_out }, Error::AbError)
+        utils::result(
+            vips_op_response,
+            || VipsImage { ctx: out_out },
+            Error::AbError,
+        )
     }
 }
 
@@ -20295,7 +20299,7 @@ pub fn oklab_2_oklch(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_Oklab2Oklch(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Oklab2OklchError,
         )
     }
@@ -20312,7 +20316,7 @@ pub fn oklch_2_oklab(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_Oklch2Oklab(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Oklch2OklabError,
         )
     }
@@ -20329,7 +20333,7 @@ pub fn oklab_2xyz(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_Oklab2XYZ(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Oklab2XyzError,
         )
     }
@@ -20346,7 +20350,7 @@ pub fn xyz2_oklab(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_XYZ2Oklab(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Xyz2OklabError,
         )
     }
@@ -21265,7 +21269,7 @@ pub fn uhdr_2sc_rgb(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_uhdr2scRGB(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Uhdr2ScRgbError,
         )
     }
