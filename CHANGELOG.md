@@ -1,5 +1,13 @@
 # Changelog
 
+## <small>1.7.5 (2026-05-11)</small>
+
+* fix: defer output construction in utils::result to prevent UB on C function failure (#150) ([4a63b61](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/4a63b61)), closes [#150](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/150) [olxgroup-oss/libvips-rust-bindings#148](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/148)
+* chore(deps): temporarily reverse heck as dependency to merge https://github.com/olxgroup-oss/libvips ([a9c9c54](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/a9c9c54))
+* chore(deps): update dependency rust to v1.95.0 (#143) ([6ec3c7b](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/6ec3c7b)), closes [#143](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/143)
+* chore(deps): update node.js to v20.20.2 (#153) ([3893fc8](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/3893fc8)), closes [#153](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/153)
+* chore(deps): update semantic-release monorepo (#154) ([a3e4d84](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/a3e4d84)), closes [#154](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/154)
+
 ## <small>1.7.3 (2026-05-07)</small>
 
 * fix(actions): fix github actions ([b1b29b7](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/b1b29b7))
