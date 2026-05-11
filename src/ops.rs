@@ -698,7 +698,7 @@ pub fn system(cmd_format: &str) -> Result<()> {
         let cmd_format_in: CString = utils::new_c_string(cmd_format)?;
 
         let vips_op_response = bindings::vips_system(cmd_format_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::SystemError)
+        utils::result(vips_op_response, || (), Error::SystemError)
     }
 }
 
@@ -776,7 +776,7 @@ pub fn system_with_opts(cmd_format: &str, system_options: &SystemOptions) -> Res
             log_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::SystemError)
+        utils::result(vips_op_response, || (), Error::SystemError)
     }
 }
 
@@ -793,7 +793,7 @@ pub fn add(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_add(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::AddError,
         )
     }
@@ -812,7 +812,7 @@ pub fn minpair(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_minpair(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MinpairError,
         )
     }
@@ -831,7 +831,7 @@ pub fn maxpair(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_maxpair(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaxpairError,
         )
     }
@@ -850,7 +850,7 @@ pub fn subtract(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_subtract(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SubtractError,
         )
     }
@@ -869,7 +869,7 @@ pub fn multiply(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_multiply(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MultiplyError,
         )
     }
@@ -888,7 +888,7 @@ pub fn divide(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_divide(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::DivideError,
         )
     }
@@ -925,7 +925,7 @@ pub fn relational(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RelationalError,
         )
     }
@@ -944,7 +944,7 @@ pub fn remainder(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_remainder(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RemainderError,
         )
     }
@@ -980,7 +980,7 @@ pub fn boolean(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BooleanError,
         )
     }
@@ -1010,7 +1010,7 @@ pub fn math_2(left: &VipsImage, right: &VipsImage, math_2: OperationMath2) -> Re
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Math2Error,
         )
     }
@@ -1042,7 +1042,7 @@ pub fn complex_2(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Complex2Error,
         )
     }
@@ -1061,7 +1061,7 @@ pub fn complexform(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_complexform(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ComplexformError,
         )
     }
@@ -1078,7 +1078,7 @@ pub fn clamp(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_clamp(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ClampError,
         )
     }
@@ -1130,7 +1130,7 @@ pub fn clamp_with_opts(inp: &VipsImage, clamp_options: &ClampOptions) -> Result<
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ClampError,
         )
     }
@@ -1147,7 +1147,7 @@ pub fn invert(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_invert(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::InvertError,
         )
     }
@@ -1183,7 +1183,7 @@ pub fn math(inp: &VipsImage, math: OperationMath) -> Result<VipsImage> {
             bindings::vips_math(inp_in, &mut out_out, math_in.try_into().unwrap(), NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MathError,
         )
     }
@@ -1198,7 +1198,7 @@ pub fn abs(inp: &VipsImage) -> Result<VipsImage> {
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
         let vips_op_response = bindings::vips_abs(inp_in, &mut out_out, NULL);
-        utils::result(vips_op_response, VipsImage { ctx: out_out }, Error::AbError)
+        utils::result(vips_op_response, || VipsImage { ctx: out_out }, Error::AbError)
     }
 }
 
@@ -1213,7 +1213,7 @@ pub fn sign(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_sign(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SignError,
         )
     }
@@ -1236,7 +1236,7 @@ pub fn round(inp: &VipsImage, round: OperationRound) -> Result<VipsImage> {
             bindings::vips_round(inp_in, &mut out_out, round_in.try_into().unwrap(), NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RoundError,
         )
     }
@@ -1274,7 +1274,7 @@ pub fn relational_const(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RelationalConstError,
         )
     }
@@ -1294,7 +1294,7 @@ pub fn remainder_const(inp: &VipsImage, c: &mut [f64]) -> Result<VipsImage> {
             bindings::vips_remainder_const(inp_in, &mut out_out, c_in, c.len() as i32, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RemainderConstError,
         )
     }
@@ -1331,7 +1331,7 @@ pub fn boolean_const(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BooleanConstError,
         )
     }
@@ -1362,7 +1362,7 @@ pub fn math_2_const(inp: &VipsImage, math_2: OperationMath2, c: &mut [f64]) -> R
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Math2ConstError,
         )
     }
@@ -1385,7 +1385,7 @@ pub fn complex(inp: &VipsImage, cmplx: OperationComplex) -> Result<VipsImage> {
             bindings::vips_complex(inp_in, &mut out_out, cmplx_in.try_into().unwrap(), NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ComplexError,
         )
     }
@@ -1407,7 +1407,7 @@ pub fn complexget(inp: &VipsImage, get: OperationComplexget) -> Result<VipsImage
             bindings::vips_complexget(inp_in, &mut out_out, get_in.try_into().unwrap(), NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ComplexgetError,
         )
     }
@@ -1431,7 +1431,7 @@ pub fn sum(inp: &mut [VipsImage]) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_sum(inp_in.as_mut_ptr(), &mut out_out, inp_len, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SumError,
         )
     }
@@ -1446,7 +1446,7 @@ pub fn avg(inp: &VipsImage) -> Result<f64> {
         let mut out_out: f64 = f64::from(0);
 
         let vips_op_response = bindings::vips_avg(inp_in, &mut out_out, NULL);
-        utils::result(vips_op_response, out_out, Error::AvgError)
+        utils::result(vips_op_response, || out_out, Error::AvgError)
     }
 }
 
@@ -1459,7 +1459,7 @@ pub fn min(inp: &VipsImage) -> Result<f64> {
         let mut out_out: f64 = f64::from(0);
 
         let vips_op_response = bindings::vips_min(inp_in, &mut out_out, NULL);
-        utils::result(vips_op_response, out_out, Error::MinError)
+        utils::result(vips_op_response, || out_out, Error::MinError)
     }
 }
 
@@ -1543,7 +1543,7 @@ pub fn min_with_opts(inp: &VipsImage, min_options: &MinOptions) -> Result<f64> {
             y_array_in,
             NULL,
         );
-        utils::result(vips_op_response, out_out, Error::MinError)
+        utils::result(vips_op_response, || out_out, Error::MinError)
     }
 }
 
@@ -1556,7 +1556,7 @@ pub fn max(inp: &VipsImage) -> Result<f64> {
         let mut out_out: f64 = f64::from(0);
 
         let vips_op_response = bindings::vips_max(inp_in, &mut out_out, NULL);
-        utils::result(vips_op_response, out_out, Error::MaxError)
+        utils::result(vips_op_response, || out_out, Error::MaxError)
     }
 }
 
@@ -1640,7 +1640,7 @@ pub fn max_with_opts(inp: &VipsImage, max_options: &MaxOptions) -> Result<f64> {
             y_array_in,
             NULL,
         );
-        utils::result(vips_op_response, out_out, Error::MaxError)
+        utils::result(vips_op_response, || out_out, Error::MaxError)
     }
 }
 
@@ -1653,7 +1653,7 @@ pub fn deviate(inp: &VipsImage) -> Result<f64> {
         let mut out_out: f64 = f64::from(0);
 
         let vips_op_response = bindings::vips_deviate(inp_in, &mut out_out, NULL);
-        utils::result(vips_op_response, out_out, Error::DeviateError)
+        utils::result(vips_op_response, || out_out, Error::DeviateError)
     }
 }
 
@@ -1668,7 +1668,7 @@ pub fn stats(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_stats(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::StatError,
         )
     }
@@ -1685,7 +1685,7 @@ pub fn hist_find(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_hist_find(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistFindError,
         )
     }
@@ -1726,7 +1726,7 @@ pub fn hist_find_with_opts(
             bindings::vips_hist_find(inp_in, &mut out_out, band_in_name.as_ptr(), band_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistFindError,
         )
     }
@@ -1743,7 +1743,7 @@ pub fn hist_find_ndim(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_hist_find_ndim(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistFindNdimError,
         )
     }
@@ -1789,7 +1789,7 @@ pub fn hist_find_ndim_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistFindNdimError,
         )
     }
@@ -1809,7 +1809,7 @@ pub fn hist_find_indexed(inp: &VipsImage, index: &VipsImage) -> Result<VipsImage
             bindings::vips_hist_find_indexed(inp_in, index_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistFindIndexedError,
         )
     }
@@ -1861,7 +1861,7 @@ pub fn hist_find_indexed_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistFindIndexedError,
         )
     }
@@ -1878,7 +1878,7 @@ pub fn hough_line(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_hough_line(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HoughLineError,
         )
     }
@@ -1933,7 +1933,7 @@ pub fn hough_line_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HoughLineError,
         )
     }
@@ -1950,7 +1950,7 @@ pub fn hough_circle(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_hough_circle(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HoughCircleError,
         )
     }
@@ -2014,7 +2014,7 @@ pub fn hough_circle_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HoughCircleError,
         )
     }
@@ -2036,7 +2036,7 @@ pub fn project(inp: &VipsImage) -> Result<(VipsImage, VipsImage)> {
             bindings::vips_project(inp_in, &mut columns_out, &mut rows_out, NULL);
         utils::result(
             vips_op_response,
-            (VipsImage { ctx: columns_out }, VipsImage { ctx: rows_out }),
+            || (VipsImage { ctx: columns_out }, VipsImage { ctx: rows_out }),
             Error::ProjectError,
         )
     }
@@ -2058,7 +2058,7 @@ pub fn profile(inp: &VipsImage) -> Result<(VipsImage, VipsImage)> {
             bindings::vips_profile(inp_in, &mut columns_out, &mut rows_out, NULL);
         utils::result(
             vips_op_response,
-            (VipsImage { ctx: columns_out }, VipsImage { ctx: rows_out }),
+            || (VipsImage { ctx: columns_out }, VipsImage { ctx: rows_out }),
             Error::ProfileError,
         )
     }
@@ -2081,7 +2081,7 @@ pub fn measure(inp: &VipsImage, h: i32, v: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_measure(inp_in, &mut out_out, h_in, v_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MeasureError,
         )
     }
@@ -2164,7 +2164,7 @@ pub fn measure_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MeasureError,
         )
     }
@@ -2196,7 +2196,7 @@ pub fn find_trim(inp: &VipsImage) -> Result<(i32, i32, i32, i32)> {
         );
         utils::result(
             vips_op_response,
-            (left_out, top_out, width_out, height_out),
+            || (left_out, top_out, width_out, height_out),
             Error::FindTrimError,
         )
     }
@@ -2272,7 +2272,7 @@ pub fn find_trim_with_opts(
         );
         utils::result(
             vips_op_response,
-            (left_out, top_out, width_out, height_out),
+            || (left_out, top_out, width_out, height_out),
             Error::FindTrimError,
         )
     }
@@ -2289,7 +2289,7 @@ pub fn copy(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_copy(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CopyError,
         )
     }
@@ -2447,7 +2447,7 @@ pub fn copy_with_opts(inp: &VipsImage, copy_options: &CopyOptions) -> Result<Vip
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CopyError,
         )
     }
@@ -2464,7 +2464,7 @@ pub fn tilecache(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_tilecache(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TilecacheError,
         )
     }
@@ -2557,7 +2557,7 @@ pub fn tilecache_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TilecacheError,
         )
     }
@@ -2574,7 +2574,7 @@ pub fn linecache(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_linecache(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LinecacheError,
         )
     }
@@ -2649,7 +2649,7 @@ pub fn linecache_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LinecacheError,
         )
     }
@@ -2666,7 +2666,7 @@ pub fn sequential(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_sequential(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SequentialError,
         )
     }
@@ -2712,7 +2712,7 @@ pub fn sequential_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SequentialError,
         )
     }
@@ -2742,7 +2742,7 @@ pub fn embed(inp: &VipsImage, x: i32, y: i32, width: i32, height: i32) -> Result
             bindings::vips_embed(inp_in, &mut out_out, x_in, y_in, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::EmbedError,
         )
     }
@@ -2822,7 +2822,7 @@ pub fn embed_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::EmbedError,
         )
     }
@@ -2868,7 +2868,7 @@ pub fn gravity(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GravityError,
         )
     }
@@ -2952,7 +2952,7 @@ pub fn gravity_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GravityError,
         )
     }
@@ -2974,7 +2974,7 @@ pub fn flip(inp: &VipsImage, direction: Direction) -> Result<VipsImage> {
             bindings::vips_flip(inp_in, &mut out_out, direction_in.try_into().unwrap(), NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::FlipError,
         )
     }
@@ -3000,7 +3000,7 @@ pub fn insert(main: &VipsImage, sub: &VipsImage, x: i32, y: i32) -> Result<VipsI
             bindings::vips_insert(main_in, sub_in, &mut out_out, x_in, y_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::InsertError,
         )
     }
@@ -3070,7 +3070,7 @@ pub fn insert_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::InsertError,
         )
     }
@@ -3099,7 +3099,7 @@ pub fn join(in_1: &VipsImage, in_2: &VipsImage, direction: Direction) -> Result<
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::JoinError,
         )
     }
@@ -3184,7 +3184,7 @@ pub fn join_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::JoinError,
         )
     }
@@ -3209,7 +3209,7 @@ pub fn arrayjoin(inp: &mut [VipsImage]) -> Result<VipsImage> {
             bindings::vips_arrayjoin(inp_in.as_mut_ptr(), &mut out_out, inp_len, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ArrayjoinError,
         )
     }
@@ -3322,7 +3322,7 @@ pub fn arrayjoin_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ArrayjoinError,
         )
     }
@@ -3365,7 +3365,7 @@ pub fn extract_area(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ExtractAreaError,
         )
     }
@@ -3389,7 +3389,7 @@ pub fn smartcrop(input: &VipsImage, width: i32, height: i32) -> Result<VipsImage
             bindings::vips_smartcrop(input_in, &mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SmartcropError,
         )
     }
@@ -3482,7 +3482,7 @@ pub fn smartcrop_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SmartcropError,
         )
     }
@@ -3502,7 +3502,7 @@ pub fn extract_band(inp: &VipsImage, band: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_extract_band(inp_in, &mut out_out, band_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ExtractBandError,
         )
     }
@@ -3551,7 +3551,7 @@ pub fn extract_band_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ExtractBandError,
         )
     }
@@ -3576,7 +3576,7 @@ pub fn bandjoin(inp: &mut [VipsImage]) -> Result<VipsImage> {
             bindings::vips_bandjoin(inp_in.as_mut_ptr(), &mut out_out, inp_len, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BandjoinError,
         )
     }
@@ -3596,7 +3596,7 @@ pub fn bandjoin_const(inp: &VipsImage, c: &mut [f64]) -> Result<VipsImage> {
             bindings::vips_bandjoin_const(inp_in, &mut out_out, c_in, c.len() as i32, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BandjoinConstError,
         )
     }
@@ -3621,7 +3621,7 @@ pub fn bandrank(inp: &mut [VipsImage]) -> Result<VipsImage> {
             bindings::vips_bandrank(inp_in.as_mut_ptr(), &mut out_out, inp_len, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BandrankError,
         )
     }
@@ -3675,7 +3675,7 @@ pub fn bandrank_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BandrankError,
         )
     }
@@ -3692,7 +3692,7 @@ pub fn bandmean(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_bandmean(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BandmeanError,
         )
     }
@@ -3717,7 +3717,7 @@ pub fn bandbool(inp: &VipsImage, boolean: OperationBoolean) -> Result<VipsImage>
             bindings::vips_bandbool(inp_in, &mut out_out, boolean_in.try_into().unwrap(), NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BandboolError,
         )
     }
@@ -3741,7 +3741,7 @@ pub fn replicate(inp: &VipsImage, across: i32, down: i32) -> Result<VipsImage> {
             bindings::vips_replicate(inp_in, &mut out_out, across_in, down_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ReplicateError,
         )
     }
@@ -3772,7 +3772,7 @@ pub fn cast(inp: &VipsImage, format: BandFormat) -> Result<VipsImage> {
             bindings::vips_cast(inp_in, &mut out_out, format_in.try_into().unwrap(), NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CastError,
         )
     }
@@ -3831,7 +3831,7 @@ pub fn cast_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CastError,
         )
     }
@@ -3855,7 +3855,7 @@ pub fn rot(inp: &VipsImage, angle: Angle) -> Result<VipsImage> {
             bindings::vips_rot(inp_in, &mut out_out, angle_in.try_into().unwrap(), NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RotError,
         )
     }
@@ -3872,7 +3872,7 @@ pub fn rot_45(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_rot45(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Rot45Error,
         )
     }
@@ -3917,7 +3917,7 @@ pub fn rot_45_with_opts(inp: &VipsImage, rot_45_options: &Rot45Options) -> Resul
             bindings::vips_rot45(inp_in, &mut out_out, angle_in_name.as_ptr(), angle_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Rot45Error,
         )
     }
@@ -3934,7 +3934,7 @@ pub fn autorot(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_autorot(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::AutorotError,
         )
     }
@@ -3989,7 +3989,7 @@ pub fn autorot_with_opts(inp: &VipsImage, autorot_options: &AutorotOptions) -> R
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::AutorotError,
         )
     }
@@ -4011,7 +4011,7 @@ pub fn ifthenelse(cond: &VipsImage, in_1: &VipsImage, in_2: &VipsImage) -> Resul
             bindings::vips_ifthenelse(cond_in, in_1_in, in_2_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::IfthenelseError,
         )
     }
@@ -4063,7 +4063,7 @@ pub fn ifthenelse_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::IfthenelseError,
         )
     }
@@ -4082,7 +4082,7 @@ pub fn recomb(inp: &VipsImage, m: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_recomb(inp_in, &mut out_out, m_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RecombError,
         )
     }
@@ -4099,7 +4099,7 @@ pub fn bandfold(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_bandfold(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BandfoldError,
         )
     }
@@ -4145,7 +4145,7 @@ pub fn bandfold_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BandfoldError,
         )
     }
@@ -4162,7 +4162,7 @@ pub fn bandunfold(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_bandunfold(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BandunfoldError,
         )
     }
@@ -4208,7 +4208,7 @@ pub fn bandunfold_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BandunfoldError,
         )
     }
@@ -4225,7 +4225,7 @@ pub fn flatten(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_flatten(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::FlattenError,
         )
     }
@@ -4278,7 +4278,7 @@ pub fn flatten_with_opts(inp: &VipsImage, flatten_options: &FlattenOptions) -> R
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::FlattenError,
         )
     }
@@ -4295,7 +4295,7 @@ pub fn premultiply(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_premultiply(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PremultiplyError,
         )
     }
@@ -4341,7 +4341,7 @@ pub fn premultiply_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PremultiplyError,
         )
     }
@@ -4358,7 +4358,7 @@ pub fn unpremultiply(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_unpremultiply(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::UnpremultiplyError,
         )
     }
@@ -4413,7 +4413,7 @@ pub fn unpremultiply_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::UnpremultiplyError,
         )
     }
@@ -4446,7 +4446,7 @@ pub fn grid(inp: &VipsImage, tile_height: i32, across: i32, down: i32) -> Result
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GridError,
         )
     }
@@ -4463,7 +4463,7 @@ pub fn transpose_3d(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_transpose3d(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Transpose3DError,
         )
     }
@@ -4509,7 +4509,7 @@ pub fn transpose_3d_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Transpose3DError,
         )
     }
@@ -4526,7 +4526,7 @@ pub fn scale(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_scale(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ScaleError,
         )
     }
@@ -4578,7 +4578,7 @@ pub fn scale_with_opts(inp: &VipsImage, scale_options: &ScaleOptions) -> Result<
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ScaleError,
         )
     }
@@ -4595,7 +4595,7 @@ pub fn wrap(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_wrap(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::WrapError,
         )
     }
@@ -4647,7 +4647,7 @@ pub fn wrap_with_opts(inp: &VipsImage, wrap_options: &WrapOptions) -> Result<Vip
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::WrapError,
         )
     }
@@ -4670,7 +4670,7 @@ pub fn zoom(input: &VipsImage, xfac: i32, yfac: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_zoom(input_in, &mut out_out, xfac_in, yfac_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ZoomError,
         )
     }
@@ -4694,7 +4694,7 @@ pub fn subsample(input: &VipsImage, xfac: i32, yfac: i32) -> Result<VipsImage> {
             bindings::vips_subsample(input_in, &mut out_out, xfac_in, yfac_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SubsampleError,
         )
     }
@@ -4748,7 +4748,7 @@ pub fn subsample_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SubsampleError,
         )
     }
@@ -4765,7 +4765,7 @@ pub fn msb(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_msb(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MsbError,
         )
     }
@@ -4803,7 +4803,7 @@ pub fn msb_with_opts(inp: &VipsImage, msb_options: &MsbOptions) -> Result<VipsIm
             bindings::vips_msb(inp_in, &mut out_out, band_in_name.as_ptr(), band_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MsbError,
         )
     }
@@ -4820,7 +4820,7 @@ pub fn byteswap(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_byteswap(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ByteswapError,
         )
     }
@@ -4837,7 +4837,7 @@ pub fn falsecolour(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_falsecolour(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::FalsecolourError,
         )
     }
@@ -4854,7 +4854,7 @@ pub fn gamma(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_gamma(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GammaError,
         )
     }
@@ -4897,7 +4897,7 @@ pub fn gamma_with_opts(inp: &VipsImage, gamma_options: &GammaOptions) -> Result<
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GammaError,
         )
     }
@@ -4930,7 +4930,7 @@ pub fn composite(inp: &mut [VipsImage], mode: &mut [i32]) -> Result<VipsImage> {
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CompositeError,
         )
     }
@@ -5041,7 +5041,7 @@ pub fn composite_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CompositeError,
         )
     }
@@ -5093,7 +5093,7 @@ pub fn composite_2(base: &VipsImage, overlay: &VipsImage, mode: BlendMode) -> Re
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Composite2Error,
         )
     }
@@ -5224,7 +5224,7 @@ pub fn composite_2_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Composite2Error,
         )
     }
@@ -5241,7 +5241,7 @@ pub fn addalpha(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_addalpha(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::AddalphaError,
         )
     }
@@ -5262,7 +5262,7 @@ pub fn black(width: i32, height: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_black(&mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BlackError,
         )
     }
@@ -5310,7 +5310,7 @@ pub fn black_with_opts(width: i32, height: i32, black_options: &BlackOptions) ->
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BlackError,
         )
     }
@@ -5331,7 +5331,7 @@ pub fn gaussnoise(width: i32, height: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_gaussnoise(&mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GaussnoiseError,
         )
     }
@@ -5401,7 +5401,7 @@ pub fn gaussnoise_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GaussnoiseError,
         )
     }
@@ -5422,7 +5422,7 @@ pub fn xyz(width: i32, height: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_xyz(&mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::XyzError,
         )
     }
@@ -5488,7 +5488,7 @@ pub fn xyz_with_opts(width: i32, height: i32, xyz_options: &XyzOptions) -> Resul
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::XyzError,
         )
     }
@@ -5509,7 +5509,7 @@ pub fn gaussmat(sigma: f64, min_ampl: f64) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_gaussmat(&mut out_out, sigma_in, min_ampl_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GaussmatError,
         )
     }
@@ -5572,7 +5572,7 @@ pub fn gaussmat_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GaussmatError,
         )
     }
@@ -5593,7 +5593,7 @@ pub fn logmat(sigma: f64, min_ampl: f64) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_logmat(&mut out_out, sigma_in, min_ampl_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LogmatError,
         )
     }
@@ -5656,7 +5656,7 @@ pub fn logmat_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LogmatError,
         )
     }
@@ -5673,7 +5673,7 @@ pub fn text(text: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_text(&mut out_out, text_in.as_ptr(), NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TextError,
         )
     }
@@ -5809,7 +5809,7 @@ pub fn text_with_opts(text: &str, text_options: &TextOptions) -> Result<VipsImag
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TextError,
         )
     }
@@ -5842,7 +5842,7 @@ pub fn sdf(width: i32, height: i32, shape: SdfShape) -> Result<VipsImage> {
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SdfError,
         )
     }
@@ -5929,7 +5929,7 @@ pub fn sdf_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SdfError,
         )
     }
@@ -5950,7 +5950,7 @@ pub fn eye(width: i32, height: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_eye(&mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::EyeError,
         )
     }
@@ -6007,7 +6007,7 @@ pub fn eye_with_opts(width: i32, height: i32, eye_options: &EyeOptions) -> Resul
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::EyeError,
         )
     }
@@ -6028,7 +6028,7 @@ pub fn grey(width: i32, height: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_grey(&mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GreyError,
         )
     }
@@ -6074,7 +6074,7 @@ pub fn grey_with_opts(width: i32, height: i32, grey_options: &GreyOptions) -> Re
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GreyError,
         )
     }
@@ -6095,7 +6095,7 @@ pub fn zone(width: i32, height: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_zone(&mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ZoneError,
         )
     }
@@ -6141,7 +6141,7 @@ pub fn zone_with_opts(width: i32, height: i32, zone_options: &ZoneOptions) -> Re
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ZoneError,
         )
     }
@@ -6162,7 +6162,7 @@ pub fn sines(width: i32, height: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_sines(&mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SineError,
         )
     }
@@ -6228,7 +6228,7 @@ pub fn sines_with_opts(width: i32, height: i32, sines_options: &SineOptions) -> 
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SineError,
         )
     }
@@ -6253,7 +6253,7 @@ pub fn mask_ideal(width: i32, height: i32, frequency_cutoff: f64) -> Result<Vips
             bindings::vips_mask_ideal(&mut out_out, width_in, height_in, frequency_cutoff_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskIdealError,
         )
     }
@@ -6337,7 +6337,7 @@ pub fn mask_ideal_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskIdealError,
         )
     }
@@ -6376,7 +6376,7 @@ pub fn mask_ideal_ring(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskIdealRingError,
         )
     }
@@ -6469,7 +6469,7 @@ pub fn mask_ideal_ring_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskIdealRingError,
         )
     }
@@ -6513,7 +6513,7 @@ pub fn mask_ideal_band(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskIdealBandError,
         )
     }
@@ -6611,7 +6611,7 @@ pub fn mask_ideal_band_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskIdealBandError,
         )
     }
@@ -6655,7 +6655,7 @@ pub fn mask_butterworth(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskButterworthError,
         )
     }
@@ -6757,7 +6757,7 @@ pub fn mask_butterworth_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskButterworthError,
         )
     }
@@ -6806,7 +6806,7 @@ pub fn mask_butterworth_ring(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskButterworthRingError,
         )
     }
@@ -6921,7 +6921,7 @@ pub fn mask_butterworth_ring_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskButterworthRingError,
         )
     }
@@ -6975,7 +6975,7 @@ pub fn mask_butterworth_band(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskButterworthBandError,
         )
     }
@@ -7095,7 +7095,7 @@ pub fn mask_butterworth_band_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskButterworthBandError,
         )
     }
@@ -7134,7 +7134,7 @@ pub fn mask_gaussian(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskGaussianError,
         )
     }
@@ -7223,7 +7223,7 @@ pub fn mask_gaussian_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskGaussianError,
         )
     }
@@ -7267,7 +7267,7 @@ pub fn mask_gaussian_ring(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskGaussianRingError,
         )
     }
@@ -7377,7 +7377,7 @@ pub fn mask_gaussian_ring_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskGaussianRingError,
         )
     }
@@ -7426,7 +7426,7 @@ pub fn mask_gaussian_band(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskGaussianBandError,
         )
     }
@@ -7541,7 +7541,7 @@ pub fn mask_gaussian_band_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskGaussianBandError,
         )
     }
@@ -7571,7 +7571,7 @@ pub fn mask_fractal(width: i32, height: i32, fractal_dimension: f64) -> Result<V
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskFractalError,
         )
     }
@@ -7655,7 +7655,7 @@ pub fn mask_fractal_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaskFractalError,
         )
     }
@@ -7672,7 +7672,7 @@ pub fn buildlut(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_buildlut(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::BuildlutError,
         )
     }
@@ -7689,7 +7689,7 @@ pub fn invertlut(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_invertlut(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::InvertlutError,
         )
     }
@@ -7730,7 +7730,7 @@ pub fn invertlut_with_opts(
             bindings::vips_invertlut(inp_in, &mut out_out, size_in_name.as_ptr(), size_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::InvertlutError,
         )
     }
@@ -7746,7 +7746,7 @@ pub fn tonelut() -> Result<VipsImage> {
         let vips_op_response = bindings::vips_tonelut(&mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TonelutError,
         )
     }
@@ -7868,7 +7868,7 @@ pub fn tonelut_with_opts(tonelut_options: &TonelutOptions) -> Result<VipsImage> 
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TonelutError,
         )
     }
@@ -7884,7 +7884,7 @@ pub fn identity() -> Result<VipsImage> {
         let vips_op_response = bindings::vips_identity(&mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::IdentityError,
         )
     }
@@ -7943,7 +7943,7 @@ pub fn identity_with_opts(identity_options: &IdentityOptions) -> Result<VipsImag
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::IdentityError,
         )
     }
@@ -7973,7 +7973,7 @@ pub fn fractsurf(width: i32, height: i32, fractal_dimension: f64) -> Result<Vips
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::FractsurfError,
         )
     }
@@ -7994,7 +7994,7 @@ pub fn worley(width: i32, height: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_worley(&mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::WorleyError,
         )
     }
@@ -8055,7 +8055,7 @@ pub fn worley_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::WorleyError,
         )
     }
@@ -8076,7 +8076,7 @@ pub fn perlin(width: i32, height: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_perlin(&mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PerlinError,
         )
     }
@@ -8146,7 +8146,7 @@ pub fn perlin_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PerlinError,
         )
     }
@@ -8171,7 +8171,7 @@ pub fn switch(tests: &mut [VipsImage]) -> Result<VipsImage> {
             bindings::vips_switch(tests_in.as_mut_ptr(), &mut out_out, tests_len, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SwitchError,
         )
     }
@@ -8188,7 +8188,7 @@ pub fn csvload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_csvload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CsvloadError,
         )
     }
@@ -8310,7 +8310,7 @@ pub fn csvload_with_opts(filename: &str, csvload_options: &CsvloadOptions) -> Re
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CsvloadError,
         )
     }
@@ -8327,7 +8327,7 @@ pub fn csvload_source(source: &VipsSource) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_csvload_source(source_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CsvloadSourceError,
         )
     }
@@ -8456,7 +8456,7 @@ pub fn csvload_source_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CsvloadSourceError,
         )
     }
@@ -8473,7 +8473,7 @@ pub fn matrixload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_matrixload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MatrixloadError,
         )
     }
@@ -8564,7 +8564,7 @@ pub fn matrixload_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MatrixloadError,
         )
     }
@@ -8581,7 +8581,7 @@ pub fn matrixload_source(source: &VipsSource) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_matrixload_source(source_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MatrixloadSourceError,
         )
     }
@@ -8680,7 +8680,7 @@ pub fn matrixload_source_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MatrixloadSourceError,
         )
     }
@@ -8713,7 +8713,7 @@ pub fn rawload(filename: &str, width: i32, height: i32, bands: i32) -> Result<Vi
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RawloadError,
         )
     }
@@ -8877,7 +8877,7 @@ pub fn rawload_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RawloadError,
         )
     }
@@ -8894,7 +8894,7 @@ pub fn vipsload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_vipsload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::VipsloadError,
         )
     }
@@ -8982,7 +8982,7 @@ pub fn vipsload_with_opts(filename: &str, vipsload_options: &VipsloadOptions) ->
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::VipsloadError,
         )
     }
@@ -8999,7 +8999,7 @@ pub fn vipsload_source(source: &VipsSource) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_vipsload_source(source_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::VipsloadSourceError,
         )
     }
@@ -9094,7 +9094,7 @@ pub fn vipsload_source_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::VipsloadSourceError,
         )
     }
@@ -9111,7 +9111,7 @@ pub fn analyzeload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_analyzeload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::AnalyzeloadError,
         )
     }
@@ -9202,7 +9202,7 @@ pub fn analyzeload_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::AnalyzeloadError,
         )
     }
@@ -9219,7 +9219,7 @@ pub fn ppmload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_ppmload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PpmloadError,
         )
     }
@@ -9307,7 +9307,7 @@ pub fn ppmload_with_opts(filename: &str, ppmload_options: &PpmloadOptions) -> Re
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PpmloadError,
         )
     }
@@ -9325,7 +9325,7 @@ pub fn ppmload_buffer(buffer: &[u8]) -> Result<VipsImage> {
             bindings::vips_ppmload_buffer(buffer_in, buffer.len() as u64, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PpmloadBufferError,
         )
     }
@@ -9421,7 +9421,7 @@ pub fn ppmload_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PpmloadBufferError,
         )
     }
@@ -9438,7 +9438,7 @@ pub fn ppmload_source(source: &VipsSource) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_ppmload_source(source_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PpmloadSourceError,
         )
     }
@@ -9533,7 +9533,7 @@ pub fn ppmload_source_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PpmloadSourceError,
         )
     }
@@ -9550,7 +9550,7 @@ pub fn radload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_radload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RadloadError,
         )
     }
@@ -9638,7 +9638,7 @@ pub fn radload_with_opts(filename: &str, radload_options: &RadloadOptions) -> Re
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RadloadError,
         )
     }
@@ -9656,7 +9656,7 @@ pub fn radload_buffer(buffer: &[u8]) -> Result<VipsImage> {
             bindings::vips_radload_buffer(buffer_in, buffer.len() as u64, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RadloadBufferError,
         )
     }
@@ -9752,7 +9752,7 @@ pub fn radload_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RadloadBufferError,
         )
     }
@@ -9769,7 +9769,7 @@ pub fn radload_source(source: &VipsSource) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_radload_source(source_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RadloadSourceError,
         )
     }
@@ -9864,7 +9864,7 @@ pub fn radload_source_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RadloadSourceError,
         )
     }
@@ -9881,7 +9881,7 @@ pub fn svgload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_svgload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SvgloadError,
         )
     }
@@ -10013,7 +10013,7 @@ pub fn svgload_with_opts(filename: &str, svgload_options: &SvgloadOptions) -> Re
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SvgloadError,
         )
     }
@@ -10031,7 +10031,7 @@ pub fn svgload_buffer(buffer: &[u8]) -> Result<VipsImage> {
             bindings::vips_svgload_buffer(buffer_in, buffer.len() as u64, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SvgloadBufferError,
         )
     }
@@ -10179,7 +10179,7 @@ pub fn svgload_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SvgloadBufferError,
         )
     }
@@ -10196,7 +10196,7 @@ pub fn gifload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_gifload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GifloadError,
         )
     }
@@ -10302,7 +10302,7 @@ pub fn gifload_with_opts(filename: &str, gifload_options: &GifloadOptions) -> Re
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GifloadError,
         )
     }
@@ -10320,7 +10320,7 @@ pub fn gifload_buffer(buffer: &[u8]) -> Result<VipsImage> {
             bindings::vips_gifload_buffer(buffer_in, buffer.len() as u64, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GifloadBufferError,
         )
     }
@@ -10434,7 +10434,7 @@ pub fn gifload_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GifloadBufferError,
         )
     }
@@ -10451,7 +10451,7 @@ pub fn gifload_source(source: &VipsSource) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_gifload_source(source_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GifloadSourceError,
         )
     }
@@ -10564,7 +10564,7 @@ pub fn gifload_source_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GifloadSourceError,
         )
     }
@@ -10581,7 +10581,7 @@ pub fn pngload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_pngload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PngloadError,
         )
     }
@@ -10678,7 +10678,7 @@ pub fn pngload_with_opts(filename: &str, pngload_options: &PngloadOptions) -> Re
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PngloadError,
         )
     }
@@ -10696,7 +10696,7 @@ pub fn pngload_buffer(buffer: &[u8]) -> Result<VipsImage> {
             bindings::vips_pngload_buffer(buffer_in, buffer.len() as u64, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PngloadBufferError,
         )
     }
@@ -10805,7 +10805,7 @@ pub fn pngload_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PngloadBufferError,
         )
     }
@@ -10822,7 +10822,7 @@ pub fn pngload_source(source: &VipsSource) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_pngload_source(source_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PngloadSourceError,
         )
     }
@@ -10930,7 +10930,7 @@ pub fn pngload_source_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PngloadSourceError,
         )
     }
@@ -10947,7 +10947,7 @@ pub fn jpegload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_jpegload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::JpegloadError,
         )
     }
@@ -11062,7 +11062,7 @@ pub fn jpegload_with_opts(filename: &str, jpegload_options: &JpegloadOptions) ->
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::JpegloadError,
         )
     }
@@ -11080,7 +11080,7 @@ pub fn jpegload_buffer(buffer: &[u8]) -> Result<VipsImage> {
             bindings::vips_jpegload_buffer(buffer_in, buffer.len() as u64, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::JpegloadBufferError,
         )
     }
@@ -11211,7 +11211,7 @@ pub fn jpegload_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::JpegloadBufferError,
         )
     }
@@ -11228,7 +11228,7 @@ pub fn webpload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_webpload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::WebploadError,
         )
     }
@@ -11343,7 +11343,7 @@ pub fn webpload_with_opts(filename: &str, webpload_options: &WebploadOptions) ->
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::WebploadError,
         )
     }
@@ -11361,7 +11361,7 @@ pub fn webpload_buffer(buffer: &[u8]) -> Result<VipsImage> {
             bindings::vips_webpload_buffer(buffer_in, buffer.len() as u64, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::WebploadBufferError,
         )
     }
@@ -11484,7 +11484,7 @@ pub fn webpload_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::WebploadBufferError,
         )
     }
@@ -11501,7 +11501,7 @@ pub fn webpload_source(source: &VipsSource) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_webpload_source(source_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::WebploadSourceError,
         )
     }
@@ -11623,7 +11623,7 @@ pub fn webpload_source_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::WebploadSourceError,
         )
     }
@@ -11640,7 +11640,7 @@ pub fn tiffload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_tiffload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TiffloadError,
         )
     }
@@ -11773,7 +11773,7 @@ pub fn tiffload_with_opts(filename: &str, tiffload_options: &TiffloadOptions) ->
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TiffloadError,
         )
     }
@@ -11791,7 +11791,7 @@ pub fn tiffload_buffer(buffer: &[u8]) -> Result<VipsImage> {
             bindings::vips_tiffload_buffer(buffer_in, buffer.len() as u64, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TiffloadBufferError,
         )
     }
@@ -11940,7 +11940,7 @@ pub fn tiffload_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TiffloadBufferError,
         )
     }
@@ -11957,7 +11957,7 @@ pub fn tiffload_source(source: &VipsSource) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_tiffload_source(source_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TiffloadSourceError,
         )
     }
@@ -12105,7 +12105,7 @@ pub fn tiffload_source_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::TiffloadSourceError,
         )
     }
@@ -12122,7 +12122,7 @@ pub fn heifload(filename: &str) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_heifload(filename_in.as_ptr(), &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HeifloadError,
         )
     }
@@ -12246,7 +12246,7 @@ pub fn heifload_with_opts(filename: &str, heifload_options: &HeifloadOptions) ->
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HeifloadError,
         )
     }
@@ -12264,7 +12264,7 @@ pub fn heifload_buffer(buffer: &[u8]) -> Result<VipsImage> {
             bindings::vips_heifload_buffer(buffer_in, buffer.len() as u64, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HeifloadBufferError,
         )
     }
@@ -12404,7 +12404,7 @@ pub fn heifload_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HeifloadBufferError,
         )
     }
@@ -12421,7 +12421,7 @@ pub fn heifload_source(source: &VipsSource) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_heifload_source(source_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HeifloadSourceError,
         )
     }
@@ -12560,7 +12560,7 @@ pub fn heifload_source_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HeifloadSourceError,
         )
     }
@@ -12576,7 +12576,7 @@ pub fn csvsave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_csvsave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::CsvsaveError)
+        utils::result(vips_op_response, || (), Error::CsvsaveError)
     }
 }
 
@@ -12662,7 +12662,7 @@ pub fn csvsave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::CsvsaveError)
+        utils::result(vips_op_response, || (), Error::CsvsaveError)
     }
 }
 
@@ -12676,7 +12676,7 @@ pub fn csvsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_csvsave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::CsvsaveTargetError)
+        utils::result(vips_op_response, || (), Error::CsvsaveTargetError)
     }
 }
 
@@ -12762,7 +12762,7 @@ pub fn csvsave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::CsvsaveTargetError)
+        utils::result(vips_op_response, || (), Error::CsvsaveTargetError)
     }
 }
 
@@ -12776,7 +12776,7 @@ pub fn matrixsave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_matrixsave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::MatrixsaveError)
+        utils::result(vips_op_response, || (), Error::MatrixsaveError)
     }
 }
 
@@ -12854,7 +12854,7 @@ pub fn matrixsave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::MatrixsaveError)
+        utils::result(vips_op_response, || (), Error::MatrixsaveError)
     }
 }
 
@@ -12868,7 +12868,7 @@ pub fn matrixsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_matrixsave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::MatrixsaveTargetError)
+        utils::result(vips_op_response, || (), Error::MatrixsaveTargetError)
     }
 }
 
@@ -12946,7 +12946,7 @@ pub fn matrixsave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::MatrixsaveTargetError)
+        utils::result(vips_op_response, || (), Error::MatrixsaveTargetError)
     }
 }
 
@@ -12958,7 +12958,7 @@ pub fn matrixprint(inp: &VipsImage) -> Result<()> {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
 
         let vips_op_response = bindings::vips_matrixprint(inp_in, NULL);
-        utils::result(vips_op_response, (), Error::MatrixprintError)
+        utils::result(vips_op_response, || (), Error::MatrixprintError)
     }
 }
 
@@ -13032,7 +13032,7 @@ pub fn matrixprint_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::MatrixprintError)
+        utils::result(vips_op_response, || (), Error::MatrixprintError)
     }
 }
 
@@ -13046,7 +13046,7 @@ pub fn rawsave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_rawsave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::RawsaveError)
+        utils::result(vips_op_response, || (), Error::RawsaveError)
     }
 }
 
@@ -13124,7 +13124,7 @@ pub fn rawsave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::RawsaveError)
+        utils::result(vips_op_response, || (), Error::RawsaveError)
     }
 }
 
@@ -13141,7 +13141,7 @@ pub fn rawsave_buffer(inp: &VipsImage) -> Result<Vec<u8>> {
             bindings::vips_rawsave_buffer(inp_in, &mut buffer_out, &mut buffer_buf_size, NULL);
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::RawsaveBufferError,
         )
     }
@@ -13223,7 +13223,7 @@ pub fn rawsave_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::RawsaveBufferError,
         )
     }
@@ -13239,7 +13239,7 @@ pub fn rawsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_rawsave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::RawsaveTargetError)
+        utils::result(vips_op_response, || (), Error::RawsaveTargetError)
     }
 }
 
@@ -13317,7 +13317,7 @@ pub fn rawsave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::RawsaveTargetError)
+        utils::result(vips_op_response, || (), Error::RawsaveTargetError)
     }
 }
 
@@ -13331,7 +13331,7 @@ pub fn vipssave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_vipssave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::VipssaveError)
+        utils::result(vips_op_response, || (), Error::VipssaveError)
     }
 }
 
@@ -13409,7 +13409,7 @@ pub fn vipssave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::VipssaveError)
+        utils::result(vips_op_response, || (), Error::VipssaveError)
     }
 }
 
@@ -13423,7 +13423,7 @@ pub fn vipssave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_vipssave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::VipssaveTargetError)
+        utils::result(vips_op_response, || (), Error::VipssaveTargetError)
     }
 }
 
@@ -13501,7 +13501,7 @@ pub fn vipssave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::VipssaveTargetError)
+        utils::result(vips_op_response, || (), Error::VipssaveTargetError)
     }
 }
 
@@ -13515,7 +13515,7 @@ pub fn ppmsave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_ppmsave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::PpmsaveError)
+        utils::result(vips_op_response, || (), Error::PpmsaveError)
     }
 }
 
@@ -13624,7 +13624,7 @@ pub fn ppmsave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::PpmsaveError)
+        utils::result(vips_op_response, || (), Error::PpmsaveError)
     }
 }
 
@@ -13638,7 +13638,7 @@ pub fn ppmsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_ppmsave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::PpmsaveTargetError)
+        utils::result(vips_op_response, || (), Error::PpmsaveTargetError)
     }
 }
 
@@ -13747,7 +13747,7 @@ pub fn ppmsave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::PpmsaveTargetError)
+        utils::result(vips_op_response, || (), Error::PpmsaveTargetError)
     }
 }
 
@@ -13761,7 +13761,7 @@ pub fn radsave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_radsave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::RadsaveError)
+        utils::result(vips_op_response, || (), Error::RadsaveError)
     }
 }
 
@@ -13839,7 +13839,7 @@ pub fn radsave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::RadsaveError)
+        utils::result(vips_op_response, || (), Error::RadsaveError)
     }
 }
 
@@ -13856,7 +13856,7 @@ pub fn radsave_buffer(inp: &VipsImage) -> Result<Vec<u8>> {
             bindings::vips_radsave_buffer(inp_in, &mut buffer_out, &mut buffer_buf_size, NULL);
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::RadsaveBufferError,
         )
     }
@@ -13938,7 +13938,7 @@ pub fn radsave_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::RadsaveBufferError,
         )
     }
@@ -13954,7 +13954,7 @@ pub fn radsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_radsave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::RadsaveTargetError)
+        utils::result(vips_op_response, || (), Error::RadsaveTargetError)
     }
 }
 
@@ -14032,7 +14032,7 @@ pub fn radsave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::RadsaveTargetError)
+        utils::result(vips_op_response, || (), Error::RadsaveTargetError)
     }
 }
 
@@ -14046,7 +14046,7 @@ pub fn gifsave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_gifsave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::GifsaveError)
+        utils::result(vips_op_response, || (), Error::GifsaveError)
     }
 }
 
@@ -14200,7 +14200,7 @@ pub fn gifsave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::GifsaveError)
+        utils::result(vips_op_response, || (), Error::GifsaveError)
     }
 }
 
@@ -14217,7 +14217,7 @@ pub fn gifsave_buffer(inp: &VipsImage) -> Result<Vec<u8>> {
             bindings::vips_gifsave_buffer(inp_in, &mut buffer_out, &mut buffer_buf_size, NULL);
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::GifsaveBufferError,
         )
     }
@@ -14379,7 +14379,7 @@ pub fn gifsave_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::GifsaveBufferError,
         )
     }
@@ -14395,7 +14395,7 @@ pub fn gifsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_gifsave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::GifsaveTargetError)
+        utils::result(vips_op_response, || (), Error::GifsaveTargetError)
     }
 }
 
@@ -14553,7 +14553,7 @@ pub fn gifsave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::GifsaveTargetError)
+        utils::result(vips_op_response, || (), Error::GifsaveTargetError)
     }
 }
 
@@ -14567,7 +14567,7 @@ pub fn pngsave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_pngsave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::PngsaveError)
+        utils::result(vips_op_response, || (), Error::PngsaveError)
     }
 }
 
@@ -14722,7 +14722,7 @@ pub fn pngsave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::PngsaveError)
+        utils::result(vips_op_response, || (), Error::PngsaveError)
     }
 }
 
@@ -14739,7 +14739,7 @@ pub fn pngsave_buffer(inp: &VipsImage) -> Result<Vec<u8>> {
             bindings::vips_pngsave_buffer(inp_in, &mut buffer_out, &mut buffer_buf_size, NULL);
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::PngsaveBufferError,
         )
     }
@@ -14902,7 +14902,7 @@ pub fn pngsave_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::PngsaveBufferError,
         )
     }
@@ -14918,7 +14918,7 @@ pub fn pngsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_pngsave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::PngsaveTargetError)
+        utils::result(vips_op_response, || (), Error::PngsaveTargetError)
     }
 }
 
@@ -15077,7 +15077,7 @@ pub fn pngsave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::PngsaveTargetError)
+        utils::result(vips_op_response, || (), Error::PngsaveTargetError)
     }
 }
 
@@ -15091,7 +15091,7 @@ pub fn jpegsave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_jpegsave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::JpegsaveError)
+        utils::result(vips_op_response, || (), Error::JpegsaveError)
     }
 }
 
@@ -15264,7 +15264,7 @@ pub fn jpegsave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::JpegsaveError)
+        utils::result(vips_op_response, || (), Error::JpegsaveError)
     }
 }
 
@@ -15281,7 +15281,7 @@ pub fn jpegsave_buffer(inp: &VipsImage) -> Result<Vec<u8>> {
             bindings::vips_jpegsave_buffer(inp_in, &mut buffer_out, &mut buffer_buf_size, NULL);
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::JpegsaveBufferError,
         )
     }
@@ -15466,7 +15466,7 @@ pub fn jpegsave_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::JpegsaveBufferError,
         )
     }
@@ -15482,7 +15482,7 @@ pub fn jpegsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_jpegsave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::JpegsaveTargetError)
+        utils::result(vips_op_response, || (), Error::JpegsaveTargetError)
     }
 }
 
@@ -15663,7 +15663,7 @@ pub fn jpegsave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::JpegsaveTargetError)
+        utils::result(vips_op_response, || (), Error::JpegsaveTargetError)
     }
 }
 
@@ -15675,7 +15675,7 @@ pub fn jpegsave_mime(inp: &VipsImage) -> Result<()> {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
 
         let vips_op_response = bindings::vips_jpegsave_mime(inp_in, NULL);
-        utils::result(vips_op_response, (), Error::JpegsaveMimeError)
+        utils::result(vips_op_response, || (), Error::JpegsaveMimeError)
     }
 }
 
@@ -15852,7 +15852,7 @@ pub fn jpegsave_mime_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::JpegsaveMimeError)
+        utils::result(vips_op_response, || (), Error::JpegsaveMimeError)
     }
 }
 
@@ -15866,7 +15866,7 @@ pub fn webpsave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_webpsave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::WebpsaveError)
+        utils::result(vips_op_response, || (), Error::WebpsaveError)
     }
 }
 
@@ -16088,7 +16088,7 @@ pub fn webpsave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::WebpsaveError)
+        utils::result(vips_op_response, || (), Error::WebpsaveError)
     }
 }
 
@@ -16105,7 +16105,7 @@ pub fn webpsave_buffer(inp: &VipsImage) -> Result<Vec<u8>> {
             bindings::vips_webpsave_buffer(inp_in, &mut buffer_out, &mut buffer_buf_size, NULL);
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::WebpsaveBufferError,
         )
     }
@@ -16347,7 +16347,7 @@ pub fn webpsave_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::WebpsaveBufferError,
         )
     }
@@ -16363,7 +16363,7 @@ pub fn webpsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_webpsave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::WebpsaveTargetError)
+        utils::result(vips_op_response, || (), Error::WebpsaveTargetError)
     }
 }
 
@@ -16601,7 +16601,7 @@ pub fn webpsave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::WebpsaveTargetError)
+        utils::result(vips_op_response, || (), Error::WebpsaveTargetError)
     }
 }
 
@@ -16613,7 +16613,7 @@ pub fn webpsave_mime(inp: &VipsImage) -> Result<()> {
         let inp_in: *mut bindings::VipsImage = inp.ctx;
 
         let vips_op_response = bindings::vips_webpsave_mime(inp_in, NULL);
-        utils::result(vips_op_response, (), Error::WebpsaveMimeError)
+        utils::result(vips_op_response, || (), Error::WebpsaveMimeError)
     }
 }
 
@@ -16839,7 +16839,7 @@ pub fn webpsave_mime_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::WebpsaveMimeError)
+        utils::result(vips_op_response, || (), Error::WebpsaveMimeError)
     }
 }
 
@@ -16853,7 +16853,7 @@ pub fn tiffsave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_tiffsave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::TiffsaveError)
+        utils::result(vips_op_response, || (), Error::TiffsaveError)
     }
 }
 
@@ -17129,7 +17129,7 @@ pub fn tiffsave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::TiffsaveError)
+        utils::result(vips_op_response, || (), Error::TiffsaveError)
     }
 }
 
@@ -17146,7 +17146,7 @@ pub fn tiffsave_buffer(inp: &VipsImage) -> Result<Vec<u8>> {
             bindings::vips_tiffsave_buffer(inp_in, &mut buffer_out, &mut buffer_buf_size, NULL);
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::TiffsaveBufferError,
         )
     }
@@ -17450,7 +17450,7 @@ pub fn tiffsave_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::TiffsaveBufferError,
         )
     }
@@ -17466,7 +17466,7 @@ pub fn tiffsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_tiffsave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::TiffsaveTargetError)
+        utils::result(vips_op_response, || (), Error::TiffsaveTargetError)
     }
 }
 
@@ -17766,7 +17766,7 @@ pub fn tiffsave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::TiffsaveTargetError)
+        utils::result(vips_op_response, || (), Error::TiffsaveTargetError)
     }
 }
 
@@ -17780,7 +17780,7 @@ pub fn heifsave(inp: &VipsImage, filename: &str) -> Result<()> {
         let filename_in: CString = utils::new_c_string(filename)?;
 
         let vips_op_response = bindings::vips_heifsave(inp_in, filename_in.as_ptr(), NULL);
-        utils::result(vips_op_response, (), Error::HeifsaveError)
+        utils::result(vips_op_response, || (), Error::HeifsaveError)
     }
 }
 
@@ -17938,7 +17938,7 @@ pub fn heifsave_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::HeifsaveError)
+        utils::result(vips_op_response, || (), Error::HeifsaveError)
     }
 }
 
@@ -17955,7 +17955,7 @@ pub fn heifsave_buffer(inp: &VipsImage) -> Result<Vec<u8>> {
             bindings::vips_heifsave_buffer(inp_in, &mut buffer_out, &mut buffer_buf_size, NULL);
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::HeifsaveBufferError,
         )
     }
@@ -18121,7 +18121,7 @@ pub fn heifsave_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            utils::new_byte_array(buffer_out, buffer_buf_size),
+            || utils::new_byte_array(buffer_out, buffer_buf_size),
             Error::HeifsaveBufferError,
         )
     }
@@ -18137,7 +18137,7 @@ pub fn heifsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
         let vips_op_response = bindings::vips_heifsave_target(inp_in, target_in, NULL);
-        utils::result(vips_op_response, (), Error::HeifsaveTargetError)
+        utils::result(vips_op_response, || (), Error::HeifsaveTargetError)
     }
 }
 
@@ -18299,7 +18299,7 @@ pub fn heifsave_target_with_opts(
             profile_in.as_ptr(),
             NULL,
         );
-        utils::result(vips_op_response, (), Error::HeifsaveTargetError)
+        utils::result(vips_op_response, || (), Error::HeifsaveTargetError)
     }
 }
 
@@ -18318,7 +18318,7 @@ pub fn thumbnail(filename: &str, width: i32) -> Result<VipsImage> {
             bindings::vips_thumbnail(filename_in.as_ptr(), &mut out_out, width_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ThumbnailError,
         )
     }
@@ -18455,7 +18455,7 @@ pub fn thumbnail_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ThumbnailError,
         )
     }
@@ -18481,7 +18481,7 @@ pub fn thumbnail_buffer(buffer: &[u8], width: i32) -> Result<VipsImage> {
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ThumbnailBufferError,
         )
     }
@@ -18638,7 +18638,7 @@ pub fn thumbnail_buffer_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ThumbnailBufferError,
         )
     }
@@ -18658,7 +18658,7 @@ pub fn thumbnail_image(inp: &VipsImage, width: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_thumbnail_image(inp_in, &mut out_out, width_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ThumbnailImageError,
         )
     }
@@ -18801,7 +18801,7 @@ pub fn thumbnail_image_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ThumbnailImageError,
         )
     }
@@ -18822,7 +18822,7 @@ pub fn thumbnail_source(source: &VipsSource, width: i32) -> Result<VipsImage> {
             bindings::vips_thumbnail_source(source_in, &mut out_out, width_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ThumbnailSourceError,
         )
     }
@@ -18978,7 +18978,7 @@ pub fn thumbnail_source_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ThumbnailSourceError,
         )
     }
@@ -18997,7 +18997,7 @@ pub fn mapim(inp: &VipsImage, index: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_mapim(inp_in, &mut out_out, index_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MapimError,
         )
     }
@@ -19078,7 +19078,7 @@ pub fn mapim_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MapimError,
         )
     }
@@ -19102,7 +19102,7 @@ pub fn shrink(inp: &VipsImage, hshrink: f64, vshrink: f64) -> Result<VipsImage> 
             bindings::vips_shrink(inp_in, &mut out_out, hshrink_in, vshrink_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ShrinkError,
         )
     }
@@ -19156,7 +19156,7 @@ pub fn shrink_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ShrinkError,
         )
     }
@@ -19176,7 +19176,7 @@ pub fn shrinkh(inp: &VipsImage, hshrink: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_shrinkh(inp_in, &mut out_out, hshrink_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ShrinkhError,
         )
     }
@@ -19225,7 +19225,7 @@ pub fn shrinkh_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ShrinkhError,
         )
     }
@@ -19245,7 +19245,7 @@ pub fn shrinkv(inp: &VipsImage, vshrink: i32) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_shrinkv(inp_in, &mut out_out, vshrink_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ShrinkvError,
         )
     }
@@ -19294,7 +19294,7 @@ pub fn shrinkv_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ShrinkvError,
         )
     }
@@ -19314,7 +19314,7 @@ pub fn reduceh(inp: &VipsImage, hshrink: f64) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_reduceh(inp_in, &mut out_out, hshrink_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ReducehError,
         )
     }
@@ -19381,7 +19381,7 @@ pub fn reduceh_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ReducehError,
         )
     }
@@ -19401,7 +19401,7 @@ pub fn reducev(inp: &VipsImage, vshrink: f64) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_reducev(inp_in, &mut out_out, vshrink_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ReducevError,
         )
     }
@@ -19468,7 +19468,7 @@ pub fn reducev_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ReducevError,
         )
     }
@@ -19492,7 +19492,7 @@ pub fn reduce(inp: &VipsImage, hshrink: f64, vshrink: f64) -> Result<VipsImage> 
             bindings::vips_reduce(inp_in, &mut out_out, hshrink_in, vshrink_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ReduceError,
         )
     }
@@ -19564,7 +19564,7 @@ pub fn reduce_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ReduceError,
         )
     }
@@ -19583,7 +19583,7 @@ pub fn quadratic(inp: &VipsImage, coeff: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_quadratic(inp_in, &mut out_out, coeff_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::QuadraticError,
         )
     }
@@ -19632,7 +19632,7 @@ pub fn quadratic_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::QuadraticError,
         )
     }
@@ -19662,7 +19662,7 @@ pub fn affine(inp: &VipsImage, a: f64, b: f64, c: f64, d: f64) -> Result<VipsIma
             bindings::vips_affine(inp_in, &mut out_out, a_in, b_in, c_in, d_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::AffineError,
         )
     }
@@ -19805,7 +19805,7 @@ pub fn affine_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::AffineError,
         )
     }
@@ -19822,7 +19822,7 @@ pub fn similarity(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_similarity(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SimilarityError,
         )
     }
@@ -19931,7 +19931,7 @@ pub fn similarity_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SimilarityError,
         )
     }
@@ -19951,7 +19951,7 @@ pub fn rotate(inp: &VipsImage, angle: f64) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_rotate(inp_in, &mut out_out, angle_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RotateError,
         )
     }
@@ -20047,7 +20047,7 @@ pub fn rotate_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RotateError,
         )
     }
@@ -20067,7 +20067,7 @@ pub fn resize(inp: &VipsImage, scale: f64) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_resize(inp_in, &mut out_out, scale_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ResizeError,
         )
     }
@@ -20143,7 +20143,7 @@ pub fn resize_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ResizeError,
         )
     }
@@ -20185,7 +20185,7 @@ pub fn colourspace(inp: &VipsImage, space: Interpretation) -> Result<VipsImage> 
             bindings::vips_colourspace(inp_in, &mut out_out, space_in.try_into().unwrap(), NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ColourspaceError,
         )
     }
@@ -20278,7 +20278,7 @@ pub fn colourspace_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ColourspaceError,
         )
     }
@@ -20363,7 +20363,7 @@ pub fn lab_2xyz(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_Lab2XYZ(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Lab2XyzError,
         )
     }
@@ -20399,7 +20399,7 @@ pub fn lab_2xyz_with_opts(inp: &VipsImage, lab_2xyz_options: &Lab2XyzOptions) ->
             bindings::vips_Lab2XYZ(inp_in, &mut out_out, temp_in_name.as_ptr(), temp_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Lab2XyzError,
         )
     }
@@ -20416,7 +20416,7 @@ pub fn xyz2_lab(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_XYZ2Lab(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Xyz2LabError,
         )
     }
@@ -20455,7 +20455,7 @@ pub fn xyz2_lab_with_opts(
             bindings::vips_XYZ2Lab(inp_in, &mut out_out, temp_in_name.as_ptr(), temp_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Xyz2LabError,
         )
     }
@@ -20472,7 +20472,7 @@ pub fn lab_2l_ch(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_Lab2LCh(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Lab2LChError,
         )
     }
@@ -20489,7 +20489,7 @@ pub fn l_ch_2_lab(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_LCh2Lab(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LCh2LabError,
         )
     }
@@ -20506,7 +20506,7 @@ pub fn l_ch_2cmc(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_LCh2CMC(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LCh2CmcError,
         )
     }
@@ -20523,7 +20523,7 @@ pub fn cmc2l_ch(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_CMC2LCh(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Cmc2LChError,
         )
     }
@@ -20540,7 +20540,7 @@ pub fn xyz2_yxy(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_XYZ2Yxy(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Xyz2YxyError,
         )
     }
@@ -20557,7 +20557,7 @@ pub fn yxy_2xyz(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_Yxy2XYZ(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Yxy2XyzError,
         )
     }
@@ -20574,7 +20574,7 @@ pub fn sc_rgb2xyz(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_scRGB2XYZ(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ScRgb2XyzError,
         )
     }
@@ -20591,7 +20591,7 @@ pub fn xyz_2sc_rgb(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_XYZ2scRGB(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Xyz2ScRgbError,
         )
     }
@@ -20608,7 +20608,7 @@ pub fn lab_q2_lab(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_LabQ2Lab(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LabQ2LabError,
         )
     }
@@ -20625,7 +20625,7 @@ pub fn lab_2_lab_q(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_Lab2LabQ(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Lab2LabQError,
         )
     }
@@ -20642,7 +20642,7 @@ pub fn lab_q2_lab_s(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_LabQ2LabS(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LabQ2LabSError,
         )
     }
@@ -20659,7 +20659,7 @@ pub fn lab_s2_lab_q(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_LabS2LabQ(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LabS2LabQError,
         )
     }
@@ -20676,7 +20676,7 @@ pub fn lab_s2_lab(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_LabS2Lab(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LabS2LabError,
         )
     }
@@ -20693,7 +20693,7 @@ pub fn lab_2_lab_s(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_Lab2LabS(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Lab2LabSError,
         )
     }
@@ -20710,7 +20710,7 @@ pub fn rad_2float(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_rad2float(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Rad2FloatError,
         )
     }
@@ -20727,7 +20727,7 @@ pub fn float_2rad(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_float2rad(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Float2RadError,
         )
     }
@@ -20744,7 +20744,7 @@ pub fn lab_q_2s_rgb(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_LabQ2sRGB(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LabQ2SRgbError,
         )
     }
@@ -20761,7 +20761,7 @@ pub fn s_rgb_2sc_rgb(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_sRGB2scRGB(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SRgb2ScRgbError,
         )
     }
@@ -20778,7 +20778,7 @@ pub fn sc_rgb2bw(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_scRGB2BW(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ScRgb2BwError,
         )
     }
@@ -20819,7 +20819,7 @@ pub fn sc_rgb2bw_with_opts(
             bindings::vips_scRGB2BW(inp_in, &mut out_out, depth_in_name.as_ptr(), depth_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ScRgb2BwError,
         )
     }
@@ -20836,7 +20836,7 @@ pub fn s_rgb2hsv(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_sRGB2HSV(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SRgb2HsvError,
         )
     }
@@ -20853,7 +20853,7 @@ pub fn hsv_2s_rgb(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_HSV2sRGB(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Hsv2SRgbError,
         )
     }
@@ -20870,7 +20870,7 @@ pub fn sc_rgb_2s_rgb(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_scRGB2sRGB(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ScRgb2SRgbError,
         )
     }
@@ -20911,7 +20911,7 @@ pub fn sc_rgb_2s_rgb_with_opts(
             bindings::vips_scRGB2sRGB(inp_in, &mut out_out, depth_in_name.as_ptr(), depth_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ScRgb2SRgbError,
         )
     }
@@ -20928,7 +20928,7 @@ pub fn icc_import(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_icc_import(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::IccImportError,
         )
     }
@@ -21018,7 +21018,7 @@ pub fn icc_import_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::IccImportError,
         )
     }
@@ -21035,7 +21035,7 @@ pub fn icc_export(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_icc_export(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::IccExportError,
         )
     }
@@ -21125,7 +21125,7 @@ pub fn icc_export_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::IccExportError,
         )
     }
@@ -21145,7 +21145,7 @@ pub fn icc_transform(inp: &VipsImage, output_profile: &str) -> Result<VipsImage>
             bindings::vips_icc_transform(inp_in, &mut out_out, output_profile_in.as_ptr(), NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::IccTransformError,
         )
     }
@@ -21248,7 +21248,7 @@ pub fn icc_transform_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::IccTransformError,
         )
     }
@@ -21284,7 +21284,7 @@ pub fn d_e76(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_dE76(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::DE76Error,
         )
     }
@@ -21303,7 +21303,7 @@ pub fn d_e00(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_dE00(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::DE00Error,
         )
     }
@@ -21322,7 +21322,7 @@ pub fn d_ecmc(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_dECMC(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::DEcmcError,
         )
     }
@@ -21339,7 +21339,7 @@ pub fn cmyk2xyz(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_CMYK2XYZ(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Cmyk2XyzError,
         )
     }
@@ -21356,7 +21356,7 @@ pub fn xyz2cmyk(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_XYZ2CMYK(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Xyz2CmykError,
         )
     }
@@ -21374,7 +21374,7 @@ pub fn profile_load(name: &str) -> Result<Vec<u8>> {
             bindings::vips_profile_load(name_in.as_ptr(), &mut profile_out, NULL);
         utils::result(
             vips_op_response,
-            VipsBlob { ctx: profile_out }.into(),
+            || VipsBlob { ctx: profile_out }.into(),
             Error::ProfileLoadError,
         )
     }
@@ -21393,7 +21393,7 @@ pub fn maplut(inp: &VipsImage, lut: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_maplut(inp_in, &mut out_out, lut_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaplutError,
         )
     }
@@ -21443,7 +21443,7 @@ pub fn maplut_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MaplutError,
         )
     }
@@ -21461,7 +21461,7 @@ pub fn percent(inp: &VipsImage, percent: f64) -> Result<i32> {
         let mut threshold_out: i32 = i32::from(0);
 
         let vips_op_response = bindings::vips_percent(inp_in, percent_in, &mut threshold_out, NULL);
-        utils::result(vips_op_response, threshold_out, Error::PercentError)
+        utils::result(vips_op_response, || threshold_out, Error::PercentError)
     }
 }
 
@@ -21483,7 +21483,7 @@ pub fn stdif(inp: &VipsImage, width: i32, height: i32) -> Result<VipsImage> {
             bindings::vips_stdif(inp_in, &mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::StdifError,
         )
     }
@@ -21566,7 +21566,7 @@ pub fn stdif_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::StdifError,
         )
     }
@@ -21583,7 +21583,7 @@ pub fn hist_cum(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_hist_cum(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistCumError,
         )
     }
@@ -21602,7 +21602,7 @@ pub fn hist_match(inp: &VipsImage, refp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_hist_match(inp_in, refp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistMatchError,
         )
     }
@@ -21619,7 +21619,7 @@ pub fn hist_norm(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_hist_norm(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistNormError,
         )
     }
@@ -21636,7 +21636,7 @@ pub fn hist_equal(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_hist_equal(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistEqualError,
         )
     }
@@ -21677,7 +21677,7 @@ pub fn hist_equal_with_opts(
             bindings::vips_hist_equal(inp_in, &mut out_out, band_in_name.as_ptr(), band_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistEqualError,
         )
     }
@@ -21694,7 +21694,7 @@ pub fn hist_plot(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_hist_plot(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistPlotError,
         )
     }
@@ -21718,7 +21718,7 @@ pub fn hist_local(inp: &VipsImage, width: i32, height: i32) -> Result<VipsImage>
             bindings::vips_hist_local(inp_in, &mut out_out, width_in, height_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistLocalError,
         )
     }
@@ -21774,7 +21774,7 @@ pub fn hist_local_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::HistLocalError,
         )
     }
@@ -21791,7 +21791,7 @@ pub fn hist_ismonotonic(inp: &VipsImage) -> Result<bool> {
         let vips_op_response = bindings::vips_hist_ismonotonic(inp_in, &mut monotonic_out, NULL);
         utils::result(
             vips_op_response,
-            monotonic_out != 0,
+            || monotonic_out != 0,
             Error::HistIsmonotonicError,
         )
     }
@@ -21806,7 +21806,7 @@ pub fn hist_entropy(inp: &VipsImage) -> Result<f64> {
         let mut out_out: f64 = f64::from(0);
 
         let vips_op_response = bindings::vips_hist_entropy(inp_in, &mut out_out, NULL);
-        utils::result(vips_op_response, out_out, Error::HistEntropyError)
+        utils::result(vips_op_response, || out_out, Error::HistEntropyError)
     }
 }
 
@@ -21823,7 +21823,7 @@ pub fn conv(inp: &VipsImage, mask: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_conv(inp_in, &mut out_out, mask_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ConvError,
         )
     }
@@ -21893,7 +21893,7 @@ pub fn conv_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ConvError,
         )
     }
@@ -21912,7 +21912,7 @@ pub fn conva(inp: &VipsImage, mask: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_conva(inp_in, &mut out_out, mask_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ConvaError,
         )
     }
@@ -21971,7 +21971,7 @@ pub fn conva_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ConvaError,
         )
     }
@@ -21990,7 +21990,7 @@ pub fn convf(inp: &VipsImage, mask: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_convf(inp_in, &mut out_out, mask_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ConvfError,
         )
     }
@@ -22009,7 +22009,7 @@ pub fn convi(inp: &VipsImage, mask: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_convi(inp_in, &mut out_out, mask_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ConviError,
         )
     }
@@ -22028,7 +22028,7 @@ pub fn compass(inp: &VipsImage, mask: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_compass(inp_in, &mut out_out, mask_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CompassError,
         )
     }
@@ -22134,7 +22134,7 @@ pub fn compass_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CompassError,
         )
     }
@@ -22153,7 +22153,7 @@ pub fn convsep(inp: &VipsImage, mask: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_convsep(inp_in, &mut out_out, mask_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ConvsepError,
         )
     }
@@ -22223,7 +22223,7 @@ pub fn convsep_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ConvsepError,
         )
     }
@@ -22242,7 +22242,7 @@ pub fn convasep(inp: &VipsImage, mask: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_convasep(inp_in, &mut out_out, mask_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ConvasepError,
         )
     }
@@ -22292,7 +22292,7 @@ pub fn convasep_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ConvasepError,
         )
     }
@@ -22311,7 +22311,7 @@ pub fn fastcor(inp: &VipsImage, refp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_fastcor(inp_in, refp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::FastcorError,
         )
     }
@@ -22330,7 +22330,7 @@ pub fn spcor(inp: &VipsImage, refp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_spcor(inp_in, refp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SpcorError,
         )
     }
@@ -22347,7 +22347,7 @@ pub fn sharpen(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_sharpen(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SharpenError,
         )
     }
@@ -22435,7 +22435,7 @@ pub fn sharpen_with_opts(inp: &VipsImage, sharpen_options: &SharpenOptions) -> R
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SharpenError,
         )
     }
@@ -22455,7 +22455,7 @@ pub fn gaussblur(inp: &VipsImage, sigma: f64) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_gaussblur(inp_in, &mut out_out, sigma_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GaussblurError,
         )
     }
@@ -22517,7 +22517,7 @@ pub fn gaussblur_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GaussblurError,
         )
     }
@@ -22534,7 +22534,7 @@ pub fn sobel(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_sobel(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SobelError,
         )
     }
@@ -22551,7 +22551,7 @@ pub fn scharr(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_scharr(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::ScharrError,
         )
     }
@@ -22568,7 +22568,7 @@ pub fn prewitt(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_prewitt(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PrewittError,
         )
     }
@@ -22585,7 +22585,7 @@ pub fn canny(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_canny(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CannyError,
         )
     }
@@ -22639,7 +22639,7 @@ pub fn canny_with_opts(inp: &VipsImage, canny_options: &CannyOptions) -> Result<
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CannyError,
         )
     }
@@ -22656,7 +22656,7 @@ pub fn fwfft(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_fwfft(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::FwfftError,
         )
     }
@@ -22673,7 +22673,7 @@ pub fn invfft(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_invfft(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::InvfftError,
         )
     }
@@ -22709,7 +22709,7 @@ pub fn invfft_with_opts(inp: &VipsImage, invfft_options: &InvfftOptions) -> Resu
             bindings::vips_invfft(inp_in, &mut out_out, real_in_name.as_ptr(), real_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::InvfftError,
         )
     }
@@ -22728,7 +22728,7 @@ pub fn freqmult(inp: &VipsImage, mask: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_freqmult(inp_in, mask_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::FreqmultError,
         )
     }
@@ -22745,7 +22745,7 @@ pub fn spectrum(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_spectrum(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::SpectrumError,
         )
     }
@@ -22764,7 +22764,7 @@ pub fn phasecor(inp: &VipsImage, in_2: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_phasecor(inp_in, in_2_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::PhasecorError,
         )
     }
@@ -22793,7 +22793,7 @@ pub fn morph(inp: &VipsImage, mask: &VipsImage, morph: OperationMorphology) -> R
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MorphError,
         )
     }
@@ -22820,7 +22820,7 @@ pub fn rank(inp: &VipsImage, width: i32, height: i32, index: i32) -> Result<Vips
             bindings::vips_rank(inp_in, &mut out_out, width_in, height_in, index_in, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RankError,
         )
     }
@@ -22844,7 +22844,7 @@ pub fn countlines(inp: &VipsImage, direction: Direction) -> Result<f64> {
             direction_in.try_into().unwrap(),
             NULL,
         );
-        utils::result(vips_op_response, nolines_out, Error::CountlineError)
+        utils::result(vips_op_response, || nolines_out, Error::CountlineError)
     }
 }
 
@@ -22859,7 +22859,7 @@ pub fn labelregions(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_labelregions(inp_in, &mut mask_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: mask_out },
+            || VipsImage { ctx: mask_out },
             Error::LabelregionError,
         )
     }
@@ -22905,7 +22905,7 @@ pub fn labelregions_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: mask_out },
+            || VipsImage { ctx: mask_out },
             Error::LabelregionError,
         )
     }
@@ -22922,7 +22922,7 @@ pub fn fill_nearest(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_fill_nearest(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::FillNearestError,
         )
     }
@@ -22967,7 +22967,7 @@ pub fn fill_nearest_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::FillNearestError,
         )
     }
@@ -23011,7 +23011,7 @@ pub fn draw_rect(
             height_in,
             NULL,
         );
-        utils::result(vips_op_response, (), Error::DrawRectError)
+        utils::result(vips_op_response, || (), Error::DrawRectError)
     }
 }
 
@@ -23074,7 +23074,7 @@ pub fn draw_rect_with_opts(
             fill_in,
             NULL,
         );
-        utils::result(vips_op_response, (), Error::DrawRectError)
+        utils::result(vips_op_response, || (), Error::DrawRectError)
     }
 }
 
@@ -23110,7 +23110,7 @@ pub fn draw_mask(
             y_in,
             NULL,
         );
-        utils::result(vips_op_response, (), Error::DrawMaskError)
+        utils::result(vips_op_response, || (), Error::DrawMaskError)
     }
 }
 
@@ -23152,7 +23152,7 @@ pub fn draw_line(
             y_2_in,
             NULL,
         );
-        utils::result(vips_op_response, (), Error::DrawLineError)
+        utils::result(vips_op_response, || (), Error::DrawLineError)
     }
 }
 
@@ -23189,7 +23189,7 @@ pub fn draw_circle(
             radius_in,
             NULL,
         );
-        utils::result(vips_op_response, (), Error::DrawCircleError)
+        utils::result(vips_op_response, || (), Error::DrawCircleError)
     }
 }
 
@@ -23247,7 +23247,7 @@ pub fn draw_circle_with_opts(
             fill_in,
             NULL,
         );
-        utils::result(vips_op_response, (), Error::DrawCircleError)
+        utils::result(vips_op_response, || (), Error::DrawCircleError)
     }
 }
 
@@ -23268,7 +23268,7 @@ pub fn draw_flood(image: &VipsImage, ink: &mut [f64], x: i32, y: i32) -> Result<
 
         let vips_op_response =
             bindings::vips_draw_flood(image_in, ink_in, ink.len() as i32, x_in, y_in, NULL);
-        utils::result(vips_op_response, (), Error::DrawFloodError)
+        utils::result(vips_op_response, || (), Error::DrawFloodError)
     }
 }
 
@@ -23367,7 +23367,7 @@ pub fn draw_flood_with_opts(
             height_in,
             NULL,
         );
-        utils::result(vips_op_response, (), Error::DrawFloodError)
+        utils::result(vips_op_response, || (), Error::DrawFloodError)
     }
 }
 
@@ -23387,7 +23387,7 @@ pub fn draw_image(image: &VipsImage, sub: &VipsImage, x: i32, y: i32) -> Result<
         let y_in: i32 = y;
 
         let vips_op_response = bindings::vips_draw_image(image_in, sub_in, x_in, y_in, NULL);
-        utils::result(vips_op_response, (), Error::DrawImageError)
+        utils::result(vips_op_response, || (), Error::DrawImageError)
     }
 }
 
@@ -23442,7 +23442,7 @@ pub fn draw_image_with_opts(
             mode_in,
             NULL,
         );
-        utils::result(vips_op_response, (), Error::DrawImageError)
+        utils::result(vips_op_response, || (), Error::DrawImageError)
     }
 }
 
@@ -23467,7 +23467,7 @@ pub fn draw_smudge(image: &VipsImage, left: i32, top: i32, width: i32, height: i
 
         let vips_op_response =
             bindings::vips_draw_smudge(image_in, left_in, top_in, width_in, height_in, NULL);
-        utils::result(vips_op_response, (), Error::DrawSmudgeError)
+        utils::result(vips_op_response, || (), Error::DrawSmudgeError)
     }
 }
 
@@ -23508,7 +23508,7 @@ pub fn merge(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MergeError,
         )
     }
@@ -23574,7 +23574,7 @@ pub fn merge_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MergeError,
         )
     }
@@ -23627,7 +23627,7 @@ pub fn mosaic(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MosaicError,
         )
     }
@@ -23784,7 +23784,7 @@ pub fn mosaic_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MosaicError,
         )
     }
@@ -23857,7 +23857,7 @@ pub fn mosaic_1(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Mosaic1Error,
         )
     }
@@ -23988,7 +23988,7 @@ pub fn mosaic_1_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::Mosaic1Error,
         )
     }
@@ -24005,7 +24005,7 @@ pub fn matrixinvert(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_matrixinvert(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MatrixinvertError,
         )
     }
@@ -24024,7 +24024,7 @@ pub fn matrixmultiply(left: &VipsImage, right: &VipsImage) -> Result<VipsImage> 
         let vips_op_response = bindings::vips_matrixmultiply(left_in, right_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MatrixmultiplyError,
         )
     }
@@ -24091,7 +24091,7 @@ pub fn matches(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MatchError,
         )
     }
@@ -24207,7 +24207,7 @@ pub fn matches_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::MatchError,
         )
     }
@@ -24224,7 +24224,7 @@ pub fn globalbalance(inp: &VipsImage) -> Result<VipsImage> {
         let vips_op_response = bindings::vips_globalbalance(inp_in, &mut out_out, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GlobalbalanceError,
         )
     }
@@ -24283,7 +24283,7 @@ pub fn globalbalance_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::GlobalbalanceError,
         )
     }
@@ -24310,7 +24310,7 @@ pub fn remosaic(inp: &VipsImage, old_str: &str, new_str: &str) -> Result<VipsIma
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::RemosaicError,
         )
     }
