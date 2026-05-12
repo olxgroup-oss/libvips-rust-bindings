@@ -1,5 +1,5 @@
 // (c) Copyright 2019-2026 OLX
-use inflector::Inflector;
+use heck::{ToSnakeCase, ToUpperCamelCase};
 use std::env;
 use std::fs::File;
 use std::io;
@@ -35,7 +35,7 @@ impl Operation {
         format!(
             "/// {}_options: `&{}Options` -> optional arguments",
             self.name,
-            self.name.to_class_case()
+            self.name.to_upper_camel_case()
         )
     }
 
@@ -100,10 +100,10 @@ impl Operation {
             }}
             "#,
             self.name,
-            self.name.to_class_case(),
+            self.name.to_upper_camel_case(),
             declarations,
-            self.name.to_class_case(),
-            self.name.to_class_case(),
+            self.name.to_upper_camel_case(),
+            self.name.to_upper_camel_case(),
             defaults
         )
     }
@@ -225,7 +225,7 @@ impl Operation {
             self.vips_name,
             self.get_params(with_optional),
             out_result,
-            self.name.to_class_case()
+            self.name.to_upper_camel_case()
         )
     }
 
@@ -239,7 +239,7 @@ impl Operation {
             let opt = format!(
                 "{}_options: &{}Options",
                 self.name.to_snake_case(),
-                self.name.to_class_case()
+                self.name.to_upper_camel_case()
             );
             let params = self
                 .required
@@ -798,7 +798,7 @@ impl ParamType {
             } => entries
                 .iter()
                 .filter(|e| *default == e.value)
-                .map(|e| format!("{}::{}", Self::enum_name(name), e.nick.to_class_case()))
+                .map(|e| format!("{}::{}", Self::enum_name(name), e.nick.to_upper_camel_case()))
                 .collect::<Vec<_>>()[0]
                 .clone(),
         }
@@ -839,7 +839,7 @@ impl Enumeration {
     fn doc(&self) -> String {
         format!(
             "///  `{}` -> {} = {}",
-            self.nick.to_class_case(),
+            self.nick.to_upper_camel_case(),
             self.name,
             self.value
         )
@@ -852,7 +852,7 @@ impl Enumeration {
             if self.name == "VIPS_INTERPRETATION_LABS" {
                 String::from("Labs")
             } else {
-                self.nick.to_class_case()
+                self.nick.to_upper_camel_case()
             },
             self.value
         )
@@ -981,7 +981,7 @@ fn parse_param(param_list: Vec<&str>, order: u8, prev: Option<String>) -> (bool,
             order,
             name: param_name.to_snake_case(),
             vips_name: param_name.to_string(),
-            nick: nick.to_class_case(),
+            nick: nick.to_upper_camel_case(),
             description: description.to_string(),
             param_type,
         },
@@ -1283,12 +1283,12 @@ fn main() {
             (String::new(), String::new(), String::new()),
             |(mut methods, mut errors, mut errors_display), operation| {
                 methods.push_str(operation.body().as_str());
-                errors.push_str(format!("{}Error,\n", operation.name.to_class_case()).as_str());
+                errors.push_str(format!("{}Error,\n", operation.name.to_upper_camel_case()).as_str());
                 errors_display.push_str(
                     format!(
                         "Error::{}Error => write!(f, \"vips error: {}Error. Check error buffer for more details\"),\n",
-                        operation.name.to_class_case(),
-                        operation.name.to_class_case()
+                        operation.name.to_upper_camel_case(),
+                        operation.name.to_upper_camel_case()
                     )
                     .as_str(),
                 );
