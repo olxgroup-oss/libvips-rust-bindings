@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.0](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v1.7.6...v2.0.0) (2026-05-12)
+
+### ⚠ BREAKING CHANGES
+
+* release v2.0.0
+
+### Miscellaneous Chores
+
+* release v2.0.0 ([9a1ea89](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/9a1ea893860de73d8a10028933bb0855e3343bae))
+
 ## <small>1.7.5 (2026-05-11)</small>
 
 * fix: defer output construction in utils::result to prevent UB on C function failure (#150) ([4a63b61](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/4a63b61)), closes [#150](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/150) [olxgroup-oss/libvips-rust-bindings#148](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/148)
