@@ -4,7 +4,7 @@ use std::path::Path;
 
 // Load a JPEG file, transform and convert it to PNG
 // Use the following cargo command to run this example
-// cargo run --examples jpeg_to_png
+// cargo run --example jpeg_to_png
 
 fn main() {
     // this initializes the libvips library. it has to live as long as the application lives (or as long as you want to use the library within your app)
@@ -21,7 +21,7 @@ fn main() {
         .expect("Where is my Cargo.toml file?")
         .display()
         .to_string();
-    let image_path = Path::new("resources/test.png")
+    let image_path = Path::new("examples/test.png")
         .display()
         .to_string();
 
@@ -45,7 +45,6 @@ fn main() {
     let options = ops::JpegsaveOptions {
         q: 90,
         background: vec![255.0],
-        strip: true,
         interlace: true,
         optimize_coding: true,
         optimize_scans: true,
@@ -56,7 +55,7 @@ fn main() {
     match ops::jpegsave_with_opts(
         &resized,
         &format!(
-            "{}/{}",
+            "{}/examples/{}",
             cargo_toml_dir, "png_to_jpeg.jpg"
         ),
         &options,
