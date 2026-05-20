@@ -65,6 +65,6 @@ fn main() {
             app.error_buffer()
                 .unwrap()
         ),
-        Ok(_) => println!("./png_to_jpeg.jpg was created in the repository root!"),
+        Ok(_) => println!("png_to_jpeg.jpg was created within the examples directory!"),
     }
 }

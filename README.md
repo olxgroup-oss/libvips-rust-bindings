@@ -52,7 +52,7 @@ Most (if not all) vips operations don't mutate the `VipsImage` object, so they'l
 
 ### Example
 
-In the following code snippet we move load a JPEG file from the file system and then transforming it by reducing the scale by 50% and saving it as a PNG image.
+In the following code snippet we load a JPEG file from the file system and then transforming it by reducing the scale by 50% and saving it as a PNG image.
 
 ```rust
 // examples/jpeg_to_png.rs
@@ -94,9 +94,9 @@ fn main() {
 The above example can be run from the console using cargo.
 
 ```console
-$ cargo run --examples jpeg_to_png.rs
-   Compiling libvips v1.6.1 (<REDACTED>/libvips-rust-bindings)
-    Finished dev [unoptimized + debuginfo] target(s) in 3.29s
-     Running `target/debug/examples/jpeg_to_png`
-./output.png was created in the repository root!
+$ cargo run --example png_to_jpeg
+   Compiling libvips v2.0.2 (<REDACTED>/libvips-rust-bindings)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.44s
+     Running `target/debug/examples/png_to_jpeg`
+png_to_jpeg.jpg was created within the examples directory!
 ```
