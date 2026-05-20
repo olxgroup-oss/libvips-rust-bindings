@@ -1,4 +1,4 @@
-// (c) Copyright 2019-2023 OLX
+// (c) Copyright 2019-2026 OLX
 // this is manually created because it doesn't follow the standard from the introspection output
 
 /// VipsLinear (linear), calculate (a * in + b)
@@ -20,7 +20,7 @@ pub fn linear(inp: &VipsImage, a: &mut[f64], b: &mut[f64]) -> Result<VipsImage> 
             bindings::vips_linear(inp_in, &mut out_out, a_in, b_in, b.len() as i32, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LinearError,
         )
     }
@@ -75,7 +75,7 @@ pub fn linear_with_opts(
         );
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::LinearError,
         )
     }
@@ -104,7 +104,7 @@ pub fn getpoint(inp: &VipsImage, x: i32, y: i32) -> Result<Vec<f64>> {
         );
         utils::result(
             vips_op_response,
-            utils::new_double_array(out_array, out_array_size.try_into().unwrap()),
+            || utils::new_double_array(out_array, out_array_size.try_into().unwrap()),
             Error::GetpointError,
         )
     }
@@ -125,7 +125,7 @@ pub fn case(index: &VipsImage, cases: &mut [VipsImage], n: i32) -> Result<VipsIm
         let vips_op_response = bindings::vips_case(index_in, cases_in, &mut out_out, n, NULL);
         utils::result(
             vips_op_response,
-            VipsImage { ctx: out_out },
+            || VipsImage { ctx: out_out },
             Error::CaseError,
         )
     }

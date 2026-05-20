@@ -1,5 +1,5 @@
-// (c) Copyright 2019-2023 OLX
-use inflector::Inflector;
+// (c) Copyright 2019-2026 OLX
+use heck::{ToSnakeCase, ToUpperCamelCase};
 use std::env;
 use std::fs::File;
 use std::io;
@@ -35,7 +35,7 @@ impl Operation {
         format!(
             "/// {}_options: `&{}Options` -> optional arguments",
             self.name,
-            self.name.to_class_case()
+            self.name.to_upper_camel_case()
         )
     }
 
@@ -100,10 +100,10 @@ impl Operation {
             }}
             "#,
             self.name,
-            self.name.to_class_case(),
+            self.name.to_upper_camel_case(),
             declarations,
-            self.name.to_class_case(),
-            self.name.to_class_case(),
+            self.name.to_upper_camel_case(),
+            self.name.to_upper_camel_case(),
             defaults
         )
     }
@@ -218,14 +218,14 @@ impl Operation {
         unsafe {{
             {}
             let vips_op_response = bindings::vips_{}({}, NULL);
-            utils::result(vips_op_response, {}, Error::{}Error)
+            utils::result(vips_op_response, || {}, Error::{}Error)
         }}
         "#,
             self.get_variables(with_optional),
             self.vips_name,
             self.get_params(with_optional),
             out_result,
-            self.name.to_class_case()
+            self.name.to_upper_camel_case()
         )
     }
 
@@ -239,7 +239,7 @@ impl Operation {
             let opt = format!(
                 "{}_options: &{}Options",
                 self.name.to_snake_case(),
-                self.name.to_class_case()
+                self.name.to_upper_camel_case()
             );
             let params = self
                 .required
@@ -382,10 +382,14 @@ impl Parameter {
     }
 
     fn doc_struct(&self) -> String {
+        let type_str = match self.param_type {
+            ParamType::Str => String::from("Option<String>"),
+            _ => self.param_type.struct_type(),
+        };
         let mut main_doc = format!(
             "/// {}: `{}` -> {}",
             self.name,
-            self.param_type.struct_type(),
+            type_str,
             self.description
         );
         let dc = self.param_type.doc();
@@ -483,9 +487,8 @@ impl Parameter {
                 self.name
             ),
             ParamType::Str => format!(
-                "let {}_in: {} = utils::new_c_string(&{}_options.{})?;",
+                "let {}_in: Option<CString> = {}_options.{}.as_ref().map(|s| utils::new_c_string(s)).transpose()?;",
                 self.name,
-                self.param_type.vips_in_type(true),
                 opt_name,
                 self.name
             ),
@@ -542,7 +545,7 @@ impl Parameter {
 
     fn opt_param_pair(&self) -> String {
         let init_var = match self.param_type {
-            ParamType::Str => format!("{}_in.as_ptr()", self.name),
+            ParamType::Str => format!("{}_in.as_ref().map(|s| s.as_ptr()).unwrap_or(std::ptr::null::<c_char>())", self.name),
             _ => format!("{}_in", self.name),
         };
         format!("{}_in_name.as_ptr(), {}", self.name, init_var)
@@ -584,14 +587,18 @@ impl Parameter {
     fn default(&self) -> String {
         match self.param_type {
             ParamType::Str if self.description.contains("ICC") => {
-                format!("{}: String::from(\"sRGB\")", self.name)
+                format!("{}: Some(String::from(\"sRGB\"))", self.name)
             }
+            ParamType::Str => format!("{}: None", self.name),
             _ => format!("{}: {}", self.name, self.param_type.default()),
         }
     }
 
     fn struct_declaration(&self) -> String {
-        format!("{}: {}", self.name, self.param_type.struct_type())
+        match self.param_type {
+            ParamType::Str => format!("{}: Option<String>", self.name),
+            _ => format!("{}: {}", self.name, self.param_type.struct_type()),
+        }
     }
 
     fn param_declaration(&self) -> String {
@@ -798,7 +805,7 @@ impl ParamType {
             } => entries
                 .iter()
                 .filter(|e| *default == e.value)
-                .map(|e| format!("{}::{}", Self::enum_name(name), e.nick.to_class_case()))
+                .map(|e| format!("{}::{}", Self::enum_name(name), e.nick.to_upper_camel_case()))
                 .collect::<Vec<_>>()[0]
                 .clone(),
         }
@@ -839,7 +846,7 @@ impl Enumeration {
     fn doc(&self) -> String {
         format!(
             "///  `{}` -> {} = {}",
-            self.nick.to_class_case(),
+            self.nick.to_upper_camel_case(),
             self.name,
             self.value
         )
@@ -852,7 +859,7 @@ impl Enumeration {
             if self.name == "VIPS_INTERPRETATION_LABS" {
                 String::from("Labs")
             } else {
-                self.nick.to_class_case()
+                self.nick.to_upper_camel_case()
             },
             self.value
         )
@@ -981,7 +988,7 @@ fn parse_param(param_list: Vec<&str>, order: u8, prev: Option<String>) -> (bool,
             order,
             name: param_name.to_snake_case(),
             vips_name: param_name.to_string(),
-            nick: nick.to_class_case(),
+            nick: nick.to_upper_camel_case(),
             description: description.to_string(),
             param_type,
         },
@@ -1283,12 +1290,12 @@ fn main() {
             (String::new(), String::new(), String::new()),
             |(mut methods, mut errors, mut errors_display), operation| {
                 methods.push_str(operation.body().as_str());
-                errors.push_str(format!("{}Error,\n", operation.name.to_class_case()).as_str());
+                errors.push_str(format!("{}Error,\n", operation.name.to_upper_camel_case()).as_str());
                 errors_display.push_str(
                     format!(
                         "Error::{}Error => write!(f, \"vips error: {}Error. Check error buffer for more details\"),\n",
-                        operation.name.to_class_case(),
-                        operation.name.to_class_case()
+                        operation.name.to_upper_camel_case(),
+                        operation.name.to_upper_camel_case()
                     )
                     .as_str(),
                 );
@@ -1308,7 +1315,7 @@ fn main() {
         .expect("Couldn't write bindings!");
     let ops_content = format!(
         r#"
-    // (c) Copyright 2019-2023 OLX
+    // (c) Copyright 2019-2026 OLX
     use std::ffi::*;
     use std::ptr::null_mut;
     use std::convert::TryInto;
