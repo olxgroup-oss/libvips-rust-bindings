@@ -299,7 +299,7 @@ impl VipsImage {
         unsafe {
             let res = bindings::vips_image_get_format(self.ctx);
             let format_enum = FromPrimitive::from_i32(res);
-            format_enum.ok_or_else(|| Error::IOError("VipsImage:get_coding - Could get format from image"))
+            format_enum.ok_or_else(|| Error::IOError("VipsImage:get_coding - Could not get format from image"))
         }
     }
 
@@ -315,7 +315,7 @@ impl VipsImage {
         unsafe {
             let res = bindings::vips_image_guess_format(self.ctx);
             let format_enum = FromPrimitive::from_i32(res);
-            format_enum.ok_or_else(|| Error::IOError("VipsImage:guess_format - Could guess format from image"))
+            format_enum.ok_or_else(|| Error::IOError("VipsImage:guess_format - Could not guess format from image"))
         }
     }
 
@@ -327,7 +327,7 @@ impl VipsImage {
         unsafe {
             let res = bindings::vips_image_get_interpretation(self.ctx);
             let format_enum = FromPrimitive::from_i32(res);
-            format_enum.ok_or_else(|| Error::IOError("VipsImage:get_interpretation - Could get interpretation from image"))
+            format_enum.ok_or_else(|| Error::IOError("VipsImage:get_interpretation - Could not get interpretation from image"))
         }
     }
 
@@ -624,7 +624,7 @@ impl VipsSource {
             utils::result(
                 result,
                 || (),
-                Error::OperationError("VipsSource:decode Error on vips decode"),
+                Error::OperationError("VipsSource:decode - Error on vips decode"),
             )
         }
     }
@@ -687,11 +687,11 @@ impl<'a> VipsSource {
             let length: *mut u64 = null_mut();
             let result = bindings::vips_source_map(self.ctx, length);
             if length.is_null() {
-                Err(Error::OperationError("<>VipsSource:map - Error on vips map"))
+                Err(Error::OperationError("VipsSource:map - Error on vips map"))
             } else {
                 let size = (*length)
                     .try_into()
-                    .map_err(|_| Error::OperationError("<>VipsSource:map - Can't get size of array"))?;
+                    .map_err(|_| Error::OperationError("VipsSource:map - Can't get size of array"))?;
                 Ok(std::slice::from_raw_parts(result as *mut u8, size))
             }
         }
@@ -854,7 +854,7 @@ impl VipsInterpolate {
             let res = bindings::vips_interpolate_new(nickname.as_ptr());
             if res.is_null() {
                 Err(Error::InitializationError(
-                    "VipsTarget:new_from_name - Cannot initialize interpolator with provided nickname",
+                    "VipsInterpolate:new_from_name - Cannot initialize interpolator with provided nickname",
                 ))
             } else {
                 Ok(VipsInterpolate { ctx: res })
