@@ -1,6 +1,5 @@
 # libvips-rust-bindings
-
-Rust bindings for libvips. Generated from `version 8.14.5`.
+Rust bindings for libvips. Generated from `version 8.18.2`.
 
 This is a safe wrapper for [libvips](https://libvips.github.io/libvips/) C library. It is made on top of the C API and based on the introspection API results.
 
@@ -47,13 +46,13 @@ let options = ops::Composite2Options {
 }
 ```
 
-In the moment the error messages are not being appended to the errors themselves. They're in the libvips error buffer. The error buffer operations are implented inside the `VipsApps` struct.
+In the moment the error messages are not being appended to the errors themselves. They're in the libvips error buffer. The error buffer operations are implented inside the `VipsApps` struct. 
 
-Most (if not all) vips operations don't mutate the `VipsImage` object, so they'll return a new object for this. The implementation of `VipsImage` in this crate takes care of freeing the internal pointer after it is dropped. <span style="color:red">Be aware that the VipsImage object is not thread safe in the moment.</span> I'll investigate what is happening and provide a solution for it in the future.
+Most (if not all) vips operations don't mutate the `VipsImage` object, so they'll return a new object for this. The implementation of `VipsImage` in this crate takes care of freeing the internal pointer after it is dropped. <span style="color:red">Be aware that the VipsImage object is not thread safe in the moment.</span> I'll investigate what is happening and provide a solution for it in the future. 
 
 ### Example
 
-In the following code snippet we move load a JPEG file from the file system and then transforming it by reducing the scale by 50% and saving it as a .
+In the following code snippet we move load a JPEG file from the file system and then transforming it by reducing the scale by 50% and saving it as a PNG image.
 
 ```rust
 // examples/jpeg_to_png.rs
