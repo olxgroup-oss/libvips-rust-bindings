@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.2](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v2.0.1...v2.0.2) (2026-05-20)
+
+### Bug Fixes
+
+* **errors:** set explicit error names for debugging ([#60](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/60)) ([29271f3](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/29271f3b0bd4cadab55ccd21949dc714b2b5a88e))
+
 ## [2.0.1](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v2.0.0...v2.0.1) (2026-05-20)
 
 ### Bug Fixes
