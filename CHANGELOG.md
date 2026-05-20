@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.1](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v2.0.0...v2.0.1) (2026-05-20)
+
+### Bug Fixes
+
+* **ISSUE#5:** use option for the optional string and pass none as default instead of empty string ("") ([#158](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/158)) ([b26be9c](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/b26be9c0d7d8f6c11db59ea0895ab515c527d5c3)), closes [ISSUE#5](https://github.com/olxgroup-oss/ISSUE/issues/5)
+
 ## [2.0.0](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v1.7.6...v2.0.0) (2026-05-12)
 
 ### ⚠ BREAKING CHANGES
