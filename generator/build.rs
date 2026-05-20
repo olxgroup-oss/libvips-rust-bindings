@@ -382,10 +382,14 @@ impl Parameter {
     }
 
     fn doc_struct(&self) -> String {
+        let type_str = match self.param_type {
+            ParamType::Str => String::from("Option<String>"),
+            _ => self.param_type.struct_type(),
+        };
         let mut main_doc = format!(
             "/// {}: `{}` -> {}",
             self.name,
-            self.param_type.struct_type(),
+            type_str,
             self.description
         );
         let dc = self.param_type.doc();
@@ -483,9 +487,8 @@ impl Parameter {
                 self.name
             ),
             ParamType::Str => format!(
-                "let {}_in: {} = utils::new_c_string(&{}_options.{})?;",
+                "let {}_in: Option<CString> = {}_options.{}.as_ref().map(|s| utils::new_c_string(s)).transpose()?;",
                 self.name,
-                self.param_type.vips_in_type(true),
                 opt_name,
                 self.name
             ),
@@ -542,7 +545,7 @@ impl Parameter {
 
     fn opt_param_pair(&self) -> String {
         let init_var = match self.param_type {
-            ParamType::Str => format!("{}_in.as_ptr()", self.name),
+            ParamType::Str => format!("{}_in.as_ref().map(|s| s.as_ptr()).unwrap_or(std::ptr::null::<c_char>())", self.name),
             _ => format!("{}_in", self.name),
         };
         format!("{}_in_name.as_ptr(), {}", self.name, init_var)
@@ -584,14 +587,18 @@ impl Parameter {
     fn default(&self) -> String {
         match self.param_type {
             ParamType::Str if self.description.contains("ICC") => {
-                format!("{}: String::from(\"sRGB\")", self.name)
+                format!("{}: Some(String::from(\"sRGB\"))", self.name)
             }
+            ParamType::Str => format!("{}: None", self.name),
             _ => format!("{}: {}", self.name, self.param_type.default()),
         }
     }
 
     fn struct_declaration(&self) -> String {
-        format!("{}: {}", self.name, self.param_type.struct_type())
+        match self.param_type {
+            ParamType::Str => format!("{}: Option<String>", self.name),
+            _ => format!("{}: {}", self.name, self.param_type.struct_type()),
+        }
     }
 
     fn param_declaration(&self) -> String {

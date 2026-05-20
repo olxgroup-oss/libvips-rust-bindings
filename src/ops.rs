@@ -709,15 +709,15 @@ pub struct SystemOptions {
     pub inp: Vec<VipsImage>,
     /// out: `VipsImage` -> Output image
     pub out: VipsImage,
-    /// in_format: `String` -> Format for input filename
-    pub in_format: String,
-    /// out_format: `String` -> Format for output filename
-    pub out_format: String,
+    /// in_format: `Option<String>` -> Format for input filename
+    pub in_format: Option<String>,
+    /// out_format: `Option<String>` -> Format for output filename
+    pub out_format: Option<String>,
     /// cache: `bool` -> Cache this call
     /// default: false
     pub cache: bool,
-    /// log: `String` -> Command log
-    pub log: String,
+    /// log: `Option<String>` -> Command log
+    pub log: Option<String>,
 }
 
 impl std::default::Default for SystemOptions {
@@ -725,10 +725,10 @@ impl std::default::Default for SystemOptions {
         SystemOptions {
             inp: Vec::new(),
             out: VipsImage::new(),
-            in_format: String::new(),
-            out_format: String::new(),
+            in_format: None,
+            out_format: None,
             cache: false,
-            log: String::new(),
+            log: None,
         }
     }
 }
@@ -748,16 +748,28 @@ pub fn system_with_opts(cmd_format: &str, system_options: &SystemOptions) -> Res
         let out_in: *mut bindings::VipsImage = system_options.out.ctx;
         let out_in_name = utils::new_c_string("out")?;
 
-        let in_format_in: CString = utils::new_c_string(&system_options.in_format)?;
+        let in_format_in: Option<CString> = system_options
+            .in_format
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let in_format_in_name = utils::new_c_string("in-format")?;
 
-        let out_format_in: CString = utils::new_c_string(&system_options.out_format)?;
+        let out_format_in: Option<CString> = system_options
+            .out_format
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let out_format_in_name = utils::new_c_string("out-format")?;
 
         let cache_in: i32 = if system_options.cache { 1 } else { 0 };
         let cache_in_name = utils::new_c_string("cache")?;
 
-        let log_in: CString = utils::new_c_string(&system_options.log)?;
+        let log_in: Option<CString> = system_options
+            .log
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let log_in_name = utils::new_c_string("log")?;
 
         let vips_op_response = bindings::vips_system(
@@ -767,13 +779,22 @@ pub fn system_with_opts(cmd_format: &str, system_options: &SystemOptions) -> Res
             out_in_name.as_ptr(),
             out_in,
             in_format_in_name.as_ptr(),
-            in_format_in.as_ptr(),
+            in_format_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             out_format_in_name.as_ptr(),
-            out_format_in.as_ptr(),
+            out_format_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             cache_in_name.as_ptr(),
             cache_in,
             log_in_name.as_ptr(),
-            log_in.as_ptr(),
+            log_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::SystemError)
@@ -5686,8 +5707,8 @@ pub fn text(text: &str) -> Result<VipsImage> {
 /// Options for text operation
 #[derive(Clone, Debug)]
 pub struct TextOptions {
-    /// font: `String` -> Font to render with
-    pub font: String,
+    /// font: `Option<String>` -> Font to render with
+    pub font: Option<String>,
     /// width: `i32` -> Maximum image width in pixels
     /// min: 0, max: 100000000, default: 0
     pub width: i32,
@@ -5711,8 +5732,8 @@ pub struct TextOptions {
     /// spacing: `i32` -> Line spacing
     /// min: -1000000, max: 1000000, default: 0
     pub spacing: i32,
-    /// fontfile: `String` -> Load this font file
-    pub fontfile: String,
+    /// fontfile: `Option<String>` -> Load this font file
+    pub fontfile: Option<String>,
     /// rgba: `bool` -> Enable RGBA output
     /// default: false
     pub rgba: bool,
@@ -5727,7 +5748,7 @@ pub struct TextOptions {
 impl std::default::Default for TextOptions {
     fn default() -> Self {
         TextOptions {
-            font: String::new(),
+            font: None,
             width: i32::from(0),
             height: i32::from(0),
             align: Align::Low,
@@ -5735,7 +5756,7 @@ impl std::default::Default for TextOptions {
             dpi: i32::from(72),
             autofit_dpi: i32::from(72),
             spacing: i32::from(0),
-            fontfile: String::new(),
+            fontfile: None,
             rgba: false,
             wrap: TextWrap::Word,
         }
@@ -5751,7 +5772,11 @@ pub fn text_with_opts(text: &str, text_options: &TextOptions) -> Result<VipsImag
         let text_in: CString = utils::new_c_string(text)?;
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
-        let font_in: CString = utils::new_c_string(&text_options.font)?;
+        let font_in: Option<CString> = text_options
+            .font
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let font_in_name = utils::new_c_string("font")?;
 
         let width_in: i32 = text_options.width;
@@ -5775,7 +5800,11 @@ pub fn text_with_opts(text: &str, text_options: &TextOptions) -> Result<VipsImag
         let spacing_in: i32 = text_options.spacing;
         let spacing_in_name = utils::new_c_string("spacing")?;
 
-        let fontfile_in: CString = utils::new_c_string(&text_options.fontfile)?;
+        let fontfile_in: Option<CString> = text_options
+            .fontfile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let fontfile_in_name = utils::new_c_string("fontfile")?;
 
         let rgba_in: i32 = if text_options.rgba { 1 } else { 0 };
@@ -5788,7 +5817,10 @@ pub fn text_with_opts(text: &str, text_options: &TextOptions) -> Result<VipsImag
             &mut out_out,
             text_in.as_ptr(),
             font_in_name.as_ptr(),
-            font_in.as_ptr(),
+            font_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             width_in_name.as_ptr(),
             width_in,
             height_in_name.as_ptr(),
@@ -5804,7 +5836,10 @@ pub fn text_with_opts(text: &str, text_options: &TextOptions) -> Result<VipsImag
             spacing_in_name.as_ptr(),
             spacing_in,
             fontfile_in_name.as_ptr(),
-            fontfile_in.as_ptr(),
+            fontfile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             rgba_in_name.as_ptr(),
             rgba_in,
             wrap_in_name.as_ptr(),
@@ -8207,10 +8242,10 @@ pub struct CsvloadOptions {
     /// lines: `i32` -> Read this many lines from the file
     /// min: -1, max: 10000000, default: -1
     pub lines: i32,
-    /// whitespace: `String` -> Set of whitespace characters
-    pub whitespace: String,
-    /// separator: `String` -> Set of separator characters
-    pub separator: String,
+    /// whitespace: `Option<String>` -> Set of whitespace characters
+    pub whitespace: Option<String>,
+    /// separator: `Option<String>` -> Set of separator characters
+    pub separator: Option<String>,
     /// flags: `ForeignFlags` -> Flags for this file
     ///  `None` -> VIPS_FOREIGN_NONE = 0 [DEFAULT]
     ///  `Partial` -> VIPS_FOREIGN_PARTIAL = 1
@@ -8242,8 +8277,8 @@ impl std::default::Default for CsvloadOptions {
         CsvloadOptions {
             skip: i32::from(0),
             lines: i32::from(-1),
-            whitespace: String::new(),
-            separator: String::new(),
+            whitespace: None,
+            separator: None,
             flags: ForeignFlags::None,
             memory: false,
             access: Access::Random,
@@ -8268,10 +8303,18 @@ pub fn csvload_with_opts(filename: &str, csvload_options: &CsvloadOptions) -> Re
         let lines_in: i32 = csvload_options.lines;
         let lines_in_name = utils::new_c_string("lines")?;
 
-        let whitespace_in: CString = utils::new_c_string(&csvload_options.whitespace)?;
+        let whitespace_in: Option<CString> = csvload_options
+            .whitespace
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let whitespace_in_name = utils::new_c_string("whitespace")?;
 
-        let separator_in: CString = utils::new_c_string(&csvload_options.separator)?;
+        let separator_in: Option<CString> = csvload_options
+            .separator
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let separator_in_name = utils::new_c_string("separator")?;
 
         let flags_in: i32 = csvload_options.flags as i32;
@@ -8297,9 +8340,15 @@ pub fn csvload_with_opts(filename: &str, csvload_options: &CsvloadOptions) -> Re
             lines_in_name.as_ptr(),
             lines_in,
             whitespace_in_name.as_ptr(),
-            whitespace_in.as_ptr(),
+            whitespace_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             separator_in_name.as_ptr(),
-            separator_in.as_ptr(),
+            separator_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             flags_in_name.as_ptr(),
             flags_in,
             memory_in_name.as_ptr(),
@@ -8346,10 +8395,10 @@ pub struct CsvloadSourceOptions {
     /// lines: `i32` -> Read this many lines from the file
     /// min: -1, max: 10000000, default: -1
     pub lines: i32,
-    /// whitespace: `String` -> Set of whitespace characters
-    pub whitespace: String,
-    /// separator: `String` -> Set of separator characters
-    pub separator: String,
+    /// whitespace: `Option<String>` -> Set of whitespace characters
+    pub whitespace: Option<String>,
+    /// separator: `Option<String>` -> Set of separator characters
+    pub separator: Option<String>,
     /// flags: `ForeignFlags` -> Flags for this file
     ///  `None` -> VIPS_FOREIGN_NONE = 0 [DEFAULT]
     ///  `Partial` -> VIPS_FOREIGN_PARTIAL = 1
@@ -8381,8 +8430,8 @@ impl std::default::Default for CsvloadSourceOptions {
         CsvloadSourceOptions {
             skip: i32::from(0),
             lines: i32::from(-1),
-            whitespace: String::new(),
-            separator: String::new(),
+            whitespace: None,
+            separator: None,
             flags: ForeignFlags::None,
             memory: false,
             access: Access::Random,
@@ -8410,10 +8459,18 @@ pub fn csvload_source_with_opts(
         let lines_in: i32 = csvload_source_options.lines;
         let lines_in_name = utils::new_c_string("lines")?;
 
-        let whitespace_in: CString = utils::new_c_string(&csvload_source_options.whitespace)?;
+        let whitespace_in: Option<CString> = csvload_source_options
+            .whitespace
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let whitespace_in_name = utils::new_c_string("whitespace")?;
 
-        let separator_in: CString = utils::new_c_string(&csvload_source_options.separator)?;
+        let separator_in: Option<CString> = csvload_source_options
+            .separator
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let separator_in_name = utils::new_c_string("separator")?;
 
         let flags_in: i32 = csvload_source_options.flags as i32;
@@ -8443,9 +8500,15 @@ pub fn csvload_source_with_opts(
             lines_in_name.as_ptr(),
             lines_in,
             whitespace_in_name.as_ptr(),
-            whitespace_in.as_ptr(),
+            whitespace_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             separator_in_name.as_ptr(),
-            separator_in.as_ptr(),
+            separator_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             flags_in_name.as_ptr(),
             flags_in,
             memory_in_name.as_ptr(),
@@ -9903,8 +9966,8 @@ pub struct SvgloadOptions {
     /// unlimited: `bool` -> Allow SVG of any size
     /// default: false
     pub unlimited: bool,
-    /// stylesheet: `String` -> Custom CSS
-    pub stylesheet: String,
+    /// stylesheet: `Option<String>` -> Custom CSS
+    pub stylesheet: Option<String>,
     /// high_bitdepth: `bool` -> Enable scRGB 128-bit output (32-bit per channel)
     /// default: false
     pub high_bitdepth: bool,
@@ -9940,7 +10003,7 @@ impl std::default::Default for SvgloadOptions {
             dpi: f64::from(72),
             scale: f64::from(1),
             unlimited: false,
-            stylesheet: String::new(),
+            stylesheet: None,
             high_bitdepth: false,
             flags: ForeignFlags::None,
             memory: false,
@@ -9969,7 +10032,11 @@ pub fn svgload_with_opts(filename: &str, svgload_options: &SvgloadOptions) -> Re
         let unlimited_in: i32 = if svgload_options.unlimited { 1 } else { 0 };
         let unlimited_in_name = utils::new_c_string("unlimited")?;
 
-        let stylesheet_in: CString = utils::new_c_string(&svgload_options.stylesheet)?;
+        let stylesheet_in: Option<CString> = svgload_options
+            .stylesheet
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let stylesheet_in_name = utils::new_c_string("stylesheet")?;
 
         let high_bitdepth_in: i32 = if svgload_options.high_bitdepth { 1 } else { 0 };
@@ -10000,7 +10067,10 @@ pub fn svgload_with_opts(filename: &str, svgload_options: &SvgloadOptions) -> Re
             unlimited_in_name.as_ptr(),
             unlimited_in,
             stylesheet_in_name.as_ptr(),
-            stylesheet_in.as_ptr(),
+            stylesheet_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             high_bitdepth_in_name.as_ptr(),
             high_bitdepth_in,
             flags_in_name.as_ptr(),
@@ -10053,8 +10123,8 @@ pub struct SvgloadBufferOptions {
     /// unlimited: `bool` -> Allow SVG of any size
     /// default: false
     pub unlimited: bool,
-    /// stylesheet: `String` -> Custom CSS
-    pub stylesheet: String,
+    /// stylesheet: `Option<String>` -> Custom CSS
+    pub stylesheet: Option<String>,
     /// high_bitdepth: `bool` -> Enable scRGB 128-bit output (32-bit per channel)
     /// default: false
     pub high_bitdepth: bool,
@@ -10090,7 +10160,7 @@ impl std::default::Default for SvgloadBufferOptions {
             dpi: f64::from(72),
             scale: f64::from(1),
             unlimited: false,
-            stylesheet: String::new(),
+            stylesheet: None,
             high_bitdepth: false,
             flags: ForeignFlags::None,
             memory: false,
@@ -10126,7 +10196,11 @@ pub fn svgload_buffer_with_opts(
         };
         let unlimited_in_name = utils::new_c_string("unlimited")?;
 
-        let stylesheet_in: CString = utils::new_c_string(&svgload_buffer_options.stylesheet)?;
+        let stylesheet_in: Option<CString> = svgload_buffer_options
+            .stylesheet
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let stylesheet_in_name = utils::new_c_string("stylesheet")?;
 
         let high_bitdepth_in: i32 = if svgload_buffer_options.high_bitdepth {
@@ -10166,7 +10240,10 @@ pub fn svgload_buffer_with_opts(
             unlimited_in_name.as_ptr(),
             unlimited_in,
             stylesheet_in_name.as_ptr(),
-            stylesheet_in.as_ptr(),
+            stylesheet_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             high_bitdepth_in_name.as_ptr(),
             high_bitdepth_in,
             flags_in_name.as_ptr(),
@@ -12587,8 +12664,8 @@ pub fn csvsave(inp: &VipsImage, filename: &str) -> Result<()> {
 /// Options for csvsave operation
 #[derive(Clone, Debug)]
 pub struct CsvsaveOptions {
-    /// separator: `String` -> Separator characters
-    pub separator: String,
+    /// separator: `Option<String>` -> Separator characters
+    pub separator: Option<String>,
     /// keep: `ForeignKeep` -> Which metadata to retain
     ///  `None` -> VIPS_FOREIGN_KEEP_NONE = 0
     ///  `Exif` -> VIPS_FOREIGN_KEEP_EXIF = 1
@@ -12604,18 +12681,18 @@ pub struct CsvsaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for CsvsaveOptions {
     fn default() -> Self {
         CsvsaveOptions {
-            separator: String::new(),
+            separator: None,
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -12634,7 +12711,11 @@ pub fn csvsave_with_opts(
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let filename_in: CString = utils::new_c_string(filename)?;
 
-        let separator_in: CString = utils::new_c_string(&csvsave_options.separator)?;
+        let separator_in: Option<CString> = csvsave_options
+            .separator
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let separator_in_name = utils::new_c_string("separator")?;
 
         let keep_in: i32 = csvsave_options.keep as i32;
@@ -12648,14 +12729,21 @@ pub fn csvsave_with_opts(
         let page_height_in: i32 = csvsave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&csvsave_options.profile)?;
+        let profile_in: Option<CString> = csvsave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_csvsave(
             inp_in,
             filename_in.as_ptr(),
             separator_in_name.as_ptr(),
-            separator_in.as_ptr(),
+            separator_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             keep_in_name.as_ptr(),
             keep_in,
             background_in_name.as_ptr(),
@@ -12663,7 +12751,10 @@ pub fn csvsave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::CsvsaveError)
@@ -12687,8 +12778,8 @@ pub fn csvsave_target(inp: &VipsImage, target: &VipsTarget) -> Result<()> {
 /// Options for csvsave_target operation
 #[derive(Clone, Debug)]
 pub struct CsvsaveTargetOptions {
-    /// separator: `String` -> Separator characters
-    pub separator: String,
+    /// separator: `Option<String>` -> Separator characters
+    pub separator: Option<String>,
     /// keep: `ForeignKeep` -> Which metadata to retain
     ///  `None` -> VIPS_FOREIGN_KEEP_NONE = 0
     ///  `Exif` -> VIPS_FOREIGN_KEEP_EXIF = 1
@@ -12704,18 +12795,18 @@ pub struct CsvsaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for CsvsaveTargetOptions {
     fn default() -> Self {
         CsvsaveTargetOptions {
-            separator: String::new(),
+            separator: None,
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -12734,7 +12825,11 @@ pub fn csvsave_target_with_opts(
         let inp_in: *mut bindings::VipsImage = inp.ctx;
         let target_in: *mut bindings::VipsTarget = target.ctx;
 
-        let separator_in: CString = utils::new_c_string(&csvsave_target_options.separator)?;
+        let separator_in: Option<CString> = csvsave_target_options
+            .separator
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let separator_in_name = utils::new_c_string("separator")?;
 
         let keep_in: i32 = csvsave_target_options.keep as i32;
@@ -12748,14 +12843,21 @@ pub fn csvsave_target_with_opts(
         let page_height_in: i32 = csvsave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&csvsave_target_options.profile)?;
+        let profile_in: Option<CString> = csvsave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_csvsave_target(
             inp_in,
             target_in,
             separator_in_name.as_ptr(),
-            separator_in.as_ptr(),
+            separator_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             keep_in_name.as_ptr(),
             keep_in,
             background_in_name.as_ptr(),
@@ -12763,7 +12865,10 @@ pub fn csvsave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::CsvsaveTargetError)
@@ -12802,8 +12907,8 @@ pub struct MatrixsaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for MatrixsaveOptions {
@@ -12812,7 +12917,7 @@ impl std::default::Default for MatrixsaveOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -12842,7 +12947,11 @@ pub fn matrixsave_with_opts(
         let page_height_in: i32 = matrixsave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&matrixsave_options.profile)?;
+        let profile_in: Option<CString> = matrixsave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_matrixsave(
@@ -12855,7 +12964,10 @@ pub fn matrixsave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::MatrixsaveError)
@@ -12894,8 +13006,8 @@ pub struct MatrixsaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for MatrixsaveTargetOptions {
@@ -12904,7 +13016,7 @@ impl std::default::Default for MatrixsaveTargetOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -12934,7 +13046,11 @@ pub fn matrixsave_target_with_opts(
         let page_height_in: i32 = matrixsave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&matrixsave_target_options.profile)?;
+        let profile_in: Option<CString> = matrixsave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_matrixsave_target(
@@ -12947,7 +13063,10 @@ pub fn matrixsave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::MatrixsaveTargetError)
@@ -12984,8 +13103,8 @@ pub struct MatrixprintOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for MatrixprintOptions {
@@ -12994,7 +13113,7 @@ impl std::default::Default for MatrixprintOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -13021,7 +13140,11 @@ pub fn matrixprint_with_opts(
         let page_height_in: i32 = matrixprint_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&matrixprint_options.profile)?;
+        let profile_in: Option<CString> = matrixprint_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_matrixprint(
@@ -13033,7 +13156,10 @@ pub fn matrixprint_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::MatrixprintError)
@@ -13072,8 +13198,8 @@ pub struct RawsaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for RawsaveOptions {
@@ -13082,7 +13208,7 @@ impl std::default::Default for RawsaveOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -13112,7 +13238,11 @@ pub fn rawsave_with_opts(
         let page_height_in: i32 = rawsave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&rawsave_options.profile)?;
+        let profile_in: Option<CString> = rawsave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_rawsave(
@@ -13125,7 +13255,10 @@ pub fn rawsave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::RawsaveError)
@@ -13169,8 +13302,8 @@ pub struct RawsaveBufferOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for RawsaveBufferOptions {
@@ -13179,7 +13312,7 @@ impl std::default::Default for RawsaveBufferOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -13208,7 +13341,11 @@ pub fn rawsave_buffer_with_opts(
         let page_height_in: i32 = rawsave_buffer_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&rawsave_buffer_options.profile)?;
+        let profile_in: Option<CString> = rawsave_buffer_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_rawsave_buffer(
@@ -13222,7 +13359,10 @@ pub fn rawsave_buffer_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(
@@ -13265,8 +13405,8 @@ pub struct RawsaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for RawsaveTargetOptions {
@@ -13275,7 +13415,7 @@ impl std::default::Default for RawsaveTargetOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -13305,7 +13445,11 @@ pub fn rawsave_target_with_opts(
         let page_height_in: i32 = rawsave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&rawsave_target_options.profile)?;
+        let profile_in: Option<CString> = rawsave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_rawsave_target(
@@ -13318,7 +13462,10 @@ pub fn rawsave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::RawsaveTargetError)
@@ -13357,8 +13504,8 @@ pub struct VipssaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for VipssaveOptions {
@@ -13367,7 +13514,7 @@ impl std::default::Default for VipssaveOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -13397,7 +13544,11 @@ pub fn vipssave_with_opts(
         let page_height_in: i32 = vipssave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&vipssave_options.profile)?;
+        let profile_in: Option<CString> = vipssave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_vipssave(
@@ -13410,7 +13561,10 @@ pub fn vipssave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::VipssaveError)
@@ -13449,8 +13603,8 @@ pub struct VipssaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for VipssaveTargetOptions {
@@ -13459,7 +13613,7 @@ impl std::default::Default for VipssaveTargetOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -13489,7 +13643,11 @@ pub fn vipssave_target_with_opts(
         let page_height_in: i32 = vipssave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&vipssave_target_options.profile)?;
+        let profile_in: Option<CString> = vipssave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_vipssave_target(
@@ -13502,7 +13660,10 @@ pub fn vipssave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::VipssaveTargetError)
@@ -13554,8 +13715,8 @@ pub struct PpmsaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for PpmsaveOptions {
@@ -13567,7 +13728,7 @@ impl std::default::Default for PpmsaveOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -13606,7 +13767,11 @@ pub fn ppmsave_with_opts(
         let page_height_in: i32 = ppmsave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&ppmsave_options.profile)?;
+        let profile_in: Option<CString> = ppmsave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_ppmsave(
@@ -13625,7 +13790,10 @@ pub fn ppmsave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::PpmsaveError)
@@ -13677,8 +13845,8 @@ pub struct PpmsaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for PpmsaveTargetOptions {
@@ -13690,7 +13858,7 @@ impl std::default::Default for PpmsaveTargetOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -13729,7 +13897,11 @@ pub fn ppmsave_target_with_opts(
         let page_height_in: i32 = ppmsave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&ppmsave_target_options.profile)?;
+        let profile_in: Option<CString> = ppmsave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_ppmsave_target(
@@ -13748,7 +13920,10 @@ pub fn ppmsave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::PpmsaveTargetError)
@@ -13787,8 +13962,8 @@ pub struct RadsaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for RadsaveOptions {
@@ -13797,7 +13972,7 @@ impl std::default::Default for RadsaveOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -13827,7 +14002,11 @@ pub fn radsave_with_opts(
         let page_height_in: i32 = radsave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&radsave_options.profile)?;
+        let profile_in: Option<CString> = radsave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_radsave(
@@ -13840,7 +14019,10 @@ pub fn radsave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::RadsaveError)
@@ -13884,8 +14066,8 @@ pub struct RadsaveBufferOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for RadsaveBufferOptions {
@@ -13894,7 +14076,7 @@ impl std::default::Default for RadsaveBufferOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -13923,7 +14105,11 @@ pub fn radsave_buffer_with_opts(
         let page_height_in: i32 = radsave_buffer_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&radsave_buffer_options.profile)?;
+        let profile_in: Option<CString> = radsave_buffer_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_radsave_buffer(
@@ -13937,7 +14123,10 @@ pub fn radsave_buffer_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(
@@ -13980,8 +14169,8 @@ pub struct RadsaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for RadsaveTargetOptions {
@@ -13990,7 +14179,7 @@ impl std::default::Default for RadsaveTargetOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -14020,7 +14209,11 @@ pub fn radsave_target_with_opts(
         let page_height_in: i32 = radsave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&radsave_target_options.profile)?;
+        let profile_in: Option<CString> = radsave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_radsave_target(
@@ -14033,7 +14226,10 @@ pub fn radsave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::RadsaveTargetError)
@@ -14096,8 +14292,8 @@ pub struct GifsaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for GifsaveOptions {
@@ -14114,7 +14310,7 @@ impl std::default::Default for GifsaveOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -14172,7 +14368,11 @@ pub fn gifsave_with_opts(
         let page_height_in: i32 = gifsave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&gifsave_options.profile)?;
+        let profile_in: Option<CString> = gifsave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_gifsave(
@@ -14201,7 +14401,10 @@ pub fn gifsave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::GifsaveError)
@@ -14269,8 +14472,8 @@ pub struct GifsaveBufferOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for GifsaveBufferOptions {
@@ -14287,7 +14490,7 @@ impl std::default::Default for GifsaveBufferOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -14348,7 +14551,11 @@ pub fn gifsave_buffer_with_opts(
         let page_height_in: i32 = gifsave_buffer_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&gifsave_buffer_options.profile)?;
+        let profile_in: Option<CString> = gifsave_buffer_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_gifsave_buffer(
@@ -14378,7 +14585,10 @@ pub fn gifsave_buffer_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(
@@ -14445,8 +14655,8 @@ pub struct GifsaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for GifsaveTargetOptions {
@@ -14463,7 +14673,7 @@ impl std::default::Default for GifsaveTargetOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -14525,7 +14735,11 @@ pub fn gifsave_target_with_opts(
         let page_height_in: i32 = gifsave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&gifsave_target_options.profile)?;
+        let profile_in: Option<CString> = gifsave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_gifsave_target(
@@ -14554,7 +14768,10 @@ pub fn gifsave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::GifsaveTargetError)
@@ -14622,8 +14839,8 @@ pub struct PngsaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for PngsaveOptions {
@@ -14640,7 +14857,7 @@ impl std::default::Default for PngsaveOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -14694,7 +14911,11 @@ pub fn pngsave_with_opts(
         let page_height_in: i32 = pngsave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&pngsave_options.profile)?;
+        let profile_in: Option<CString> = pngsave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_pngsave(
@@ -14723,7 +14944,10 @@ pub fn pngsave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::PngsaveError)
@@ -14796,8 +15020,8 @@ pub struct PngsaveBufferOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for PngsaveBufferOptions {
@@ -14814,7 +15038,7 @@ impl std::default::Default for PngsaveBufferOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -14871,7 +15095,11 @@ pub fn pngsave_buffer_with_opts(
         let page_height_in: i32 = pngsave_buffer_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&pngsave_buffer_options.profile)?;
+        let profile_in: Option<CString> = pngsave_buffer_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_pngsave_buffer(
@@ -14901,7 +15129,10 @@ pub fn pngsave_buffer_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(
@@ -14973,8 +15204,8 @@ pub struct PngsaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for PngsaveTargetOptions {
@@ -14991,7 +15222,7 @@ impl std::default::Default for PngsaveTargetOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -15049,7 +15280,11 @@ pub fn pngsave_target_with_opts(
         let page_height_in: i32 = pngsave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&pngsave_target_options.profile)?;
+        let profile_in: Option<CString> = pngsave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_pngsave_target(
@@ -15078,7 +15313,10 @@ pub fn pngsave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::PngsaveTargetError)
@@ -15146,8 +15384,8 @@ pub struct JpegsaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for JpegsaveOptions {
@@ -15165,7 +15403,7 @@ impl std::default::Default for JpegsaveOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -15234,7 +15472,11 @@ pub fn jpegsave_with_opts(
         let page_height_in: i32 = jpegsave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&jpegsave_options.profile)?;
+        let profile_in: Option<CString> = jpegsave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_jpegsave(
@@ -15265,7 +15507,10 @@ pub fn jpegsave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::JpegsaveError)
@@ -15338,8 +15583,8 @@ pub struct JpegsaveBufferOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for JpegsaveBufferOptions {
@@ -15357,7 +15602,7 @@ impl std::default::Default for JpegsaveBufferOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -15433,7 +15678,11 @@ pub fn jpegsave_buffer_with_opts(
         let page_height_in: i32 = jpegsave_buffer_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&jpegsave_buffer_options.profile)?;
+        let profile_in: Option<CString> = jpegsave_buffer_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_jpegsave_buffer(
@@ -15465,7 +15714,10 @@ pub fn jpegsave_buffer_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(
@@ -15537,8 +15789,8 @@ pub struct JpegsaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for JpegsaveTargetOptions {
@@ -15556,7 +15808,7 @@ impl std::default::Default for JpegsaveTargetOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -15633,7 +15885,11 @@ pub fn jpegsave_target_with_opts(
         let page_height_in: i32 = jpegsave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&jpegsave_target_options.profile)?;
+        let profile_in: Option<CString> = jpegsave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_jpegsave_target(
@@ -15664,7 +15920,10 @@ pub fn jpegsave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::JpegsaveTargetError)
@@ -15730,8 +15989,8 @@ pub struct JpegsaveMimeOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for JpegsaveMimeOptions {
@@ -15749,7 +16008,7 @@ impl std::default::Default for JpegsaveMimeOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -15823,7 +16082,11 @@ pub fn jpegsave_mime_with_opts(
         let page_height_in: i32 = jpegsave_mime_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&jpegsave_mime_options.profile)?;
+        let profile_in: Option<CString> = jpegsave_mime_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_jpegsave_mime(
@@ -15853,7 +16116,10 @@ pub fn jpegsave_mime_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::JpegsaveMimeError)
@@ -15942,8 +16208,8 @@ pub struct WebpsaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for WebpsaveOptions {
@@ -15967,7 +16233,7 @@ impl std::default::Default for WebpsaveOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -16046,7 +16312,11 @@ pub fn webpsave_with_opts(
         let page_height_in: i32 = webpsave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&webpsave_options.profile)?;
+        let profile_in: Option<CString> = webpsave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_webpsave(
@@ -16089,7 +16359,10 @@ pub fn webpsave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::WebpsaveError)
@@ -16183,8 +16456,8 @@ pub struct WebpsaveBufferOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for WebpsaveBufferOptions {
@@ -16208,7 +16481,7 @@ impl std::default::Default for WebpsaveBufferOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -16302,7 +16575,11 @@ pub fn webpsave_buffer_with_opts(
         let page_height_in: i32 = webpsave_buffer_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&webpsave_buffer_options.profile)?;
+        let profile_in: Option<CString> = webpsave_buffer_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_webpsave_buffer(
@@ -16346,7 +16623,10 @@ pub fn webpsave_buffer_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(
@@ -16439,8 +16719,8 @@ pub struct WebpsaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for WebpsaveTargetOptions {
@@ -16464,7 +16744,7 @@ impl std::default::Default for WebpsaveTargetOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -16559,7 +16839,11 @@ pub fn webpsave_target_with_opts(
         let page_height_in: i32 = webpsave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&webpsave_target_options.profile)?;
+        let profile_in: Option<CString> = webpsave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_webpsave_target(
@@ -16602,7 +16886,10 @@ pub fn webpsave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::WebpsaveTargetError)
@@ -16689,8 +16976,8 @@ pub struct WebpsaveMimeOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for WebpsaveMimeOptions {
@@ -16714,7 +17001,7 @@ impl std::default::Default for WebpsaveMimeOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -16798,7 +17085,11 @@ pub fn webpsave_mime_with_opts(
         let page_height_in: i32 = webpsave_mime_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&webpsave_mime_options.profile)?;
+        let profile_in: Option<CString> = webpsave_mime_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_webpsave_mime(
@@ -16840,7 +17131,10 @@ pub fn webpsave_mime_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::WebpsaveMimeError)
@@ -16957,8 +17251,8 @@ pub struct TiffsaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for TiffsaveOptions {
@@ -16987,7 +17281,7 @@ impl std::default::Default for TiffsaveOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -17077,7 +17371,11 @@ pub fn tiffsave_with_opts(
         let page_height_in: i32 = tiffsave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&tiffsave_options.profile)?;
+        let profile_in: Option<CString> = tiffsave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_tiffsave(
@@ -17130,7 +17428,10 @@ pub fn tiffsave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::TiffsaveError)
@@ -17252,8 +17553,8 @@ pub struct TiffsaveBufferOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for TiffsaveBufferOptions {
@@ -17282,7 +17583,7 @@ impl std::default::Default for TiffsaveBufferOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -17395,7 +17696,11 @@ pub fn tiffsave_buffer_with_opts(
         let page_height_in: i32 = tiffsave_buffer_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&tiffsave_buffer_options.profile)?;
+        let profile_in: Option<CString> = tiffsave_buffer_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_tiffsave_buffer(
@@ -17449,7 +17754,10 @@ pub fn tiffsave_buffer_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(
@@ -17570,8 +17878,8 @@ pub struct TiffsaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for TiffsaveTargetOptions {
@@ -17600,7 +17908,7 @@ impl std::default::Default for TiffsaveTargetOptions {
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -17714,7 +18022,11 @@ pub fn tiffsave_target_with_opts(
         let page_height_in: i32 = tiffsave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&tiffsave_target_options.profile)?;
+        let profile_in: Option<CString> = tiffsave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_tiffsave_target(
@@ -17767,7 +18079,10 @@ pub fn tiffsave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::TiffsaveTargetError)
@@ -17821,8 +18136,8 @@ pub struct HeifsaveOptions {
     ///  `Svt` -> VIPS_FOREIGN_HEIF_ENCODER_SVT = 3
     ///  `X265` -> VIPS_FOREIGN_HEIF_ENCODER_X265 = 4
     pub encoder: ForeignHeifEncoder,
-    /// tune: `String` -> Tuning parameters
-    pub tune: String,
+    /// tune: `Option<String>` -> Tuning parameters
+    pub tune: Option<String>,
     /// keep: `ForeignKeep` -> Which metadata to retain
     ///  `None` -> VIPS_FOREIGN_KEEP_NONE = 0
     ///  `Exif` -> VIPS_FOREIGN_KEEP_EXIF = 1
@@ -17838,8 +18153,8 @@ pub struct HeifsaveOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for HeifsaveOptions {
@@ -17852,11 +18167,11 @@ impl std::default::Default for HeifsaveOptions {
             effort: i32::from(4),
             subsample_mode: ForeignSubsample::Auto,
             encoder: ForeignHeifEncoder::Auto,
-            tune: String::new(),
+            tune: None,
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -17896,7 +18211,11 @@ pub fn heifsave_with_opts(
         let encoder_in: i32 = heifsave_options.encoder as i32;
         let encoder_in_name = utils::new_c_string("encoder")?;
 
-        let tune_in: CString = utils::new_c_string(&heifsave_options.tune)?;
+        let tune_in: Option<CString> = heifsave_options
+            .tune
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let tune_in_name = utils::new_c_string("tune")?;
 
         let keep_in: i32 = heifsave_options.keep as i32;
@@ -17910,7 +18229,11 @@ pub fn heifsave_with_opts(
         let page_height_in: i32 = heifsave_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&heifsave_options.profile)?;
+        let profile_in: Option<CString> = heifsave_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_heifsave(
@@ -17931,7 +18254,10 @@ pub fn heifsave_with_opts(
             encoder_in_name.as_ptr(),
             encoder_in,
             tune_in_name.as_ptr(),
-            tune_in.as_ptr(),
+            tune_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             keep_in_name.as_ptr(),
             keep_in,
             background_in_name.as_ptr(),
@@ -17939,7 +18265,10 @@ pub fn heifsave_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::HeifsaveError)
@@ -17998,8 +18327,8 @@ pub struct HeifsaveBufferOptions {
     ///  `Svt` -> VIPS_FOREIGN_HEIF_ENCODER_SVT = 3
     ///  `X265` -> VIPS_FOREIGN_HEIF_ENCODER_X265 = 4
     pub encoder: ForeignHeifEncoder,
-    /// tune: `String` -> Tuning parameters
-    pub tune: String,
+    /// tune: `Option<String>` -> Tuning parameters
+    pub tune: Option<String>,
     /// keep: `ForeignKeep` -> Which metadata to retain
     ///  `None` -> VIPS_FOREIGN_KEEP_NONE = 0
     ///  `Exif` -> VIPS_FOREIGN_KEEP_EXIF = 1
@@ -18015,8 +18344,8 @@ pub struct HeifsaveBufferOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for HeifsaveBufferOptions {
@@ -18029,11 +18358,11 @@ impl std::default::Default for HeifsaveBufferOptions {
             effort: i32::from(4),
             subsample_mode: ForeignSubsample::Auto,
             encoder: ForeignHeifEncoder::Auto,
-            tune: String::new(),
+            tune: None,
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -18076,7 +18405,11 @@ pub fn heifsave_buffer_with_opts(
         let encoder_in: i32 = heifsave_buffer_options.encoder as i32;
         let encoder_in_name = utils::new_c_string("encoder")?;
 
-        let tune_in: CString = utils::new_c_string(&heifsave_buffer_options.tune)?;
+        let tune_in: Option<CString> = heifsave_buffer_options
+            .tune
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let tune_in_name = utils::new_c_string("tune")?;
 
         let keep_in: i32 = heifsave_buffer_options.keep as i32;
@@ -18090,7 +18423,11 @@ pub fn heifsave_buffer_with_opts(
         let page_height_in: i32 = heifsave_buffer_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&heifsave_buffer_options.profile)?;
+        let profile_in: Option<CString> = heifsave_buffer_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_heifsave_buffer(
@@ -18112,7 +18449,10 @@ pub fn heifsave_buffer_with_opts(
             encoder_in_name.as_ptr(),
             encoder_in,
             tune_in_name.as_ptr(),
-            tune_in.as_ptr(),
+            tune_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             keep_in_name.as_ptr(),
             keep_in,
             background_in_name.as_ptr(),
@@ -18120,7 +18460,10 @@ pub fn heifsave_buffer_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(
@@ -18178,8 +18521,8 @@ pub struct HeifsaveTargetOptions {
     ///  `Svt` -> VIPS_FOREIGN_HEIF_ENCODER_SVT = 3
     ///  `X265` -> VIPS_FOREIGN_HEIF_ENCODER_X265 = 4
     pub encoder: ForeignHeifEncoder,
-    /// tune: `String` -> Tuning parameters
-    pub tune: String,
+    /// tune: `Option<String>` -> Tuning parameters
+    pub tune: Option<String>,
     /// keep: `ForeignKeep` -> Which metadata to retain
     ///  `None` -> VIPS_FOREIGN_KEEP_NONE = 0
     ///  `Exif` -> VIPS_FOREIGN_KEEP_EXIF = 1
@@ -18195,8 +18538,8 @@ pub struct HeifsaveTargetOptions {
     /// page_height: `i32` -> Set page height for multipage save
     /// min: 0, max: 100000000, default: 0
     pub page_height: i32,
-    /// profile: `String` -> Filename of ICC profile to embed
-    pub profile: String,
+    /// profile: `Option<String>` -> Filename of ICC profile to embed
+    pub profile: Option<String>,
 }
 
 impl std::default::Default for HeifsaveTargetOptions {
@@ -18209,11 +18552,11 @@ impl std::default::Default for HeifsaveTargetOptions {
             effort: i32::from(4),
             subsample_mode: ForeignSubsample::Auto,
             encoder: ForeignHeifEncoder::Auto,
-            tune: String::new(),
+            tune: None,
             keep: ForeignKeep::All,
             background: Vec::new(),
             page_height: i32::from(0),
-            profile: String::from("sRGB"),
+            profile: Some(String::from("sRGB")),
         }
     }
 }
@@ -18257,7 +18600,11 @@ pub fn heifsave_target_with_opts(
         let encoder_in: i32 = heifsave_target_options.encoder as i32;
         let encoder_in_name = utils::new_c_string("encoder")?;
 
-        let tune_in: CString = utils::new_c_string(&heifsave_target_options.tune)?;
+        let tune_in: Option<CString> = heifsave_target_options
+            .tune
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let tune_in_name = utils::new_c_string("tune")?;
 
         let keep_in: i32 = heifsave_target_options.keep as i32;
@@ -18271,7 +18618,11 @@ pub fn heifsave_target_with_opts(
         let page_height_in: i32 = heifsave_target_options.page_height;
         let page_height_in_name = utils::new_c_string("page-height")?;
 
-        let profile_in: CString = utils::new_c_string(&heifsave_target_options.profile)?;
+        let profile_in: Option<CString> = heifsave_target_options
+            .profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let profile_in_name = utils::new_c_string("profile")?;
 
         let vips_op_response = bindings::vips_heifsave_target(
@@ -18292,7 +18643,10 @@ pub fn heifsave_target_with_opts(
             encoder_in_name.as_ptr(),
             encoder_in,
             tune_in_name.as_ptr(),
-            tune_in.as_ptr(),
+            tune_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             keep_in_name.as_ptr(),
             keep_in,
             background_in_name.as_ptr(),
@@ -18300,7 +18654,10 @@ pub fn heifsave_target_with_opts(
             page_height_in_name.as_ptr(),
             page_height_in,
             profile_in_name.as_ptr(),
-            profile_in.as_ptr(),
+            profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(vips_op_response, || (), Error::HeifsaveTargetError)
@@ -18355,10 +18712,10 @@ pub struct ThumbnailOptions {
     /// linear: `bool` -> Reduce in linear light
     /// default: false
     pub linear: bool,
-    /// input_profile: `String` -> Fallback input profile
-    pub input_profile: String,
-    /// output_profile: `String` -> Fallback output profile
-    pub output_profile: String,
+    /// input_profile: `Option<String>` -> Fallback input profile
+    pub input_profile: Option<String>,
+    /// output_profile: `Option<String>` -> Fallback output profile
+    pub output_profile: Option<String>,
     /// intent: `Intent` -> Rendering intent
     ///  `Perceptual` -> VIPS_INTENT_PERCEPTUAL = 0
     ///  `Relative` -> VIPS_INTENT_RELATIVE = 1 [DEFAULT]
@@ -18382,8 +18739,8 @@ impl std::default::Default for ThumbnailOptions {
             no_rotate: false,
             crop: Interesting::None,
             linear: false,
-            input_profile: String::new(),
-            output_profile: String::new(),
+            input_profile: None,
+            output_profile: None,
             intent: Intent::Relative,
             fail_on: FailOn::None,
         }
@@ -18421,10 +18778,18 @@ pub fn thumbnail_with_opts(
         let linear_in: i32 = if thumbnail_options.linear { 1 } else { 0 };
         let linear_in_name = utils::new_c_string("linear")?;
 
-        let input_profile_in: CString = utils::new_c_string(&thumbnail_options.input_profile)?;
+        let input_profile_in: Option<CString> = thumbnail_options
+            .input_profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let input_profile_in_name = utils::new_c_string("input-profile")?;
 
-        let output_profile_in: CString = utils::new_c_string(&thumbnail_options.output_profile)?;
+        let output_profile_in: Option<CString> = thumbnail_options
+            .output_profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let output_profile_in_name = utils::new_c_string("output-profile")?;
 
         let intent_in: i32 = thumbnail_options.intent as i32;
@@ -18448,9 +18813,15 @@ pub fn thumbnail_with_opts(
             linear_in_name.as_ptr(),
             linear_in,
             input_profile_in_name.as_ptr(),
-            input_profile_in.as_ptr(),
+            input_profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             output_profile_in_name.as_ptr(),
-            output_profile_in.as_ptr(),
+            output_profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             intent_in_name.as_ptr(),
             intent_in,
             fail_on_in_name.as_ptr(),
@@ -18494,8 +18865,8 @@ pub fn thumbnail_buffer(buffer: &[u8], width: i32) -> Result<VipsImage> {
 /// Options for thumbnail_buffer operation
 #[derive(Clone, Debug)]
 pub struct ThumbnailBufferOptions {
-    /// option_string: `String` -> Options that are passed on to the underlying loader
-    pub option_string: String,
+    /// option_string: `Option<String>` -> Options that are passed on to the underlying loader
+    pub option_string: Option<String>,
     /// height: `i32` -> Size to this height
     /// min: 1, max: 100000000, default: 1
     pub height: i32,
@@ -18520,10 +18891,10 @@ pub struct ThumbnailBufferOptions {
     /// linear: `bool` -> Reduce in linear light
     /// default: false
     pub linear: bool,
-    /// input_profile: `String` -> Fallback input profile
-    pub input_profile: String,
-    /// output_profile: `String` -> Fallback output profile
-    pub output_profile: String,
+    /// input_profile: `Option<String>` -> Fallback input profile
+    pub input_profile: Option<String>,
+    /// output_profile: `Option<String>` -> Fallback output profile
+    pub output_profile: Option<String>,
     /// intent: `Intent` -> Rendering intent
     ///  `Perceptual` -> VIPS_INTENT_PERCEPTUAL = 0
     ///  `Relative` -> VIPS_INTENT_RELATIVE = 1 [DEFAULT]
@@ -18542,14 +18913,14 @@ pub struct ThumbnailBufferOptions {
 impl std::default::Default for ThumbnailBufferOptions {
     fn default() -> Self {
         ThumbnailBufferOptions {
-            option_string: String::new(),
+            option_string: None,
             height: i32::from(1),
             size: Size::Both,
             no_rotate: false,
             crop: Interesting::None,
             linear: false,
-            input_profile: String::new(),
-            output_profile: String::new(),
+            input_profile: None,
+            output_profile: None,
             intent: Intent::Relative,
             fail_on: FailOn::None,
         }
@@ -18572,8 +18943,11 @@ pub fn thumbnail_buffer_with_opts(
         let width_in: i32 = width;
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
-        let option_string_in: CString =
-            utils::new_c_string(&thumbnail_buffer_options.option_string)?;
+        let option_string_in: Option<CString> = thumbnail_buffer_options
+            .option_string
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let option_string_in_name = utils::new_c_string("option-string")?;
 
         let height_in: i32 = thumbnail_buffer_options.height;
@@ -18599,12 +18973,18 @@ pub fn thumbnail_buffer_with_opts(
         };
         let linear_in_name = utils::new_c_string("linear")?;
 
-        let input_profile_in: CString =
-            utils::new_c_string(&thumbnail_buffer_options.input_profile)?;
+        let input_profile_in: Option<CString> = thumbnail_buffer_options
+            .input_profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let input_profile_in_name = utils::new_c_string("input-profile")?;
 
-        let output_profile_in: CString =
-            utils::new_c_string(&thumbnail_buffer_options.output_profile)?;
+        let output_profile_in: Option<CString> = thumbnail_buffer_options
+            .output_profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let output_profile_in_name = utils::new_c_string("output-profile")?;
 
         let intent_in: i32 = thumbnail_buffer_options.intent as i32;
@@ -18619,7 +18999,10 @@ pub fn thumbnail_buffer_with_opts(
             &mut out_out,
             width_in,
             option_string_in_name.as_ptr(),
-            option_string_in.as_ptr(),
+            option_string_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             height_in_name.as_ptr(),
             height_in,
             size_in_name.as_ptr(),
@@ -18631,9 +19014,15 @@ pub fn thumbnail_buffer_with_opts(
             linear_in_name.as_ptr(),
             linear_in,
             input_profile_in_name.as_ptr(),
-            input_profile_in.as_ptr(),
+            input_profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             output_profile_in_name.as_ptr(),
-            output_profile_in.as_ptr(),
+            output_profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             intent_in_name.as_ptr(),
             intent_in,
             fail_on_in_name.as_ptr(),
@@ -18695,10 +19084,10 @@ pub struct ThumbnailImageOptions {
     /// linear: `bool` -> Reduce in linear light
     /// default: false
     pub linear: bool,
-    /// input_profile: `String` -> Fallback input profile
-    pub input_profile: String,
-    /// output_profile: `String` -> Fallback output profile
-    pub output_profile: String,
+    /// input_profile: `Option<String>` -> Fallback input profile
+    pub input_profile: Option<String>,
+    /// output_profile: `Option<String>` -> Fallback output profile
+    pub output_profile: Option<String>,
     /// intent: `Intent` -> Rendering intent
     ///  `Perceptual` -> VIPS_INTENT_PERCEPTUAL = 0
     ///  `Relative` -> VIPS_INTENT_RELATIVE = 1 [DEFAULT]
@@ -18722,8 +19111,8 @@ impl std::default::Default for ThumbnailImageOptions {
             no_rotate: false,
             crop: Interesting::None,
             linear: false,
-            input_profile: String::new(),
-            output_profile: String::new(),
+            input_profile: None,
+            output_profile: None,
             intent: Intent::Relative,
             fail_on: FailOn::None,
         }
@@ -18765,12 +19154,18 @@ pub fn thumbnail_image_with_opts(
         let linear_in: i32 = if thumbnail_image_options.linear { 1 } else { 0 };
         let linear_in_name = utils::new_c_string("linear")?;
 
-        let input_profile_in: CString =
-            utils::new_c_string(&thumbnail_image_options.input_profile)?;
+        let input_profile_in: Option<CString> = thumbnail_image_options
+            .input_profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let input_profile_in_name = utils::new_c_string("input-profile")?;
 
-        let output_profile_in: CString =
-            utils::new_c_string(&thumbnail_image_options.output_profile)?;
+        let output_profile_in: Option<CString> = thumbnail_image_options
+            .output_profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let output_profile_in_name = utils::new_c_string("output-profile")?;
 
         let intent_in: i32 = thumbnail_image_options.intent as i32;
@@ -18794,9 +19189,15 @@ pub fn thumbnail_image_with_opts(
             linear_in_name.as_ptr(),
             linear_in,
             input_profile_in_name.as_ptr(),
-            input_profile_in.as_ptr(),
+            input_profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             output_profile_in_name.as_ptr(),
-            output_profile_in.as_ptr(),
+            output_profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             intent_in_name.as_ptr(),
             intent_in,
             fail_on_in_name.as_ptr(),
@@ -18835,8 +19236,8 @@ pub fn thumbnail_source(source: &VipsSource, width: i32) -> Result<VipsImage> {
 /// Options for thumbnail_source operation
 #[derive(Clone, Debug)]
 pub struct ThumbnailSourceOptions {
-    /// option_string: `String` -> Options that are passed on to the underlying loader
-    pub option_string: String,
+    /// option_string: `Option<String>` -> Options that are passed on to the underlying loader
+    pub option_string: Option<String>,
     /// height: `i32` -> Size to this height
     /// min: 1, max: 100000000, default: 1
     pub height: i32,
@@ -18861,10 +19262,10 @@ pub struct ThumbnailSourceOptions {
     /// linear: `bool` -> Reduce in linear light
     /// default: false
     pub linear: bool,
-    /// input_profile: `String` -> Fallback input profile
-    pub input_profile: String,
-    /// output_profile: `String` -> Fallback output profile
-    pub output_profile: String,
+    /// input_profile: `Option<String>` -> Fallback input profile
+    pub input_profile: Option<String>,
+    /// output_profile: `Option<String>` -> Fallback output profile
+    pub output_profile: Option<String>,
     /// intent: `Intent` -> Rendering intent
     ///  `Perceptual` -> VIPS_INTENT_PERCEPTUAL = 0
     ///  `Relative` -> VIPS_INTENT_RELATIVE = 1 [DEFAULT]
@@ -18883,14 +19284,14 @@ pub struct ThumbnailSourceOptions {
 impl std::default::Default for ThumbnailSourceOptions {
     fn default() -> Self {
         ThumbnailSourceOptions {
-            option_string: String::new(),
+            option_string: None,
             height: i32::from(1),
             size: Size::Both,
             no_rotate: false,
             crop: Interesting::None,
             linear: false,
-            input_profile: String::new(),
-            output_profile: String::new(),
+            input_profile: None,
+            output_profile: None,
             intent: Intent::Relative,
             fail_on: FailOn::None,
         }
@@ -18913,8 +19314,11 @@ pub fn thumbnail_source_with_opts(
         let width_in: i32 = width;
         let mut out_out: *mut bindings::VipsImage = null_mut();
 
-        let option_string_in: CString =
-            utils::new_c_string(&thumbnail_source_options.option_string)?;
+        let option_string_in: Option<CString> = thumbnail_source_options
+            .option_string
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let option_string_in_name = utils::new_c_string("option-string")?;
 
         let height_in: i32 = thumbnail_source_options.height;
@@ -18940,12 +19344,18 @@ pub fn thumbnail_source_with_opts(
         };
         let linear_in_name = utils::new_c_string("linear")?;
 
-        let input_profile_in: CString =
-            utils::new_c_string(&thumbnail_source_options.input_profile)?;
+        let input_profile_in: Option<CString> = thumbnail_source_options
+            .input_profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let input_profile_in_name = utils::new_c_string("input-profile")?;
 
-        let output_profile_in: CString =
-            utils::new_c_string(&thumbnail_source_options.output_profile)?;
+        let output_profile_in: Option<CString> = thumbnail_source_options
+            .output_profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let output_profile_in_name = utils::new_c_string("output-profile")?;
 
         let intent_in: i32 = thumbnail_source_options.intent as i32;
@@ -18959,7 +19369,10 @@ pub fn thumbnail_source_with_opts(
             &mut out_out,
             width_in,
             option_string_in_name.as_ptr(),
-            option_string_in.as_ptr(),
+            option_string_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             height_in_name.as_ptr(),
             height_in,
             size_in_name.as_ptr(),
@@ -18971,9 +19384,15 @@ pub fn thumbnail_source_with_opts(
             linear_in_name.as_ptr(),
             linear_in,
             input_profile_in_name.as_ptr(),
-            input_profile_in.as_ptr(),
+            input_profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             output_profile_in_name.as_ptr(),
-            output_profile_in.as_ptr(),
+            output_profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             intent_in_name.as_ptr(),
             intent_in,
             fail_on_in_name.as_ptr(),
@@ -20955,8 +21374,8 @@ pub struct IccImportOptions {
     /// embedded: `bool` -> Use embedded input profile, if available
     /// default: false
     pub embedded: bool,
-    /// input_profile: `String` -> Filename to load input profile from
-    pub input_profile: String,
+    /// input_profile: `Option<String>` -> Filename to load input profile from
+    pub input_profile: Option<String>,
 }
 
 impl std::default::Default for IccImportOptions {
@@ -20966,7 +21385,7 @@ impl std::default::Default for IccImportOptions {
             intent: Intent::Relative,
             black_point_compensation: false,
             embedded: false,
-            input_profile: String::new(),
+            input_profile: None,
         }
     }
 }
@@ -20999,7 +21418,11 @@ pub fn icc_import_with_opts(
         let embedded_in: i32 = if icc_import_options.embedded { 1 } else { 0 };
         let embedded_in_name = utils::new_c_string("embedded")?;
 
-        let input_profile_in: CString = utils::new_c_string(&icc_import_options.input_profile)?;
+        let input_profile_in: Option<CString> = icc_import_options
+            .input_profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let input_profile_in_name = utils::new_c_string("input-profile")?;
 
         let vips_op_response = bindings::vips_icc_import(
@@ -21014,7 +21437,10 @@ pub fn icc_import_with_opts(
             embedded_in_name.as_ptr(),
             embedded_in,
             input_profile_in_name.as_ptr(),
-            input_profile_in.as_ptr(),
+            input_profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             NULL,
         );
         utils::result(
@@ -21059,8 +21485,8 @@ pub struct IccExportOptions {
     /// black_point_compensation: `bool` -> Enable black point compensation
     /// default: false
     pub black_point_compensation: bool,
-    /// output_profile: `String` -> Filename to load output profile from
-    pub output_profile: String,
+    /// output_profile: `Option<String>` -> Filename to load output profile from
+    pub output_profile: Option<String>,
     /// depth: `i32` -> Output device space depth in bits
     /// min: 8, max: 16, default: 8
     pub depth: i32,
@@ -21072,7 +21498,7 @@ impl std::default::Default for IccExportOptions {
             pcs: PCS::Lab,
             intent: Intent::Relative,
             black_point_compensation: false,
-            output_profile: String::new(),
+            output_profile: None,
             depth: i32::from(8),
         }
     }
@@ -21103,7 +21529,11 @@ pub fn icc_export_with_opts(
         };
         let black_point_compensation_in_name = utils::new_c_string("black-point-compensation")?;
 
-        let output_profile_in: CString = utils::new_c_string(&icc_export_options.output_profile)?;
+        let output_profile_in: Option<CString> = icc_export_options
+            .output_profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let output_profile_in_name = utils::new_c_string("output-profile")?;
 
         let depth_in: i32 = icc_export_options.depth;
@@ -21119,7 +21549,10 @@ pub fn icc_export_with_opts(
             black_point_compensation_in_name.as_ptr(),
             black_point_compensation_in,
             output_profile_in_name.as_ptr(),
-            output_profile_in.as_ptr(),
+            output_profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             depth_in_name.as_ptr(),
             depth_in,
             NULL,
@@ -21172,8 +21605,8 @@ pub struct IccTransformOptions {
     /// embedded: `bool` -> Use embedded input profile, if available
     /// default: false
     pub embedded: bool,
-    /// input_profile: `String` -> Filename to load input profile from
-    pub input_profile: String,
+    /// input_profile: `Option<String>` -> Filename to load input profile from
+    pub input_profile: Option<String>,
     /// depth: `i32` -> Output device space depth in bits
     /// min: 8, max: 16, default: 8
     pub depth: i32,
@@ -21186,7 +21619,7 @@ impl std::default::Default for IccTransformOptions {
             intent: Intent::Relative,
             black_point_compensation: false,
             embedded: false,
-            input_profile: String::new(),
+            input_profile: None,
             depth: i32::from(8),
         }
     }
@@ -21223,7 +21656,11 @@ pub fn icc_transform_with_opts(
         let embedded_in: i32 = if icc_transform_options.embedded { 1 } else { 0 };
         let embedded_in_name = utils::new_c_string("embedded")?;
 
-        let input_profile_in: CString = utils::new_c_string(&icc_transform_options.input_profile)?;
+        let input_profile_in: Option<CString> = icc_transform_options
+            .input_profile
+            .as_ref()
+            .map(|s| utils::new_c_string(s))
+            .transpose()?;
         let input_profile_in_name = utils::new_c_string("input-profile")?;
 
         let depth_in: i32 = icc_transform_options.depth;
@@ -21242,7 +21679,10 @@ pub fn icc_transform_with_opts(
             embedded_in_name.as_ptr(),
             embedded_in,
             input_profile_in_name.as_ptr(),
-            input_profile_in.as_ptr(),
+            input_profile_in
+                .as_ref()
+                .map(|s| s.as_ptr())
+                .unwrap_or(std::ptr::null::<c_char>()),
             depth_in_name.as_ptr(),
             depth_in,
             NULL,
