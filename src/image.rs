@@ -509,6 +509,27 @@ impl VipsImage {
             )
         }
     }
+
+    pub fn get_as_string(&self, name: &str) -> Result<String> {
+        unsafe {
+            let name_c_str = utils::new_c_string(name)?;
+            let mut out: *mut c_char = std::ptr::null_mut();
+
+            let result = bindings::vips_image_get_as_string(self.ctx, name_c_str.as_ptr(), &mut out);
+
+            if result == -1 || out.is_null() {
+                return Err(Error::OperationError("VipsImage:get_as_string - Error on vips get_as_string or null pointer returned"));
+            }
+
+            let res_string = CStr::from_ptr(out)
+                .to_string_lossy()
+                .into_owned();
+
+            bindings::g_free(out as *mut _);
+
+            Ok(res_string)
+        }
+    }
 }
 
 impl VipsConnection {
