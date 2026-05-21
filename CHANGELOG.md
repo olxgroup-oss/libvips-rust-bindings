@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.0](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v2.0.2...v2.1.0) (2026-05-21)
+
+### Features
+
+* **ISSUE#43:** implement get_as_string for the vips image ([#159](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/159)) ([763eedb](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/763eedbaf11229fa4c9277dff46ae66a93adf54b)), closes [ISSUE#43](https://github.com/olxgroup-oss/ISSUE/issues/43) [ISSUE#43](https://github.com/olxgroup-oss/ISSUE/issues/43)
+
 ## [2.0.2](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v2.0.1...v2.0.2) (2026-05-20)
 
 ### Bug Fixes

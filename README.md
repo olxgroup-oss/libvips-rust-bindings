@@ -1,5 +1,5 @@
 # libvips-rust-bindings
-Rust bindings for libvips. Generated from `version 8.18.2`.
+Rust bindings for libvips. Generated from `version 2.1.0`.
 
 This is a safe wrapper for [libvips](https://libvips.github.io/libvips/) C library. It is made on top of the C API and based on the introspection API results.
 
