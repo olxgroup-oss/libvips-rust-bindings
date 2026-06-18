@@ -13,8 +13,8 @@ edition = "2021"
 [build-dependencies]
 bindgen = "0.72.1"
 heck = "0.5.0"
-cc = "1.2.61"
-which = "8.0.2"
+cc = "1.2.64"
+which = "8.0.4"
 
 [dependencies]
 num-traits = "0.2.19"
