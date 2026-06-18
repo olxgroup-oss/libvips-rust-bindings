@@ -135,7 +135,9 @@ impl VipsImage {
         }
     }
 
-    pub unsafe fn new_from_memory(
+    /// This is the main type of vips. It represents an image and most operations will take one as input and output a new one.
+    /// In the moment this type is not thread safe. Be careful working within thread environments.
+    pub fn new_from_memory(
         buffer: &[u8],
         width: i32,
         height: i32,
