@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.0](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v2.1.0...v2.2.0) (2026-06-18)
+
+### Features
+
+* **rust:** upgrade rust to 1.96.0 ([#169](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/169)) ([700d59d](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/700d59d9584951b70be518509b9ba0b7a5a29aa5))
+
 ## [2.1.0](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v2.0.2...v2.1.0) (2026-05-21)
 
 ### Features
