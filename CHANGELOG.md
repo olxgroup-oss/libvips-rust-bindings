@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.0](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v2.2.0...v2.3.0) (2026-06-19)
+
+### Features
+
+* Add safe method for constructing image from memory ([#141](https://github.com/olxgroup-oss/libvips-rust-bindings/issues/141)) ([91fae3a](https://github.com/olxgroup-oss/libvips-rust-bindings/commit/91fae3aff8ce35ef482c5469e41523d2fa763ada))
+
 ## [2.2.0](https://github.com/olxgroup-oss/libvips-rust-bindings/compare/v2.1.0...v2.2.0) (2026-06-18)
 
 ### Features
