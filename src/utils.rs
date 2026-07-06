@@ -84,10 +84,23 @@ pub(crate) fn new_c_string(string: &str) -> Result<CString> {
     CString::new(string).map_err(|_| Error::InitializationError("Error initializing C string."))
 }
 
-#[inline]
-pub(crate) unsafe fn new_byte_array(buf: *mut c_void, size: u64) -> Vec<u8> {
-    Vec::from_raw_parts(buf as *mut u8, size as usize, size as usize)
-}
+ #[inline]
+ pub(crate) unsafe fn new_byte_array(buf: *mut c_void, size: u64) -> Vec<u8> {
+     // libvips allocates this buffer with g_malloc. Adopting it into a Vec would
+     // hand it to Rust's global allocator on drop (jemalloc in the ais worker),
+     // which segfaults walking arena metadata for a chunk it never allocated.
+     // Copy into a Rust-owned Vec and release the original with g_free — matching
+     // how new_int_array / new_double_array already copy their inputs. The NULL
+     // case also covers failed save ops (buf left NULL), where Vec::from_raw_parts
+     // would trip NonNull::new_unchecked and abort; utils::result discards this
+     // empty Vec in favour of the Err.
+     if buf.is_null() {
+         return Vec::new();
+     }
+     let out = std::slice::from_raw_parts(buf as *const u8, size as usize).to_vec();
+     crate::bindings::g_free(buf);
+     out
+ }
 
 #[inline]
 pub unsafe fn new_int_array(array: *mut i32, size: u64) -> Vec<i32> {
