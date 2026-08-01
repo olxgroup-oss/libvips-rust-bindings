@@ -251,6 +251,26 @@ impl VipsImage {
         }
     }
 
+    /// Read a blob metadata field (e.g. "xmp-data", "iptc-data") as owned bytes.
+    ///
+    /// The pointer returned by `vips_image_get_blob` is owned by the image, so we
+    /// copy it into a Rust `Vec` and must NOT free it here (contrast with
+    /// `new_byte_array`, which adopts a caller-owned save buffer).
+    pub fn get_blob(&self, name: &str) -> Result<Vec<u8>> {
+        unsafe {
+            let name_c_str = utils::new_c_string(name)?;
+            let mut data: *const std::os::raw::c_void = std::ptr::null();
+            let mut length: bindings::size_t = 0;
+            let result = bindings::vips_image_get_blob(self.ctx, name_c_str.as_ptr(), &mut data, &mut length);
+            
+            if result == -1 || data.is_null() {
+                return Err(Error::OperationError("Error on vips get_blob"));
+            }
+
+            Ok(std::slice::from_raw_parts(data as *const u8, length as usize).to_vec())
+        }
+    }
+
     pub fn get_string(&self, name: &str) -> Result<&str> {
         unsafe {
             let name_c_str = utils::new_c_string(name)?;
