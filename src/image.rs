@@ -13,7 +13,7 @@ use std::ptr::null_mut;
 
 const NULL: *const c_void = null_mut();
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct VipsImage {
     pub(crate) ctx: *mut bindings::VipsImage,
 }
@@ -922,6 +922,15 @@ impl VipsInterpolate {
 
     pub fn get_windows_offset(&self) -> i32 {
         unsafe { bindings::vips_interpolate_get_window_offset(self.ctx) }
+    }
+}
+
+impl Clone for VipsImage {
+    fn clone(&self) -> VipsImage {
+        unsafe {
+                bindings::g_object_ref(self.ctx as *mut c_void);
+            }
+        VipsImage { ctx: self.ctx }
     }
 }
 
